@@ -5,13 +5,19 @@ import { companies } from "@/lib/data";
 import { notFound } from "next/navigation";
 
 interface CompanyPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function CompanyPage({ params }: CompanyPageProps) {
-  const company = companies.find(c => c.id === params.id);
+export default async function CompanyPage({ params }: CompanyPageProps) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
+  const company = companies.find(c => c.id === id);
+
+
+
 
   if (!company) {
     notFound();
@@ -20,7 +26,7 @@ export default function CompanyPage({ params }: CompanyPageProps) {
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
-      <CompanyProfile companyId={params.id} />
+      <CompanyProfile companyId={id} />
       <Footer />
     </div>
   );
