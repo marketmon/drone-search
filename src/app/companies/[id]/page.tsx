@@ -32,17 +32,3 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: CompanyPageProps) {
-  const company = companies.find(c => c.id === params.id);
-
-  if (!company) {
-    return {
-      title: 'Company Not Found',
-    };
-  }
-
-  return {
-    title: `${company.name} - NDAA Compliant Drone Components`,
-    description: company.description,
-  };
-}

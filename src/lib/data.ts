@@ -1,3 +1,14 @@
+export interface TeamMember {
+  id: string;
+  name: string;
+  title: string;
+  expertise: string[];
+  experience: string;
+  credentials: string[];
+  photo?: string;
+  bio: string;
+}
+
 export interface Company {
   id: string;
   name: string;
@@ -11,6 +22,7 @@ export interface Company {
   email?: string;
   phone?: string;
   capabilities?: string[];
+  teamMembers?: TeamMember[];
 }
 
 export interface Product {
@@ -41,11 +53,27 @@ export interface Subsystem {
   systemId: string;
 }
 
-export interface DroneSystem {
+export interface UnmannedSystem {
   id: string;
   name: string;
   description: string;
   icon: string;
+  domain: 'aerial' | 'marine';
+  vehicleType?: string;
+}
+
+export interface DroneSystem extends UnmannedSystem {
+  domain: 'aerial';
+}
+
+export interface MarineSystem extends UnmannedSystem {
+  domain: 'marine';
+  vehicleCategory: 'surface' | 'undersea';
+  hullLengthRange?: {
+    min: number;
+    max: number;
+    unit: 'meters' | 'feet';
+  };
 }
 
 export const companies: Company[] = [
@@ -170,53 +198,261 @@ export const companies: Company[] = [
       "Rapid prototyping and design validation services",
       "Supply chain management and component sourcing"
     ]
+  },
+  {
+    id: "voltaic-marine-systems",
+    name: "Voltaic Marine Systems",
+    description: "Specialized manufacturer of advanced battery systems for both marine and aerial unmanned platforms. Leading innovation in hybrid maritime-aviation power solutions with proven reliability across dual-environment operations.",
+    logo: "/images/companies/voltaic-logo.png",
+    ndaaCompliant: true,
+    certifications: ["ISO 9001", "AS9100", "ITAR", "UL 2089", "IEC 62133", "CMMC Level 2", "Marine Equipment Directive (MED)"],
+    location: "San Diego, California, USA",
+    website: "https://voltaicmarinesystems.com",
+    squareFootage: "180,000 sq ft (Battery Assembly: 85,000 sq ft, Testing: 35,000 sq ft, R&D: 40,000 sq ft, Administration: 20,000 sq ft)",
+    email: "info@voltaicmarinesystems.com",
+    phone: "+1 (619) 555-0892",
+    capabilities: [
+      "Multi-environment battery system design and manufacturing",
+      "Waterproof battery enclosures rated to IP68",
+      "Advanced Battery Management Systems (BMS) with dual-mode operation",
+      "Lithium-ion cell manufacturing and testing (15,000 cells/day)",
+      "Environmental testing chamber for marine/aerial conditions",
+      "Custom charging infrastructure for fleet operations",
+      "Rapid deployment field service and maintenance",
+      "Hybrid power system integration services"
+    ],
+    teamMembers: [
+      {
+        id: "dr-sarah-chen",
+        name: "Dr. Sarah Chen",
+        title: "Chief Technology Officer & VP Manufacturing",
+        expertise: ["Battery Chemistry", "Marine Power Systems", "Aerospace Engineering", "Manufacturing Process Optimization"],
+        experience: "15+ years leading battery technology development for dual-environment applications",
+        credentials: [
+          "Ph.D. Electrochemical Engineering, MIT",
+          "Former Senior Battery Engineer, Tesla Marine Division",
+          "12 patents in marine-grade battery technology",
+          "IEEE Fellow in Energy Storage Systems",
+          "Published 45+ peer-reviewed papers on battery systems"
+        ],
+        photo: "https://picsum.photos/300/400?random=50",
+        bio: "Dr. Chen pioneered the development of corrosion-resistant battery systems that operate seamlessly between aerial and marine environments. Her breakthrough work on dual-chemistry battery packs has set new industry standards for unmanned systems operating in harsh maritime conditions. Under her leadership, Voltaic has achieved a 99.7% reliability rate across 2M+ operating hours in marine environments."
+      }
+    ]
+  },
+  {
+    id: "razor-dynamics-fpv",
+    name: "Razor Dynamics FPV",
+    description: "Premier manufacturer of high-performance brushless motors specifically engineered for FPV racing and tactical drone applications. Delivering cutting-edge propulsion technology for competitive racing circuits and precision flight operations.",
+    logo: "/images/companies/razor-fpv-logo.png",
+    ndaaCompliant: true,
+    certifications: ["ISO 9001", "AS9100", "ITAR", "CMMC Level 2", "FCC Part 15", "CE Marking"],
+    location: "Austin, Texas, USA",
+    website: "https://razordynamicsfpv.com",
+    squareFootage: "125,000 sq ft (Motor Assembly: 65,000 sq ft, Testing: 25,000 sq ft, R&D: 20,000 sq ft, Administration: 15,000 sq ft)",
+    email: "racing@razordynamicsfpv.com",
+    phone: "+1 (512) 555-0734",
+    capabilities: [
+      "Ultra-lightweight racing motor design and production (8,000 units/month)",
+      "High-KV motor optimization for FPV applications",
+      "Precision-balanced rotor assemblies for minimal vibration",
+      "Custom motor winding configurations",
+      "Advanced magnetic simulation and testing",
+      "Racing team sponsorship and technical support",
+      "Real-time performance telemetry integration",
+      "Rapid prototyping for competitive racing development"
+    ],
+    teamMembers: [
+      {
+        id: "marcus-rodriguez",
+        name: "Marcus Rodriguez",
+        title: "Lead Manufacturing Engineer & Head of Racing Division",
+        expertise: ["Brushless Motor Design", "FPV Racing Technology", "Precision Manufacturing", "Performance Optimization"],
+        experience: "12+ years specializing in high-performance FPV motor development and racing applications",
+        credentials: [
+          "M.S. Electrical Engineering, University of Texas at Austin",
+          "Former Lead Engineer, Team BlackSheep Racing",
+          "3-time MultiGP National Champion (2019-2021)",
+          "8 patents in brushless motor optimization",
+          "Certified Level 3 FAI F3U Judge"
+        ],
+        photo: "https://picsum.photos/300/400?random=2",
+        bio: "Marcus combines world-class racing experience with manufacturing expertise to create motors that consistently dominate competitive circuits. His deep understanding of racing dynamics, gained from years of professional competition, drives innovations that have resulted in 47 national racing victories using Razor motors. His team has achieved sub-0.1g motor balance tolerances, setting new industry benchmarks for racing performance."
+      }
+    ]
   }
 ];
 
-export const droneSystems: DroneSystem[] = [
+export const unmannedSystems: (DroneSystem | MarineSystem)[] = [
+  // Aerial Systems
   {
     id: "flight-controller",
     name: "Flight Controller Systems",
     description: "Enterprise-grade processors, navigation sensors, and flight management firmware",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "frame",
     name: "Airframe & Structure",
     description: "Industrial carbon fiber frames, mounting systems, and protective housings",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "propulsion",
     name: "Propulsion Systems",
     description: "High-performance motors, speed controllers, and propeller assemblies",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "imaging-comms",
     name: "Imaging & Communications",
     description: "Professional cameras, video transmitters, and secure communication systems",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "control-systems",
     name: "Control & Telemetry",
     description: "Long-range control links, telemetry systems, and command protocols",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "power-systems",
     name: "Power & Energy",
     description: "Enterprise battery systems, power management, and charging infrastructure",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
   },
   {
     id: "navigation-sensors",
     name: "Navigation & Sensors",
     description: "Precision GPS, advanced sensors, and mission-critical navigation systems",
-    icon: ""
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Multi-rotor"
+  },
+  {
+    id: "fpv-systems",
+    name: "FPV Systems",
+    description: "First-person view systems for racing and tactical applications",
+    icon: "",
+    domain: "aerial",
+    vehicleType: "FPV"
+  },
+  {
+    id: "fixed-wing-systems",
+    name: "Fixed Wing Systems",
+    description: "Long-range surveillance and mapping aircraft components",
+    icon: "",
+    domain: "aerial",
+    vehicleType: "Fixed Wing"
+  },
+  {
+    id: "vtol-systems",
+    name: "VTOL Systems",
+    description: "Vertical takeoff and landing hybrid aircraft systems",
+    icon: "",
+    domain: "aerial",
+    vehicleType: "VTOL"
+  },
+
+  // Marine Surface Systems
+  {
+    id: "surface-propulsion",
+    name: "Surface Propulsion",
+    description: "Electric and hybrid propulsion systems for surface vessels",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "surface",
+    vehicleType: "USV",
+    hullLengthRange: { min: 1, max: 50, unit: "meters" }
+  },
+  {
+    id: "surface-navigation",
+    name: "Surface Navigation",
+    description: "Maritime navigation and positioning systems",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "surface",
+    vehicleType: "USV",
+    hullLengthRange: { min: 1, max: 50, unit: "meters" }
+  },
+  {
+    id: "surface-communication",
+    name: "Surface Communications",
+    description: "Maritime radio, satellite, and mesh networking systems",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "surface",
+    vehicleType: "USV",
+    hullLengthRange: { min: 1, max: 50, unit: "meters" }
+  },
+  {
+    id: "surface-hull-structure",
+    name: "Hull & Structure",
+    description: "Composite hulls, deck structures, and mounting systems",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "surface",
+    vehicleType: "USV",
+    hullLengthRange: { min: 1, max: 50, unit: "meters" }
+  },
+
+  // Marine Undersea Systems
+  {
+    id: "undersea-propulsion",
+    name: "Undersea Propulsion",
+    description: "Thruster systems and underwater propulsion technology",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "undersea",
+    vehicleType: "UUV",
+    hullLengthRange: { min: 0.5, max: 30, unit: "meters" }
+  },
+  {
+    id: "undersea-navigation",
+    name: "Undersea Navigation",
+    description: "Inertial navigation, acoustic positioning, and depth sensors",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "undersea",
+    vehicleType: "UUV",
+    hullLengthRange: { min: 0.5, max: 30, unit: "meters" }
+  },
+  {
+    id: "undersea-communication",
+    name: "Undersea Communications",
+    description: "Acoustic modems, through-water communication systems",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "undersea",
+    vehicleType: "UUV",
+    hullLengthRange: { min: 0.5, max: 30, unit: "meters" }
+  },
+  {
+    id: "pressure-hull",
+    name: "Pressure Hull Systems",
+    description: "Pressure-resistant hulls and watertight enclosures",
+    icon: "",
+    domain: "marine",
+    vehicleCategory: "undersea",
+    vehicleType: "UUV",
+    hullLengthRange: { min: 0.5, max: 30, unit: "meters" }
   }
 ];
+
+export const droneSystems: DroneSystem[] = unmannedSystems.filter(system => system.domain === 'aerial') as DroneSystem[];
+export const marineSystems: MarineSystem[] = unmannedSystems.filter(system => system.domain === 'marine') as MarineSystem[];
 
 export const subsystems: Subsystem[] = [
   // Flight Controller System subsystems
@@ -244,7 +480,7 @@ export const subsystems: Subsystem[] = [
     description: "UART, I2C, SPI ports, USB, ESC outputs",
     systemId: "flight-controller"
   },
-  
+
   // Frame subsystems
   {
     id: "main-structure",
@@ -264,7 +500,7 @@ export const subsystems: Subsystem[] = [
     description: "Prop guards, camera mounts, antenna mounts, TPU prints",
     systemId: "frame"
   },
-  
+
   // Propulsion subsystems
   {
     id: "bldc-motors",
@@ -290,7 +526,7 @@ export const subsystems: Subsystem[] = [
     description: "PDB boards, XT connectors, high-current wiring",
     systemId: "propulsion"
   },
-  
+
   // Imaging & Communications subsystems
   {
     id: "video-transmitters",
@@ -310,7 +546,7 @@ export const subsystems: Subsystem[] = [
     description: "Directional and omnidirectional antennas for enterprise communications",
     systemId: "imaging-comms"
   },
-  
+
   // Control & Telemetry subsystems
   {
     id: "control-links",
@@ -324,7 +560,7 @@ export const subsystems: Subsystem[] = [
     description: "Real-time data transmission and mission monitoring systems",
     systemId: "control-systems"
   },
-  
+
   // Power & Energy subsystems
   {
     id: "battery-systems",
@@ -344,7 +580,7 @@ export const subsystems: Subsystem[] = [
     description: "Automated charging systems and fleet power management",
     systemId: "power-systems"
   },
-  
+
   // Navigation & Sensors subsystems
   {
     id: "gnss-systems",
@@ -363,6 +599,106 @@ export const subsystems: Subsystem[] = [
     name: "Navigation Aids",
     description: "Backup navigation and positioning systems",
     systemId: "navigation-sensors"
+  },
+
+  // Marine Surface System subsystems
+  {
+    id: "surface-thrusters",
+    name: "Surface Thrusters",
+    description: "Electric and hybrid propulsion units for surface vessels",
+    systemId: "surface-propulsion"
+  },
+  {
+    id: "surface-steering",
+    name: "Steering Systems",
+    description: "Rudder and vectored thrust steering mechanisms",
+    systemId: "surface-propulsion"
+  },
+  {
+    id: "marine-gps",
+    name: "Marine GPS Systems",
+    description: "GNSS navigation systems optimized for maritime operations",
+    systemId: "surface-navigation"
+  },
+  {
+    id: "marine-sensors",
+    name: "Marine Sensors",
+    description: "Sonar, radar, and environmental sensors for surface operations",
+    systemId: "surface-navigation"
+  },
+  {
+    id: "maritime-radio",
+    name: "Maritime Radio Systems",
+    description: "VHF, UHF, and satellite communication systems",
+    systemId: "surface-communication"
+  },
+  {
+    id: "mesh-networking",
+    name: "Mesh Networking",
+    description: "Inter-vessel communication and data sharing systems",
+    systemId: "surface-communication"
+  },
+  {
+    id: "hull-materials",
+    name: "Hull Materials",
+    description: "Composite materials and coatings for marine hulls",
+    systemId: "surface-hull-structure"
+  },
+  {
+    id: "deck-systems",
+    name: "Deck Systems",
+    description: "Deck structures, mounting points, and equipment housings",
+    systemId: "surface-hull-structure"
+  },
+
+  // Marine Undersea System subsystems
+  {
+    id: "underwater-thrusters",
+    name: "Underwater Thrusters",
+    description: "Sealed propulsion systems for underwater operations",
+    systemId: "undersea-propulsion"
+  },
+  {
+    id: "ballast-systems",
+    name: "Ballast Systems",
+    description: "Depth control and buoyancy management systems",
+    systemId: "undersea-propulsion"
+  },
+  {
+    id: "inertial-navigation",
+    name: "Inertial Navigation",
+    description: "IMU and dead reckoning systems for underwater navigation",
+    systemId: "undersea-navigation"
+  },
+  {
+    id: "acoustic-positioning",
+    name: "Acoustic Positioning",
+    description: "USBL and LBL acoustic positioning systems",
+    systemId: "undersea-navigation"
+  },
+  {
+    id: "acoustic-modems",
+    name: "Acoustic Modems",
+    description: "Underwater acoustic communication systems",
+    systemId: "undersea-communication"
+  },
+  {
+    id: "through-water-comms",
+    name: "Through-Water Communications",
+    description: "Advanced underwater communication technologies",
+    systemId: "undersea-communication"
+  },
+  {
+    id: "pressure-vessels",
+    name: "Pressure Vessels",
+    description: "Pressure-resistant housings and sealed compartments",
+    systemId: "pressure-hull"
+  },
+  {
+    id: "sealing-systems",
+    name: "Sealing Systems",
+    description: "O-rings, gaskets, and watertight sealing solutions",
+    systemId: "pressure-hull"
   }
 ];
 
@@ -803,6 +1139,173 @@ export const products: Product[] = [
     cadModelUrl: "/downloads/atlas-power-hub-cad-model.step",
     optionSheetUrl: "/downloads/atlas-power-hub-options.pdf",
     userManualUrl: "/downloads/atlas-power-hub-manual.pdf"
+  },
+
+  // Voltaic Marine Systems products
+  {
+    id: "marine-aerial-dual-battery",
+    name: "Marine-Aerial Dual Environment Battery Pack",
+    description: "Revolutionary battery system engineered for seamless operation between aerial and marine environments with IP68 waterproof rating and corrosion-resistant housing.",
+    price: "$2,850 (Qty 50+: $2,200)",
+    companyId: "voltaic-marine-systems",
+    systemId: "power-systems",
+    subsystemId: "battery-systems",
+    specifications: {
+      "Capacity": "28000mAh",
+      "Voltage": "25.2V (7S)",
+      "Discharge": "15C continuous, 30C burst",
+      "Chemistry": "LiPo with marine-grade coating",
+      "Waterproof Rating": "IP68 (submerged to 50m)",
+      "Operating Temp": "-20°C to +60°C",
+      "Cycles": "2000+ cycles",
+      "BMS": "Dual-mode marine/aerial optimization",
+      "Weight": "3.2kg",
+      "Dimensions": "185mm x 95mm x 65mm",
+      "Connectors": "XT90 (waterproof) + Anderson Powerpole"
+    },
+    images: ["/images/products/marine-aerial-battery-1.jpg", "/images/products/marine-aerial-battery-2.jpg"],
+    availability: "In Stock",
+    leadTime: "4-6 weeks",
+    ndaaCompliant: true,
+    applications: [
+      "Amphibious drone operations",
+      "Marine surveillance and patrol",
+      "Coastal search and rescue",
+      "Underwater ROV applications",
+      "All-weather aerial missions",
+      "Maritime border security",
+      "Offshore inspection platforms"
+    ],
+    dimensions: "185mm x 95mm x 65mm",
+    datasheetUrl: "/downloads/marine-aerial-battery-datasheet.pdf",
+    cadModelUrl: "/downloads/marine-aerial-battery-cad-model.step",
+    optionSheetUrl: "/downloads/marine-aerial-battery-options.pdf",
+    userManualUrl: "/downloads/marine-aerial-battery-manual.pdf"
+  },
+  {
+    id: "submersible-charging-dock",
+    name: "Submersible Charging Dock System",
+    description: "Automated underwater charging station for marine drones with wireless power transfer and weatherproof operation down to 100 meters depth.",
+    price: "$8,500 (Qty 10+: $6,800)",
+    companyId: "voltaic-marine-systems",
+    systemId: "power-systems",
+    subsystemId: "charging-infrastructure",
+    specifications: {
+      "Max Depth": "100 meters",
+      "Charging Power": "500W wireless transfer",
+      "Dock Capacity": "4 simultaneous vehicles",
+      "Communication": "Acoustic + RF hybrid",
+      "Material": "Marine-grade titanium alloy",
+      "Buoyancy": "Neutral (adjustable ballast)",
+      "Operating Time": "6 months autonomous",
+      "Efficiency": "92% power transfer",
+      "Safety": "Auto-disconnect on fault",
+      "Installation": "Anchor or seafloor mount"
+    },
+    images: ["/images/products/submersible-dock-1.jpg", "/images/products/submersible-dock-2.jpg"],
+    availability: "Pre-Order",
+    leadTime: "12-16 weeks",
+    ndaaCompliant: true,
+    applications: [
+      "Underwater drone fleet operations",
+      "Marine research stations",
+      "Offshore monitoring systems",
+      "Subsea infrastructure inspection",
+      "Autonomous underwater vehicle support",
+      "Deep sea exploration missions"
+    ],
+    dimensions: "2000mm x 1500mm x 800mm",
+    datasheetUrl: "/downloads/submersible-dock-datasheet.pdf",
+    cadModelUrl: "/downloads/submersible-dock-cad-model.step",
+    optionSheetUrl: "/downloads/submersible-dock-options.pdf",
+    userManualUrl: "/downloads/submersible-dock-manual.pdf"
+  },
+
+  // Razor Dynamics FPV products
+  {
+    id: "razor-racing-motor-2306",
+    name: "Razor Racing Motor 2306",
+    description: "Ultra-lightweight competition motor engineered for FPV racing with precision-balanced rotors and championship-winning performance characteristics.",
+    price: "$89 (Qty 100+: $72)",
+    companyId: "razor-dynamics-fpv",
+    systemId: "propulsion",
+    subsystemId: "bldc-motors",
+    specifications: {
+      "KV Rating": "2750 KV",
+      "Configuration": "12N14P",
+      "Stator": "23mm diameter, 6mm height",
+      "Max Power": "850W",
+      "Operating Voltage": "11.1V - 22.2V (3S-6S)",
+      "Max Current": "42A",
+      "Efficiency": "89% at optimal load",
+      "Weight": "28.5g",
+      "Shaft": "M5 threading, 4mm titanium",
+      "Bearings": "Premium Japanese ball bearings",
+      "Magnets": "N52SH arc magnets",
+      "Wire": "20AWG silicone leads",
+      "Operating Temp": "-10°C to +85°C",
+      "Balance": "<0.05g deviation"
+    },
+    images: ["/images/products/razor-motor-2306-1.jpg", "/images/products/razor-motor-2306-2.jpg"],
+    availability: "In Stock",
+    leadTime: "1-2 weeks",
+    ndaaCompliant: true,
+    applications: [
+      "FPV racing competitions",
+      "Freestyle aerobatic flying",
+      "High-speed surveillance drones",
+      "Tactical reconnaissance platforms",
+      "Professional aerial cinematography",
+      "Racing team development",
+      "Performance testing applications"
+    ],
+    dimensions: "Ø23mm x 26.8mm (excluding shaft)",
+    datasheetUrl: "/downloads/razor-motor-2306-datasheet.pdf",
+    cadModelUrl: "/downloads/razor-motor-2306-cad-model.step",
+    optionSheetUrl: "/downloads/razor-motor-2306-options.pdf",
+    userManualUrl: "/downloads/razor-motor-2306-manual.pdf"
+  },
+  {
+    id: "fpv-racing-esc-45a",
+    name: "FPV Racing ESC 45A",
+    description: "High-performance electronic speed controller optimized for racing applications with lightning-fast response times and championship-proven reliability.",
+    price: "$65 (Set of 4: $220)",
+    companyId: "razor-dynamics-fpv",
+    systemId: "propulsion",
+    subsystemId: "escs",
+    specifications: {
+      "Current Rating": "45A continuous",
+      "Burst Current": "55A for 10 seconds",
+      "Input Voltage": "2S-6S LiPo",
+      "Protocols": "Multishot, DShot600/1200",
+      "MCU": "32-bit ARM processor",
+      "PWM Frequency": "96kHz",
+      "Response Time": "<1ms",
+      "BEC": "None (external required)",
+      "Weight": "4.2g",
+      "Dimensions": "24mm x 12mm x 4mm",
+      "Wire": "16AWG silicone",
+      "Features": "Active braking, motor timing adjustment",
+      "Firmware": "BLHeli_32 compatible"
+    },
+    images: ["/images/products/fpv-racing-esc-1.jpg", "/images/products/fpv-racing-esc-2.jpg"],
+    availability: "In Stock",
+    leadTime: "1-2 weeks",
+    ndaaCompliant: true,
+    applications: [
+      "Professional FPV racing",
+      "Competitive drone events",
+      "High-performance freestyle",
+      "Racing team applications",
+      "Speed record attempts",
+      "Precision aerobatic maneuvers",
+      "Tournament racing circuits"
+    ],
+    dimensions: "24mm x 12mm x 4mm",
+    datasheetUrl: "/downloads/fpv-racing-esc-datasheet.pdf",
+    cadModelUrl: "/downloads/fpv-racing-esc-cad-model.step",
+    optionSheetUrl: "/downloads/fpv-racing-esc-options.pdf",
+    userManualUrl: "/downloads/fpv-racing-esc-manual.pdf"
   }
 ];
 
@@ -810,8 +1313,16 @@ export function getCompanyById(id: string): Company | undefined {
   return companies.find(company => company.id === id);
 }
 
-export function getSystemById(id: string): DroneSystem | undefined {
-  return droneSystems.find(system => system.id === id);
+export function getSystemById(id: string): DroneSystem | MarineSystem | undefined {
+  return unmannedSystems.find(system => system.id === id);
+}
+
+export function getSystemsByDomain(domain: 'aerial' | 'marine'): (DroneSystem | MarineSystem)[] {
+  return unmannedSystems.filter(system => system.domain === domain);
+}
+
+export function getSystemsByVehicleType(vehicleType: string): (DroneSystem | MarineSystem)[] {
+  return unmannedSystems.filter(system => system.vehicleType === vehicleType);
 }
 
 export function getSubsystemById(id: string): Subsystem | undefined {

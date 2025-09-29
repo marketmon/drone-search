@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DemoButton } from "@/components/ui/demo-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -151,9 +152,9 @@ export function DroneForgeEvaluation() {
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white text-black hover:bg-gray-200 w-full">
+                  <DemoButton className="w-full">
                     Apply to List Your Components
-                  </Button>
+                  </DemoButton>
                 </DialogTrigger>
                 <DialogContent className="bg-black border-gray-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>

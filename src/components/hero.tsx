@@ -100,10 +100,13 @@ export function Hero() {
 
       <div className="container mx-auto px-4 text-center relative z-10">
         <h1 className="text-6xl md:text-8xl font-bold text-white mb-8">
-          DroneForge
+          USForge
         </h1>
-        <p className="text-xl md:text-2xl text-white max-w-4xl mx-auto">
+        <p className="text-xl md:text-2xl text-white max-w-4xl mx-auto mb-6">
           Scale-ready, NDAA-compliant, superior-quality components for unmanned systems
+        </p>
+        <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          Aerial platforms including FPV, multi-rotor, fixed-wing, and VTOL systems • Marine platforms including surface vessels (USV) and undersea vehicles (UUV)
         </p>
       </div>
 

@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DemoButton, DemoLink } from "@/components/ui/demo-button";
 import { Separator } from "@/components/ui/separator";
-import { Company, Product, getCompanyById } from "@/lib/data";
+import { Company, Product, TeamMember, getCompanyById } from "@/lib/data";
 import { products } from "@/lib/data";
 
 interface CompanyProfileProps {
@@ -61,7 +62,7 @@ export function CompanyProfile({ companyId }: CompanyProfileProps) {
               <div className="text-gray-400">
                 <p className="mb-2">📍 {company.location}</p>
                 {company.website && (
-                  <p className="mb-2">🌐 <a href={company.website} className="text-blue-400 hover:text-blue-300" target="_blank" rel="noopener noreferrer">{company.website}</a></p>
+                  <p className="mb-2">🌐 <DemoLink href={company.website}>{company.website}</DemoLink></p>
                 )}
               </div>
             </div>
@@ -91,9 +92,9 @@ export function CompanyProfile({ companyId }: CompanyProfileProps) {
               <div>
                 <p className="text-sm text-gray-400">Website</p>
                 {company.website ? (
-                  <a href={company.website} className="text-blue-400 hover:text-blue-300" target="_blank" rel="noopener noreferrer">
+                  <DemoLink href={company.website}>
                     {company.website}
-                  </a>
+                  </DemoLink>
                 ) : (
                   <p className="text-gray-500">Not provided</p>
                 )}
@@ -156,6 +157,18 @@ export function CompanyProfile({ companyId }: CompanyProfileProps) {
           </Card>
         )}
 
+        {/* Expert Team Section */}
+        {company.teamMembers && company.teamMembers.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-4xl font-bold text-white mb-8">Expert Team</h2>
+            <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+              {company.teamMembers.map((member) => (
+                <TeamMemberCard key={member.id} member={member} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Products Section */}
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-white mb-8">Products</h2>
@@ -175,6 +188,82 @@ export function CompanyProfile({ companyId }: CompanyProfileProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+interface TeamMemberCardProps {
+  member: TeamMember;
+}
+
+function TeamMemberCard({ member }: TeamMemberCardProps) {
+  return (
+    <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
+      <CardContent className="p-8">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Photo */}
+          <div className="flex-shrink-0">
+            <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-lg overflow-hidden bg-gray-800 border border-gray-700">
+              {member.photo ? (
+                <img
+                  src={member.photo}
+                  alt={member.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-4xl font-bold text-white">{member.name.charAt(0)}</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="flex-1">
+            <div className="mb-4">
+              <h3 className="text-2xl font-bold text-white mb-2">{member.name}</h3>
+              <p className="text-lg text-blue-400 mb-2">{member.title}</p>
+              <p className="text-gray-300 text-sm">{member.experience}</p>
+            </div>
+
+            {/* Expertise */}
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-white mb-2">EXPERTISE</h4>
+              <div className="flex flex-wrap gap-2">
+                {member.expertise.map((skill, index) => (
+                  <Badge key={index} variant="outline" className="border-blue-500 text-blue-400 text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* Credentials */}
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-white mb-2">CREDENTIALS</h4>
+              <div className="space-y-1">
+                {member.credentials.slice(0, 3).map((credential, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-green-400 mt-2 flex-shrink-0 rounded-full"></div>
+                    <p className="text-gray-300 text-sm">{credential}</p>
+                  </div>
+                ))}
+                {member.credentials.length > 3 && (
+                  <p className="text-gray-400 text-xs ml-4">
+                    +{member.credentials.length - 3} additional credentials
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div>
+              <h4 className="text-sm font-semibold text-white mb-2">BACKGROUND</h4>
+              <p className="text-gray-300 text-sm leading-relaxed">{member.bio}</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -274,24 +363,24 @@ function ProductCard({ product }: ProductCardProps) {
                 <p className="text-sm font-semibold text-white mb-2">Downloads</p>
                 <div className="grid grid-cols-2 gap-2">
                   {product.datasheetUrl && (
-                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs">
+                    <DemoButton size="sm" variant="outline" className="text-xs">
                       Datasheet
-                    </Button>
+                    </DemoButton>
                   )}
                   {product.userManualUrl && (
-                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs">
+                    <DemoButton size="sm" variant="outline" className="text-xs">
                       Manual
-                    </Button>
+                    </DemoButton>
                   )}
                   {product.cadModelUrl && (
-                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs">
+                    <DemoButton size="sm" variant="outline" className="text-xs">
                       CAD Model
-                    </Button>
+                    </DemoButton>
                   )}
                   {product.optionSheetUrl && (
-                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs">
+                    <DemoButton size="sm" variant="outline" className="text-xs">
                       Options
-                    </Button>
+                    </DemoButton>
                   )}
                 </div>
               </div>
