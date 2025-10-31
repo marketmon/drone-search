@@ -14,8 +14,8 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "NDAA Compliant Drone Marketplace",
-  description: "Secure marketplace for NDAA compliant drone components and systems",
+  title: "Syndicate 708",
+  description: "Enabling Scale for American Onshore Initiiatives",
 };
 
 export default function RootLayout({
