@@ -19,8 +19,8 @@ export default function Feedback() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, this would send data to a backend
-    console.log("Feedback submitted:", formData);
+    // Log for demo purposes
+    console.log('Company feedback submitted:', formData);
     setSubmitted(true);
   };
 
@@ -56,19 +56,33 @@ export default function Feedback() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black py-12 px-6 relative">
+    <div className="min-h-screen bg-white text-black relative">
       {/* Grid background pattern */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
-      <div className="relative max-w-2xl mx-auto">
-        <div className="mb-8">
-          <Link
-            href="/usv-market"
-            className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors mb-4 inline-block"
-          >
-            ← BACK TO USV MARKET
-          </Link>
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/usv-market" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+              ← BACK TO USV MARKET
+            </Link>
+            <div className="flex gap-4 text-xs font-mono tracking-wider">
+              <Link href="/collection" className="text-gray-600 hover:text-black transition-colors">
+                COLLECTION
+              </Link>
+              <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
+                PORTFOLIO
+              </Link>
+              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
+                ABOUT
+              </Link>
+            </div>
+          </div>
         </div>
+      </nav>
+
+      <div className="relative max-w-2xl mx-auto px-6 py-12">{/* Removed previous back link section */}
 
         <div className="border-2 border-black bg-white p-8">
           <div className="border-b-2 border-black pb-4 mb-6">

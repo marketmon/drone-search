@@ -37,26 +37,33 @@ export default function Home() {
               </p>
             </div>
 
-            {/* CTA Section */}
-            <div className="pt-6 space-y-6">
-              <div className="border-t-2 border-black pt-6">
-                <Link href="/usv-market">
+            {/* Navigation */}
+            <div className="pt-6 border-t-2 border-black space-y-4">
+              <Link href="/collection">
+                <Button
+                  size="lg"
+                  className="w-full text-lg px-8 py-6 mb-2 bg-black text-white hover:bg-gray-800 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  → MARKETS
+                </Button>
+              </Link>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Link href="/portfolio">
                   <Button
                     size="lg"
-                    className="w-full text-lg px-8 py-6 bg-black text-white hover:bg-gray-800 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
+                    className="w-full px-6 py-6 bg-white text-black hover:bg-gray-50 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
                   >
-                    → THE US USV MARKET LANDSCAPE
+                    PORTFOLIO
                   </Button>
                 </Link>
-              </div>
-
-              {/* About link */}
-              <div className="text-center pt-4">
-                <Link
-                  href="/about"
-                  className="text-sm font-mono text-gray-600 hover:text-black transition-colors tracking-wider border-b border-gray-400 hover:border-black pb-1"
-                >
-                  WHAT IS SYNDICATE 708?
+                <Link href="/about">
+                  <Button
+                    size="lg"
+                    className="w-full px-6 py-6 bg-white text-black hover:bg-gray-50 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    ABOUT
+                  </Button>
                 </Link>
               </div>
             </div>

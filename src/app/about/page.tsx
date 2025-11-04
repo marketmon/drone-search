@@ -13,10 +13,20 @@ export default function About() {
             <Link href="/" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
               ← HOME
             </Link>
-            <div className="flex gap-6 text-xs font-mono tracking-wider">
-              <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
-                USV MARKET
+            <div className="flex gap-4 items-center">
+              <Link href="/market-scouting">
+                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
+                  CREATE DEMAND
+                </button>
               </Link>
+              <div className="flex gap-4 text-xs font-mono tracking-wider">
+                <Link href="/collection" className="text-gray-600 hover:text-black transition-colors">
+                  MARKETS
+                </Link>
+                <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
+                  PORTFOLIO
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -200,7 +210,7 @@ export default function About() {
               </div>
 
               <div className="border-l-4 border-black pl-6 py-3 bg-gray-50">
-                <h3 className="font-bold text-lg mb-1 tracking-tight">Market Intelligence</h3>
+                <h3 className="font-bold text-lg mb-1 tracking-tight">Market Development</h3>
                 <p className="text-gray-700 text-sm">
                   Comprehensive understanding of defense markets, trends, and opportunities
                 </p>

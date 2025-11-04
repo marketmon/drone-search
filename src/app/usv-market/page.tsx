@@ -9,6 +9,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
 
 interface Company {
   name: string;
@@ -17,7 +18,7 @@ interface Company {
   image: string;
 }
 
-const primes: Company[] = [
+const legacy: Company[] = [
   {
     name: "Lockheed Martin",
     website: "https://www.lockheedmartin.com",
@@ -35,23 +36,27 @@ const primes: Company[] = [
     website: "https://www.northropgrumman.com",
     description: "Aerospace and defense technology company developing autonomous maritime systems with focus on ISR and fleet protection capabilities.",
     image: "/placeholder-company.jpg"
-  }
-];
-
-const shipyards: Company[] = [
+  },
   {
-    name: "Huntington Ingalls Industries",
-    website: "https://www.huntingtoningalls.com",
-    description: "America's largest military shipbuilding company expanding into unmanned surface vehicle production for Navy operations.",
+    name: "Textron Systems",
+    website: "https://www.textronsystems.com",
+    description: "Defense and aerospace manufacturer producing Common Unmanned Surface Vehicle (CUSV) for mine countermeasures.",
     image: "/placeholder-company.jpg"
   },
   {
-    name: "Austal USA",
-    website: "https://www.austal.com",
-    description: "High-speed aluminum shipbuilder producing unmanned surface vessels with advanced composite materials and modular designs.",
+    name: "L3Harris Technologies",
+    website: "https://www.l3harris.com",
+    description: "Defense technology company developing autonomous maritime systems with advanced communications and electronic warfare capabilities.",
+    image: "/placeholder-company.jpg"
+  },
+  {
+    name: "Raytheon",
+    website: "https://www.rtx.com",
+    description: "Aerospace and defense company integrating sensor systems and weapons platforms onto unmanned surface vessels.",
     image: "/placeholder-company.jpg"
   }
 ];
+
 
 const smallShipbuilders: Company[] = [
   {
@@ -91,27 +96,6 @@ const startups: Company[] = [
     name: "Sea Machines",
     website: "https://www.sea-machines.com",
     description: "Autonomous technology provider delivering remote command and autonomous control systems for commercial and government vessels.",
-    image: "/placeholder-company.jpg"
-  }
-];
-
-const legacyBusinesses: Company[] = [
-  {
-    name: "Textron Systems",
-    website: "https://www.textronsystems.com",
-    description: "Defense and aerospace manufacturer producing Common Unmanned Surface Vehicle (CUSV) for mine countermeasures.",
-    image: "/placeholder-company.jpg"
-  },
-  {
-    name: "L3Harris Technologies",
-    website: "https://www.l3harris.com",
-    description: "Defense technology company developing autonomous maritime systems with advanced communications and electronic warfare capabilities.",
-    image: "/placeholder-company.jpg"
-  },
-  {
-    name: "Raytheon",
-    website: "https://www.rtx.com",
-    description: "Aerospace and defense company integrating sensor systems and weapons platforms onto unmanned surface vessels.",
     image: "/placeholder-company.jpg"
   }
 ];
@@ -236,28 +220,26 @@ export default function USVMarket() {
       <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
-              ← HOME
-            </Link>
-            <div className="flex gap-6 text-xs font-mono tracking-wider">
-              <button onClick={() => scrollToSection('primes')} className="text-gray-600 hover:text-black transition-colors">
-                PRIMES
-              </button>
-              <button onClick={() => scrollToSection('shipyards')} className="text-gray-600 hover:text-black transition-colors">
-                SHIPYARDS
-              </button>
-              <button onClick={() => scrollToSection('small-shipbuilders')} className="text-gray-600 hover:text-black transition-colors">
-                SMALL SHIPBUILDERS
-              </button>
-              <button onClick={() => scrollToSection('startups')} className="text-gray-600 hover:text-black transition-colors">
-                STARTUPS
-              </button>
-              <button onClick={() => scrollToSection('legacy')} className="text-gray-600 hover:text-black transition-colors">
-                LEGACY
-              </button>
-              <button onClick={() => scrollToSection('collaborations')} className="text-gray-600 hover:text-black transition-colors">
-                COLLABORATIONS
-              </button>
+            <div className="flex items-center gap-6">
+              <Link href="/collection" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+                ← MARKETS
+              </Link>
+              <span className="text-xs font-mono tracking-wider text-black">USV DOMAIN</span>
+            </div>
+            <div className="flex gap-4 items-center">
+              <Link href="/market-scouting">
+                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
+                  SUBMIT DEMAND SIGNAL
+                </button>
+              </Link>
+              <div className="flex gap-4 text-xs font-mono tracking-wider">
+                <Link href="/usv-market" className="text-black font-bold transition-colors">
+                  MARKET LANDSCAPE
+                </Link>
+                <Link href="/usv-systems" className="text-gray-600 hover:text-black transition-colors">
+                  SYSTEM ARCHITECTURE
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -279,25 +261,18 @@ export default function USVMarket() {
         </div>
 
         <div className="space-y-8">
-          <div id="primes">
-            <CategorySection title="Primes" companies={primes} />
+          <div id="startups">
+            <CategorySection title="Startups" companies={startups} />
           </div>
 
-          <div id="shipyards">
-            <CategorySection title="Shipyards" companies={shipyards} />
+          <div id="legacy">
+            <CategorySection title="Legacy" companies={legacy} />
           </div>
 
           <div id="small-shipbuilders">
             <CategorySection title="Small Shipbuilders" companies={smallShipbuilders} />
           </div>
 
-          <div id="startups">
-            <CategorySection title="Startups" companies={startups} />
-          </div>
-
-          <div id="legacy">
-            <CategorySection title="Legacy Businesses" companies={legacyBusinesses} />
-          </div>
         </div>
 
         <div id="collaborations" className="mt-12 pt-12 border-t-2 border-black">
@@ -315,15 +290,8 @@ export default function USVMarket() {
         </div>
       </div>
 
-      {/* Fixed Feedback Button */}
-      <Link href="/feedback">
-        <Button
-          className="fixed bottom-6 left-6 bg-black hover:bg-gray-800 text-white border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
-          size="lg"
-        >
-          DID WE MISS ANYTHING?
-        </Button>
-      </Link>
+      {/* Content Feedback Widget */}
+      <ContentFeedbackWidget contentType="usv-market-landscape" />
     </div>
   );
 }
