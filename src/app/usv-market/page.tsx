@@ -192,7 +192,7 @@ export default function USVMarketInteractive() {
           setContractData(data.filter(row => row.lat && row.lng && row.company_name));
           setIsLoadingContracts(false);
         },
-        error: (error) => {
+        error: (error: Error) => {
           console.error("Error parsing CSV:", error);
           setIsLoadingContracts(false);
         }
