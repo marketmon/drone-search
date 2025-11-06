@@ -69,13 +69,10 @@ export default function Feedback() {
             </Link>
             <div className="flex gap-4 text-xs font-mono tracking-wider">
               <Link href="/collection" className="text-gray-600 hover:text-black transition-colors">
-                COLLECTION
+                MARKETS
               </Link>
-              <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
-                PORTFOLIO
-              </Link>
-              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                ABOUT
+              <Link href="/" className="text-gray-600 hover:text-black transition-colors">
+                HOME
               </Link>
             </div>
           </div>

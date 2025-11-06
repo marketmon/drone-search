@@ -4,61 +4,81 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function MarketScouting() {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    organizationName: "",
-    organizationType: "",
-    contactName: "",
-    contactEmail: "",
-    phoneNumber: "",
-    usvRequirement: "",
-    intendedApplication: "",
-    technicalRequirements: "",
-    quantityNeeded: "",
+    technologyAreas: [] as string[],
+    needType: "",
+    specificNeed: "",
     timeline: "",
-    budgetRange: "",
-    specificComponents: [] as string[],
-    additionalInfo: ""
+    organizationName: "",
+    contactName: "",
+    contactEmail: ""
   });
 
   const [submitted, setSubmitted] = useState(false);
 
-  const componentOptions = [
-    "Autonomous Navigation System",
-    "Electric Propulsion",
-    "Power Management System",
-    "Communication Systems",
-    "Sensor Suite (Radar, Lidar, Cameras)",
-    "Mission Payload Integration",
-    "Hull/Platform",
-    "Control Software",
-    "Cybersecurity Systems",
-    "Energy Storage (Batteries)"
+  const totalSteps = 4;
+
+  const technologyOptions = [
+    { id: "unmanned-surface", label: "Unmanned Surface Vehicles" },
+    { id: "unmanned-aerial", label: "Unmanned Aerial Systems" },
+    { id: "unmanned-underwater", label: "Unmanned Underwater Vehicles" },
+    { id: "autonomous-ground", label: "Autonomous Ground Vehicles" },
+    { id: "ai-ml", label: "AI/ML Systems" },
+    { id: "sensors-isr", label: "Sensors & ISR" },
+    { id: "communications", label: "Communications Systems" },
+    { id: "cyber-ew", label: "Cyber & Electronic Warfare" },
+    { id: "energy-power", label: "Energy & Power Systems" },
+    { id: "other", label: "Other Technology" }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Log for demo purposes
-    console.log('Market scouting submitted:', formData);
+  const needTypeOptions = [
+    { id: "buying", label: "Buying/Procuring", description: "Looking to acquire systems or components" },
+    { id: "partnering", label: "Partnership", description: "Seeking technology or business partners" },
+    { id: "selling", label: "Offering Solutions", description: "Have capabilities to offer" },
+    { id: "market-intel", label: "Market Intelligence", description: "Understanding the landscape" },
+    { id: "investment", label: "Investment Opportunity", description: "Looking to invest or fund" },
+    { id: "research", label: "Research/Development", description: "Academic or R&D collaboration" }
+  ];
+
+  const timelineOptions = [
+    { id: "immediate", label: "Immediate", sublabel: "0-3 months" },
+    { id: "near-term", label: "Near Term", sublabel: "3-6 months" },
+    { id: "mid-term", label: "Mid Term", sublabel: "6-12 months" },
+    { id: "long-term", label: "Long Term", sublabel: "1+ years" },
+    { id: "exploring", label: "Just Exploring", sublabel: "No timeline" }
+  ];
+
+  const handleSubmit = () => {
+    console.log('Needs assessment submitted:', formData);
     setSubmitted(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const toggleTechnology = (tech: string) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      technologyAreas: formData.technologyAreas.includes(tech)
+        ? formData.technologyAreas.filter(t => t !== tech)
+        : [...formData.technologyAreas, tech]
     });
   };
 
-  const handleComponentToggle = (component: string) => {
-    setFormData({
-      ...formData,
-      specificComponents: formData.specificComponents.includes(component)
-        ? formData.specificComponents.filter(c => c !== component)
-        : [...formData.specificComponents, component]
-    });
+  const canProgress = () => {
+    switch (step) {
+      case 1:
+        return formData.technologyAreas.length > 0;
+      case 2:
+        return formData.needType !== "";
+      case 3:
+        return formData.timeline !== "";
+      case 4:
+        return formData.organizationName && formData.contactName && formData.contactEmail;
+      default:
+        return false;
+    }
   };
 
   if (submitted) {
@@ -66,23 +86,17 @@ export default function MarketScouting() {
       <div className="min-h-screen bg-white text-black flex items-center justify-center px-6 relative">
         <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
-        <div className="relative max-w-2xl w-full border-2 border-black bg-white p-8">
-          <div className="border-b-2 border-black pb-4 mb-4">
-            <span className="text-xs font-mono tracking-wider text-gray-600">SUBMISSION CONFIRMED</span>
-            <h1 className="text-3xl font-bold tracking-tight mt-2">THANK YOU FOR YOUR INTEREST</h1>
+        <div className="relative max-w-2xl w-full border-2 border-black bg-white p-12 text-center">
+          <CheckCircle2 className="w-16 h-16 mx-auto mb-6 text-green-600" />
+          <div className="border-b-2 border-black pb-4 mb-6">
+            <h1 className="text-4xl font-bold tracking-tight">THANK YOU!</h1>
           </div>
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            We've received your demand signal and will analyze it as part of our market intelligence efforts.
-            Our team may reach out to discuss potential solutions or partnerships.
+          <p className="text-gray-700 mb-8 text-lg leading-relaxed">
+            We've received your needs assessment and will be in touch soon to discuss how we can help.
           </p>
-          <div className="flex gap-4">
-            <Link href="/usv-market">
-              <Button className="bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]">
-                ← BACK TO USV MARKET
-              </Button>
-            </Link>
+          <div className="flex gap-4 justify-center">
             <Link href="/collection">
-              <Button className="bg-white text-black hover:bg-gray-50 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]">
+              <Button className="bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all">
                 ← BACK TO MARKETS
               </Button>
             </Link>
@@ -103,61 +117,144 @@ export default function MarketScouting() {
             <Link href="/collection" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
               ← MARKETS
             </Link>
-            <div className="flex gap-4 text-xs font-mono tracking-wider">
-              <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
-                PORTFOLIO
-              </Link>
-              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                ABOUT
-              </Link>
-            </div>
+            <Link href="/" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+              HOME
+            </Link>
           </div>
         </div>
       </nav>
 
-      <div className="relative max-w-3xl mx-auto px-6 pt-12">{/* Removed the previous back link section */}
-
+      <div className="relative max-w-4xl mx-auto px-6 py-12">
+        {/* Header */}
         <div className="border-2 border-black bg-white p-8 mb-8">
-          <div className="border-b-2 border-black pb-4 mb-6">
-            <span className="text-xs font-mono tracking-wider text-gray-600">DEMAND SIGNAL COLLECTION</span>
-            <h1 className="text-4xl font-bold tracking-tight mt-2">SUBMIT USV DEMAND SIGNAL</h1>
+          <div className="border-b-2 border-black pb-4 mb-4">
+            <span className="text-xs font-mono tracking-wider text-gray-600">QUICK ASSESSMENT</span>
+            <h1 className="text-4xl font-bold tracking-tight mt-2">TELL US WHAT YOU NEED</h1>
           </div>
-          <div className="space-y-4 text-gray-700">
-            <p className="leading-relaxed">
-              Syndicate 708 aggregates demand signals across the USV market to help manufacturers,
-              systems integrators, and component suppliers understand real customer needs.
-            </p>
-            <p className="leading-relaxed">
-              If your organization is seeking USV capabilities, components, or complete systems,
-              please share your requirements below. This information helps us:
-            </p>
-            <ul className="list-none space-y-2 pl-4">
-              <li className="flex gap-2">
-                <span className="font-mono text-black">•</span>
-                <span>Connect you with appropriate suppliers and manufacturers</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-mono text-black">•</span>
-                <span>Aggregate market demand to justify domestic manufacturing investments</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-mono text-black">•</span>
-                <span>Identify gaps in the American defense supply chain</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-mono text-black">•</span>
-                <span>Enable portfolio companies to respond to real market needs</span>
-              </li>
-            </ul>
+          <p className="text-gray-700 leading-relaxed">
+            A quick 4-step assessment to help us understand your needs and connect you with the right solutions.
+          </p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between mb-2">
+            <span className="text-xs font-mono text-gray-600">STEP {step} OF {totalSteps}</span>
+            <span className="text-xs font-mono text-gray-600">{Math.round((step / totalSteps) * 100)}% COMPLETE</span>
+          </div>
+          <div className="h-2 bg-gray-200 border-2 border-black">
+            <div
+              className="h-full bg-black transition-all duration-300"
+              style={{ width: `${(step / totalSteps) * 100}%` }}
+            />
           </div>
         </div>
 
+        {/* Form Steps */}
         <div className="border-2 border-black bg-white p-8">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Organization Information */}
-            <div className="border-l-4 border-black pl-4">
-              <h2 className="text-2xl font-bold tracking-tight mb-4">ORGANIZATION INFORMATION</h2>
+          {/* Step 1: Technology Areas */}
+          {step === 1 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">What technology areas are you interested in?</h2>
+                <p className="text-sm text-gray-600">Select all that apply</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {technologyOptions.map((tech) => (
+                  <div
+                    key={tech.id}
+                    onClick={() => toggleTechnology(tech.id)}
+                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${
+                      formData.technologyAreas.includes(tech.id)
+                        ? "border-black bg-black text-white"
+                        : "border-gray-300 bg-white text-black hover:border-black"
+                    }`}
+                  >
+                    <div className="text-sm font-bold">{tech.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
+          {/* Step 2: Need Type */}
+          {step === 2 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">What best describes your need?</h2>
+                <p className="text-sm text-gray-600">Select one</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {needTypeOptions.map((need) => (
+                  <div
+                    key={need.id}
+                    onClick={() => setFormData({ ...formData, needType: need.id })}
+                    className={`p-6 border-2 cursor-pointer transition-all hover:scale-105 ${
+                      formData.needType === need.id
+                        ? "border-black bg-black text-white"
+                        : "border-gray-300 bg-white text-black hover:border-black"
+                    }`}
+                  >
+                    <div className="font-bold text-lg mb-2">{need.label}</div>
+                    <div className={`text-sm ${formData.needType === need.id ? "text-gray-200" : "text-gray-600"}`}>
+                      {need.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Timeline & Details */}
+          {step === 3 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">What's your timeline?</h2>
+                <p className="text-sm text-gray-600">When are you looking to move forward?</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                {timelineOptions.map((time) => (
+                  <div
+                    key={time.id}
+                    onClick={() => setFormData({ ...formData, timeline: time.id })}
+                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${
+                      formData.timeline === time.id
+                        ? "border-black bg-black text-white"
+                        : "border-gray-300 bg-white text-black hover:border-black"
+                    }`}
+                  >
+                    <div className="font-bold text-sm mb-1">{time.label}</div>
+                    <div className={`text-xs ${formData.timeline === time.id ? "text-gray-200" : "text-gray-600"}`}>
+                      {time.sublabel}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-6 border-t-2 border-gray-200">
+                <label htmlFor="specificNeed" className="block text-sm font-bold mb-2">
+                  Tell us more about what you're looking for (optional)
+                </label>
+                <textarea
+                  id="specificNeed"
+                  name="specificNeed"
+                  value={formData.specificNeed}
+                  onChange={(e) => setFormData({ ...formData, specificNeed: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black focus:outline-none focus:border-black rounded-none"
+                  placeholder="Any specific requirements, constraints, or details that would help us understand your needs better..."
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Contact Info */}
+          {step === 4 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">How can we reach you?</h2>
+                <p className="text-sm text-gray-600">Just a few quick details so we can follow up</p>
+              </div>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="organizationName" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
@@ -169,41 +266,16 @@ export default function MarketScouting() {
                     type="text"
                     required
                     value={formData.organizationName}
-                    onChange={handleChange}
-                    className="bg-white border-2 border-black text-black rounded-none focus:ring-0 focus:border-black"
-                    placeholder="Your organization name"
+                    onChange={(e) => setFormData({ ...formData, organizationName: e.target.value })}
+                    className="bg-white border-2 border-gray-300 text-black rounded-none focus:ring-0 focus:border-black"
+                    placeholder="Your organization"
                   />
-                </div>
-
-                <div>
-                  <label htmlFor="organizationType" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    ORGANIZATION TYPE *
-                  </label>
-                  <select
-                    id="organizationType"
-                    name="organizationType"
-                    required
-                    value={formData.organizationType}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                  >
-                    <option value="">Select organization type</option>
-                    <option value="defense-contractor">Defense Contractor (Prime)</option>
-                    <option value="systems-integrator">Systems Integrator</option>
-                    <option value="dod-agency">DoD Agency</option>
-                    <option value="military-branch">Military Branch</option>
-                    <option value="shipyard">Shipyard</option>
-                    <option value="research-institution">Research Institution</option>
-                    <option value="commercial-operator">Commercial Operator</option>
-                    <option value="startup">Startup</option>
-                    <option value="other">Other</option>
-                  </select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="contactName" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                      CONTACT NAME *
+                      YOUR NAME *
                     </label>
                     <Input
                       id="contactName"
@@ -211,9 +283,9 @@ export default function MarketScouting() {
                       type="text"
                       required
                       value={formData.contactName}
-                      onChange={handleChange}
-                      className="bg-white border-2 border-black text-black rounded-none focus:ring-0 focus:border-black"
-                      placeholder="Your name"
+                      onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                      className="bg-white border-2 border-gray-300 text-black rounded-none focus:ring-0 focus:border-black"
+                      placeholder="Full name"
                     />
                   </div>
 
@@ -227,208 +299,53 @@ export default function MarketScouting() {
                       type="email"
                       required
                       value={formData.contactEmail}
-                      onChange={handleChange}
-                      className="bg-white border-2 border-black text-black rounded-none focus:ring-0 focus:border-black"
+                      onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                      className="bg-white border-2 border-gray-300 text-black rounded-none focus:ring-0 focus:border-black"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="phoneNumber" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    PHONE NUMBER (OPTIONAL)
-                  </label>
-                  <Input
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    type="tel"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    className="bg-white border-2 border-black text-black rounded-none focus:ring-0 focus:border-black"
-                    placeholder="+1 (555) 123-4567"
-                  />
+                <div className="pt-4 border-t-2 border-gray-200">
+                  <p className="text-xs text-gray-600 font-mono">
+                    Your information is confidential and will only be used to connect you with relevant solutions.
+                  </p>
                 </div>
               </div>
             </div>
+          )}
 
-            {/* USV Requirements */}
-            <div className="border-l-4 border-black pl-4">
-              <h2 className="text-2xl font-bold tracking-tight mb-4">USV REQUIREMENTS</h2>
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center pt-8 border-t-2 border-black mt-8">
+            <Button
+              onClick={() => setStep(step - 1)}
+              disabled={step === 1}
+              className="bg-white text-black hover:bg-gray-100 rounded-none border-2 border-black font-mono text-xs tracking-wider disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              BACK
+            </Button>
 
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="usvRequirement" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    WHAT ARE YOU LOOKING FOR? *
-                  </label>
-                  <select
-                    id="usvRequirement"
-                    name="usvRequirement"
-                    required
-                    value={formData.usvRequirement}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                  >
-                    <option value="">Select requirement type</option>
-                    <option value="complete-usv">Complete USV System</option>
-                    <option value="usv-platform">USV Platform (Hull)</option>
-                    <option value="specific-components">Specific Components</option>
-                    <option value="integration-services">Integration Services</option>
-                    <option value="technology-partner">Technology Partnership</option>
-                    <option value="manufacturing-partner">Manufacturing Partnership</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="intendedApplication" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    INTENDED APPLICATION *
-                  </label>
-                  <textarea
-                    id="intendedApplication"
-                    name="intendedApplication"
-                    required
-                    value={formData.intendedApplication}
-                    onChange={handleChange}
-                    rows={3}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                    placeholder="e.g., Mine countermeasures, ISR operations, harbor patrol, etc."
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="technicalRequirements" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    TECHNICAL REQUIREMENTS
-                  </label>
-                  <textarea
-                    id="technicalRequirements"
-                    name="technicalRequirements"
-                    value={formData.technicalRequirements}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                    placeholder="Size, speed, endurance, payload capacity, operating environment, etc."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono tracking-wider text-gray-600 mb-3">
-                    SPECIFIC COMPONENTS OF INTEREST
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {componentOptions.map((component) => (
-                      <div
-                        key={component}
-                        onClick={() => handleComponentToggle(component)}
-                        className={`p-3 border-2 cursor-pointer transition-colors ${
-                          formData.specificComponents.includes(component)
-                            ? "border-black bg-black text-white"
-                            : "border-gray-300 bg-white text-black hover:border-black"
-                        }`}
-                      >
-                        <span className="text-sm">{component}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Procurement Details */}
-            <div className="border-l-4 border-black pl-4">
-              <h2 className="text-2xl font-bold tracking-tight mb-4">PROCUREMENT DETAILS</h2>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="quantityNeeded" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                      QUANTITY NEEDED
-                    </label>
-                    <Input
-                      id="quantityNeeded"
-                      name="quantityNeeded"
-                      type="text"
-                      value={formData.quantityNeeded}
-                      onChange={handleChange}
-                      className="bg-white border-2 border-black text-black rounded-none focus:ring-0 focus:border-black"
-                      placeholder="e.g., 10 units, 50-100 units, etc."
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="timeline" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                      TIMELINE *
-                    </label>
-                    <select
-                      id="timeline"
-                      name="timeline"
-                      required
-                      value={formData.timeline}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                    >
-                      <option value="">Select timeline</option>
-                      <option value="immediate">Immediate (0-3 months)</option>
-                      <option value="near-term">Near term (3-6 months)</option>
-                      <option value="mid-term">Mid term (6-12 months)</option>
-                      <option value="long-term">Long term (1-2 years)</option>
-                      <option value="planning">Planning phase (2+ years)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="budgetRange" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    BUDGET RANGE *
-                  </label>
-                  <select
-                    id="budgetRange"
-                    name="budgetRange"
-                    required
-                    value={formData.budgetRange}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                  >
-                    <option value="">Select budget range</option>
-                    <option value="under-100k">Under $100K</option>
-                    <option value="100k-500k">$100K - $500K</option>
-                    <option value="500k-1m">$500K - $1M</option>
-                    <option value="1m-5m">$1M - $5M</option>
-                    <option value="5m-10m">$5M - $10M</option>
-                    <option value="over-10m">Over $10M</option>
-                    <option value="tbd">To be determined</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="additionalInfo" className="block text-xs font-mono tracking-wider text-gray-600 mb-2">
-                    ADDITIONAL INFORMATION
-                  </label>
-                  <textarea
-                    id="additionalInfo"
-                    name="additionalInfo"
-                    value={formData.additionalInfo}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full px-3 py-2 bg-white border-2 border-black text-black focus:outline-none focus:border-black rounded-none"
-                    placeholder="Any other relevant details about your requirements, constraints, or preferences..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t-2 border-black">
-              <p className="text-xs text-gray-600 mb-4 font-mono">
-                All information provided is confidential and will be used solely for market intelligence
-                and partnership development purposes.
-              </p>
+            {step < totalSteps ? (
               <Button
-                type="submit"
-                className="w-full bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
-                size="lg"
+                onClick={() => setStep(step + 1)}
+                disabled={!canProgress()}
+                className="bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:translate-x-1"
               >
-                SUBMIT DEMAND SIGNAL
+                NEXT
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
-            </div>
-          </form>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={!canProgress()}
+                className="bg-green-600 text-white hover:bg-green-700 rounded-none border-2 border-green-600 font-mono text-xs tracking-wider disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:translate-x-1 px-8"
+              >
+                SUBMIT
+                <CheckCircle2 className="w-4 h-4 ml-2" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

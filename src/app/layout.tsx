@@ -14,7 +14,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "Syndicate 708",
+  title: "SCALE FORGE USA",
   description: "Enabling Scale for American Onshore Initiiatives",
 };
 

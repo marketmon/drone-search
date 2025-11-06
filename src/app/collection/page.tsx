@@ -14,14 +14,11 @@ export default function Collection() {
               ← HOME
             </Link>
             <div className="flex gap-4 items-center">
-              <div className="flex gap-6 text-xs font-mono tracking-wider">
-                <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
-                  PORTFOLIO
-                </Link>
-                <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                  ABOUT
-                </Link>
-              </div>
+              <Link href="/market-scouting">
+                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
+                  SUBMIT DEMAND SIGNAL
+                </button>
+              </Link>
             </div>
           </div>
         </div>
