@@ -29,11 +29,11 @@ export default function Collection() {
         {/* Header */}
         <div className="mb-16 border-2 border-black bg-white p-8">
           <div className="border-b-2 border-black pb-4 mb-4">
-            <span className="text-xs font-mono tracking-wider text-gray-600">MARKET DEVELOPMENT</span>
+            <span className="text-xs font-mono tracking-wider text-gray-600">ADAPTIVE INTELLIGENCE</span>
             <h1 className="text-5xl font-bold tracking-tight mt-2">MARKETS</h1>
           </div>
           <p className="text-xl text-gray-700 leading-relaxed">
-            Deep-dive market intelligence and demand aggregation across critical defense technology domains
+            Deep-dive market intelligence and demand aggregation across critical defense technology markets
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function Collection() {
           <div className="border-2 border-black bg-white">
             {/* Domain Header */}
             <div className="border-b-2 border-black bg-gray-50 p-6">
-              <span className="text-xs font-mono tracking-wider text-gray-600">ACTIVE DOMAIN</span>
+              <span className="text-xs font-mono tracking-wider text-gray-600">ACTIVE MARKET</span>
               <h2 className="text-3xl font-bold tracking-tight mt-1">Unmanned Surface Vehicles</h2>
               <p className="text-sm text-gray-700 mt-2">
                 Market landscape, system architecture, and demand signals for autonomous maritime platforms
@@ -103,7 +103,7 @@ export default function Collection() {
         <div>
           <div className="border-2 border-black bg-white">
             <div className="border-b-2 border-black bg-gray-50 p-6">
-              <span className="text-xs font-mono tracking-wider text-gray-600">FUTURE DOMAINS</span>
+              <span className="text-xs font-mono tracking-wider text-gray-600">FUTURE MARKETS</span>
               <h2 className="text-3xl font-bold tracking-tight mt-1">Coming Soon</h2>
             </div>
 
@@ -113,7 +113,7 @@ export default function Collection() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-bold tracking-tight text-gray-600">Electric Stack</h4>
-                      <p className="text-xs text-gray-500 mt-1">Electric propulsion, motors, and power systems</p>
+                      <p className="text-xs text-gray-500 mt-1">Shift to electrification & addressing challenges facing our power systems</p>
                     </div>
                     <span className="font-mono text-gray-400">→</span>
                   </div>
@@ -122,8 +122,8 @@ export default function Collection() {
                 <div className="border-2 border-gray-300 bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-bold tracking-tight text-gray-600">Air Drones</h4>
-                      <p className="text-xs text-gray-500 mt-1">Unmanned aerial vehicles and components</p>
+                      <h4 className="font-bold tracking-tight text-gray-600">Commercial Maritime</h4>
+                      <p className="text-xs text-gray-500 mt-1">Next generation containerships, bulk carriers made competively in the US</p>
                     </div>
                     <span className="font-mono text-gray-400">→</span>
                   </div>
@@ -132,8 +132,8 @@ export default function Collection() {
                 <div className="border-2 border-gray-300 bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-bold tracking-tight text-gray-600">Energy Systems</h4>
-                      <p className="text-xs text-gray-500 mt-1">Batteries, power management, and storage</p>
+                      <h4 className="font-bold tracking-tight text-gray-600">Aerial Drones</h4>
+                      <p className="text-xs text-gray-500 mt-1">FPV, etc</p>
                     </div>
                     <span className="font-mono text-gray-400">→</span>
                   </div>

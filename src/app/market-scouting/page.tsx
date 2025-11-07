@@ -95,7 +95,7 @@ export default function MarketScouting() {
             We've received your needs assessment and will be in touch soon to discuss how we can help.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/collection">
+            <Link href="/markets">
               <Button className="bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all">
                 ← BACK TO MARKETS
               </Button>
@@ -114,7 +114,7 @@ export default function MarketScouting() {
       <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/collection" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+            <Link href="/markets" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
               ← MARKETS
             </Link>
             <Link href="/" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
@@ -164,11 +164,10 @@ export default function MarketScouting() {
                   <div
                     key={tech.id}
                     onClick={() => toggleTechnology(tech.id)}
-                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${
-                      formData.technologyAreas.includes(tech.id)
-                        ? "border-black bg-black text-white"
-                        : "border-gray-300 bg-white text-black hover:border-black"
-                    }`}
+                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${formData.technologyAreas.includes(tech.id)
+                      ? "border-black bg-black text-white"
+                      : "border-gray-300 bg-white text-black hover:border-black"
+                      }`}
                   >
                     <div className="text-sm font-bold">{tech.label}</div>
                   </div>
@@ -189,11 +188,10 @@ export default function MarketScouting() {
                   <div
                     key={need.id}
                     onClick={() => setFormData({ ...formData, needType: need.id })}
-                    className={`p-6 border-2 cursor-pointer transition-all hover:scale-105 ${
-                      formData.needType === need.id
-                        ? "border-black bg-black text-white"
-                        : "border-gray-300 bg-white text-black hover:border-black"
-                    }`}
+                    className={`p-6 border-2 cursor-pointer transition-all hover:scale-105 ${formData.needType === need.id
+                      ? "border-black bg-black text-white"
+                      : "border-gray-300 bg-white text-black hover:border-black"
+                      }`}
                   >
                     <div className="font-bold text-lg mb-2">{need.label}</div>
                     <div className={`text-sm ${formData.needType === need.id ? "text-gray-200" : "text-gray-600"}`}>
@@ -217,11 +215,10 @@ export default function MarketScouting() {
                   <div
                     key={time.id}
                     onClick={() => setFormData({ ...formData, timeline: time.id })}
-                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${
-                      formData.timeline === time.id
-                        ? "border-black bg-black text-white"
-                        : "border-gray-300 bg-white text-black hover:border-black"
-                    }`}
+                    className={`p-4 border-2 cursor-pointer transition-all hover:scale-105 ${formData.timeline === time.id
+                      ? "border-black bg-black text-white"
+                      : "border-gray-300 bg-white text-black hover:border-black"
+                      }`}
                   >
                     <div className="font-bold text-sm mb-1">{time.label}</div>
                     <div className={`text-xs ${formData.timeline === time.id ? "text-gray-200" : "text-gray-600"}`}>
@@ -233,7 +230,7 @@ export default function MarketScouting() {
 
               <div className="pt-6 border-t-2 border-gray-200">
                 <label htmlFor="specificNeed" className="block text-sm font-bold mb-2">
-                  Tell us more about what you're looking for (optional)
+                  Tell us more about what you're looking for
                 </label>
                 <textarea
                   id="specificNeed"

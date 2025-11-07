@@ -16,6 +16,7 @@ interface ContractData {
   state: string;
   contract_id: string;
   source: string;
+  company_url: string;
 }
 
 interface Company {
@@ -139,6 +140,14 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
     }).format(amount);
   };
 
+  const ensureProtocol = (url: string) => {
+    if (!url) return url;
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   const center: [number, number] = [39.8283, -98.5795]; // Geographic center of USA
 
   return (
@@ -211,6 +220,16 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
                   <p className="text-xs text-gray-600">
                     {contract.city}, {contract.state}
                   </p>
+                  {contract.company_url && (
+                    <a
+                      href={ensureProtocol(contract.company_url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:text-blue-800 font-mono border-b border-blue-400 inline-block mt-1"
+                    >
+                      Visit Website →
+                    </a>
+                  )}
                   <p className="text-xs font-mono text-gray-500 mt-1">
                     {contractsAtLocation.length} CONTRACT{contractsAtLocation.length > 1 ? "S" : ""} • {formatCurrency(totalAmount)}
                   </p>
@@ -224,7 +243,12 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
                         <span>{formatCurrency(c.contract_amount || 0)}</span>
                         <span>{c.start_date}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1 font-mono">{c.contract_id}</p>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className="text-xs text-gray-500 font-mono">{c.contract_id}</p>
+                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded font-mono">
+                          {c.source}
+                        </span>
+                      </div>
                     </div>
                   ))}
                   {contractsAtLocation.length > 5 && (

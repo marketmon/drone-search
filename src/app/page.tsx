@@ -29,7 +29,7 @@ export default function Home() {
               </h1>
 
               <p className="text-2xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                The foundation to manufacture emerging technology at scale
+                A foundation to manufacture emerging technology at scale
               </p>
 
               <div className="border-t-2 border-black pt-6 max-w-xl mx-auto">
@@ -52,7 +52,7 @@ export default function Home() {
                 </Button>
               </Link>
 
-              <Link href="/collection">
+              <Link href="/markets">
                 <Button
                   size="lg"
                   className="w-full h-32 text-xl px-8 bg-white text-black hover:bg-gray-50 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-2 hover:translate-y-2 hover:shadow-[-8px_-8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center gap-3"
@@ -68,12 +68,12 @@ export default function Home() {
           </div>
 
           {/* Attribution footer */}
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center mb-3">
             <p className="text-sm text-gray-600 font-mono">
-              Built by{" "}
-              <Link href="/syndicate708" className="text-black font-bold hover:underline">
+              by{" "}
+              <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
                 Syndicate 708
-              </Link>
+              </a>
             </p>
           </div>
         </div>

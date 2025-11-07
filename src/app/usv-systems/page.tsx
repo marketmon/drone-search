@@ -179,7 +179,7 @@ export default function USVSystems() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <Link href="/collection" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+              <Link href="/markets" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
                 ← MARKETS
               </Link>
               <span className="text-xs font-mono tracking-wider text-black">USV DOMAIN</span>

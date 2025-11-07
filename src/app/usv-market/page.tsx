@@ -36,6 +36,7 @@ interface ContractData {
   state: string;
   contract_id: string;
   source: string;
+  company_url: string;
 }
 
 const marketCompanies: Company[] = [
@@ -216,7 +217,7 @@ export default function USVMarketInteractive() {
   const filteredCompanies = useMemo(() => {
     return marketCompanies.filter((company) => {
       const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          company.description.toLowerCase().includes(searchTerm.toLowerCase());
+        company.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategories.has(company.category);
       return matchesSearch && matchesCategory;
     });
@@ -232,7 +233,7 @@ export default function USVMarketInteractive() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <Link href="/collection" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+              <Link href="/markets" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
                 MARKETS
               </Link>
               <span className="text-xs font-mono tracking-wider text-black">USV DOMAIN</span>
@@ -300,33 +301,30 @@ export default function USVMarketInteractive() {
                 <Button
                   onClick={() => toggleCategory("startup")}
                   variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${
-                    selectedCategories.has("startup")
-                      ? "bg-blue-100 border-blue-500 text-blue-700"
-                      : "border-gray-300 text-gray-600"
-                  }`}
+                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("startup")
+                    ? "bg-blue-100 border-blue-500 text-blue-700"
+                    : "border-gray-300 text-gray-600"
+                    }`}
                 >
                   STARTUPS
                 </Button>
                 <Button
                   onClick={() => toggleCategory("legacy")}
                   variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${
-                    selectedCategories.has("legacy")
-                      ? "bg-purple-100 border-purple-500 text-purple-700"
-                      : "border-gray-300 text-gray-600"
-                  }`}
+                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("legacy")
+                    ? "bg-purple-100 border-purple-500 text-purple-700"
+                    : "border-gray-300 text-gray-600"
+                    }`}
                 >
                   LEGACY DEFENSE
                 </Button>
                 <Button
                   onClick={() => toggleCategory("shipbuilder")}
                   variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${
-                    selectedCategories.has("shipbuilder")
-                      ? "bg-green-100 border-green-500 text-green-700"
-                      : "border-gray-300 text-gray-600"
-                  }`}
+                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("shipbuilder")
+                    ? "bg-green-100 border-green-500 text-green-700"
+                    : "border-gray-300 text-gray-600"
+                    }`}
                 >
                   SHIPBUILDERS
                 </Button>
@@ -362,14 +360,13 @@ export default function USVMarketInteractive() {
                 <div className="text-xs font-mono text-gray-600 mb-3">FILTER:</div>
                 <Button
                   onClick={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
-                  className={`w-full font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${
-                    showOnlyMarketPlayers
-                      ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
-                      : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
-                  }`}
+                  className={`w-full font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${showOnlyMarketPlayers
+                    ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
+                    : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
+                    }`}
                 >
                   <Filter className="w-4 h-4 mr-2" />
-                  {showOnlyMarketPlayers ? "SHOWING KEY PLAYERS ONLY" : "SHOW ALL CONTRACTORS"}
+                  {showOnlyMarketPlayers ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}
                 </Button>
               </div>
 
@@ -377,12 +374,12 @@ export default function USVMarketInteractive() {
                 <div className="text-xs font-mono text-gray-600">LEGEND:</div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                  <span className="text-xs">Key Market Players ({marketCompanies.length})</span>
+                  <span className="text-xs">Market Defining Organizations ({marketCompanies.length})</span>
                 </div>
                 {!showOnlyMarketPlayers && (
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                    <span className="text-xs">Gov Contractors ({contractData.length})</span>
+                    <span className="text-xs">Government Funded Landscape ({contractData.length})</span>
                   </div>
                 )}
               </div>
