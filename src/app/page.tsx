@@ -61,7 +61,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base sm:text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0">
-                The comprehensive directory of innovative companies, suppliers, and capabilities shaping America's unmanned maritime future
+                The comprehensive directory of innovative companies, and capabilities shaping America's unmanned maritime future
               </p>
 
               <div className="border-t-2 border-gray-200 pt-4 sm:pt-6 max-w-2xl mx-auto">
@@ -93,7 +93,7 @@ export default function Home() {
                   <MessageSquare className="w-8 h-8 sm:w-10 sm:h-10" />
                   <div className="space-y-1">
                     <div className="text-sm sm:text-xl">BUILD TECH FASTER</div>
-                    <div className="text-xs text-gray-500 font-sans tracking-normal">Get connected with suppliers</div>
+                    <div className="text-xs text-gray-500 font-sans tracking-normal">What components do you need?</div>
                   </div>
                 </Button>
               </Link>
@@ -158,7 +158,7 @@ export default function Home() {
                     <div className="flex-1">
                       <h3 className="font-bold text-base sm:text-lg tracking-tight mb-2">USV Market Database</h3>
                       <p className="text-xs sm:text-sm text-gray-700">
-                        Comprehensive directory of companies, suppliers, and capabilities in the unmanned surface vehicle ecosystem
+                        Comprehensive directory of companies, and capabilities in the unmanned surface vehicle ecosystem
                       </p>
                     </div>
                     <span className="font-mono text-xl sm:text-2xl flex-shrink-0">→</span>
