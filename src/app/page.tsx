@@ -31,11 +31,11 @@ export default function Home() {
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="wave" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
-              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
-              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5" />
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#wave)"/>
+          <rect width="100%" height="100%" fill="url(#wave)" />
         </svg>
       </div>
 
@@ -57,11 +57,11 @@ export default function Home() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-tight">
-                NEW MARITIME HUB
+                Maritime Tech Hub
               </h1>
 
               <p className="text-base sm:text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0">
-                The comprehensive directory of innovative companies, suppliers, and capabilities shaping America's maritime future
+                The comprehensive directory of innovative companies, suppliers, and capabilities shaping America's unmanned maritime future
               </p>
 
               <div className="border-t-2 border-gray-200 pt-4 sm:pt-6 max-w-2xl mx-auto">
@@ -109,9 +109,7 @@ export default function Home() {
               <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
                 MARKET DATABASE
               </Link>
-              <Link href="/usv-systems" className="text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-                SYSTEM ARCHITECTURE
-              </Link>
+
             </div>
             <p className="text-xs sm:text-sm text-gray-600 font-mono">
               A{" "}
@@ -161,20 +159,6 @@ export default function Home() {
                       <h3 className="font-bold text-base sm:text-lg tracking-tight mb-2">USV Market Database</h3>
                       <p className="text-xs sm:text-sm text-gray-700">
                         Comprehensive directory of companies, suppliers, and capabilities in the unmanned surface vehicle ecosystem
-                      </p>
-                    </div>
-                    <span className="font-mono text-xl sm:text-2xl flex-shrink-0">→</span>
-                  </div>
-                </div>
-              </Link>
-
-              <Link href="/usv-systems" onClick={() => setShowArtifacts(false)}>
-                <div className="border-2 border-black bg-white hover:bg-blue-50 p-4 sm:p-6 transition-colors cursor-pointer">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base sm:text-lg tracking-tight mb-2">USV System Architecture Breakdown</h3>
-                      <p className="text-xs sm:text-sm text-gray-700">
-                        Technical deep-dive on the major subsystems that comprise modern unmanned surface vehicles
                       </p>
                     </div>
                     <span className="font-mono text-xl sm:text-2xl flex-shrink-0">→</span>

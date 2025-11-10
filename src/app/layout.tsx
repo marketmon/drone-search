@@ -14,7 +14,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "SCALE FORGE USA",
+  title: "Maritime Tech Hub",
   description: "Enabling Scale for American Onshore Initiiatives",
 };
 
