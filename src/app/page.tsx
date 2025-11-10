@@ -1,66 +1,99 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, MessageSquare } from "lucide-react";
+import { Ship, MessageSquare, Database, X } from "lucide-react";
 
 export default function Home() {
+  const [showArtifacts, setShowArtifacts] = useState(false);
+
   return (
     <div className="min-h-screen bg-white text-black relative overflow-hidden">
-      {/* Grid background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      {/* Wave background pattern */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: `
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 35px,
+            #3b82f620 35px,
+            #3b82f620 37px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 100%
+          )
+        `,
+        backgroundSize: '100% 40px'
+      }}>
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="wave" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wave)"/>
+        </svg>
+      </div>
 
       {/* Corner accent lines */}
-      <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-black"></div>
-      <div className="absolute top-0 right-0 w-32 h-32 border-r-2 border-t-2 border-black"></div>
-      <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-black"></div>
-      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-black"></div>
+      <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-blue-600"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 border-r-2 border-t-2 border-blue-600"></div>
+      <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-blue-600"></div>
+      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-blue-600"></div>
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-6">
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-0">
         <div className="max-w-5xl w-full">
           {/* Main content box */}
-          <div className="border-2 border-black bg-white p-16 space-y-12">
+          <div className="border-2 border-black bg-white p-6 sm:p-12 md:p-16 space-y-8 sm:space-y-12">
             {/* Header */}
-            <div className="text-center space-y-6">
-              <div className="inline-block border-2 border-black px-6 py-2 bg-gray-50">
-                <span className="text-xs font-mono tracking-wider text-gray-600">MARKET DEFINING INTELLIGENCE + SCALE READY SUPPLIERS</span>
+            <div className="text-center space-y-4 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 sm:gap-3 border-2 border-blue-600 px-4 sm:px-6 py-2 bg-blue-50">
+                <Ship className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                <span className="text-[10px] sm:text-xs font-mono tracking-wider text-blue-600 font-bold">UNMANNED SURFACE VEHICLES</span>
               </div>
 
-              <h1 className="text-7xl font-bold tracking-tighter leading-tight">
-                SCALE FORGE USA
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-tight">
+                NEW MARITIME HUB
               </h1>
 
-              <p className="text-2xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                A foundation to manufacture emerging technology at scale
+              <p className="text-base sm:text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0">
+                The comprehensive directory of innovative companies, suppliers, and capabilities shaping America's maritime future
               </p>
 
-              <div className="border-t-2 border-black pt-6 max-w-xl mx-auto">
-
+              <div className="border-t-2 border-gray-200 pt-4 sm:pt-6 max-w-2xl mx-auto">
+                <p className="text-xs sm:text-sm text-gray-600 px-4 sm:px-0">
+                  Curated market intelligence for engineers, program managers, and decision-makers in the new maritime ecosystem
+                </p>
               </div>
             </div>
 
             {/* CTA Buttons */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-2">
+              <Button
+                size="lg"
+                onClick={() => setShowArtifacts(true)}
+                className="w-full h-24 sm:h-32 text-base sm:text-xl px-4 sm:px-8 bg-blue-600 text-white hover:bg-blue-700 rounded-none font-mono tracking-wider border-2 border-blue-600 transition-all md:hover:translate-x-2 md:hover:translate-y-2 md:hover:shadow-[-8px_-8px_0px_0px_rgba(37,99,235,1)] flex flex-col items-center justify-center gap-2 sm:gap-3"
+              >
+                <Database className="w-8 h-8 sm:w-10 sm:h-10" />
+                <div className="space-y-1">
+                  <div className="text-sm sm:text-xl">VIEW RESOURCES</div>
+                  <div className="text-xs text-blue-100 font-sans tracking-normal">Market data & insights</div>
+                </div>
+              </Button>
+
               <Link href="/market-scouting">
                 <Button
                   size="lg"
-                  className="w-full h-32 text-xl px-8 bg-black text-white hover:bg-gray-800 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-2 hover:translate-y-2 hover:shadow-[-8px_-8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center gap-3"
+                  className="w-full h-24 sm:h-32 text-base sm:text-xl px-4 sm:px-8 bg-white text-black hover:bg-gray-50 rounded-none font-mono tracking-wider border-2 border-black transition-all md:hover:translate-x-2 md:hover:translate-y-2 md:hover:shadow-[-8px_-8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center gap-2 sm:gap-3"
                 >
-                  <MessageSquare className="w-10 h-10" />
+                  <MessageSquare className="w-8 h-8 sm:w-10 sm:h-10" />
                   <div className="space-y-1">
-                    <div>SUBMIT DEMAND SIGNAL</div>
-                    <div className="text-xs text-gray-300 font-sans tracking-normal">Tell us what you need</div>
-                  </div>
-                </Button>
-              </Link>
-
-              <Link href="/markets">
-                <Button
-                  size="lg"
-                  className="w-full h-32 text-xl px-8 bg-white text-black hover:bg-gray-50 rounded-none font-mono tracking-wider border-2 border-black transition-all hover:translate-x-2 hover:translate-y-2 hover:shadow-[-8px_-8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center gap-3"
-                >
-                  <TrendingUp className="w-10 h-10" />
-                  <div className="space-y-1">
-                    <div>EXPLORE MARKETS</div>
-                    <div className="text-xs text-gray-500 font-sans tracking-normal">Adaptive intelligence</div>
+                    <div className="text-sm sm:text-xl">BUILD TECH FASTER</div>
+                    <div className="text-xs text-gray-500 font-sans tracking-normal">Get connected with suppliers</div>
                   </div>
                 </Button>
               </Link>
@@ -68,9 +101,24 @@ export default function Home() {
           </div>
 
           {/* Attribution footer */}
-          <div className="mt-8 text-center mb-3">
-            <p className="text-sm text-gray-600 font-mono">
-              by{" "}
+          <div className="mt-6 sm:mt-8 text-center mb-3 space-y-2 px-4">
+            <div className="flex flex-wrap gap-3 sm:gap-4 justify-center text-[10px] sm:text-xs font-mono tracking-wider">
+              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
+                ABOUT
+              </Link>
+              <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
+                MARKET DATABASE
+              </Link>
+              <Link href="/usv-systems" className="text-gray-600 hover:text-black transition-colors whitespace-nowrap">
+                SYSTEM ARCHITECTURE
+              </Link>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-600 font-mono">
+              A{" "}
+              <a href="https://scaleforgeusa.com" className="text-black font-bold hover:underline">
+                Scale Forge USA
+              </a>
+              {" "}initiative by{" "}
               <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
                 Syndicate 708
               </a>
@@ -78,6 +126,65 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Artifacts Modal */}
+      {showArtifacts && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={() => setShowArtifacts(false)}
+          />
+
+          {/* Modal Content */}
+          <div className="relative bg-white border-2 border-black max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="border-b-2 border-black p-4 sm:p-6 flex items-center justify-between sticky top-0 bg-white z-10">
+              <div>
+                <span className="text-[10px] sm:text-xs font-mono tracking-wider text-blue-600 font-bold block">USV RESOURCES</span>
+                <h2 className="text-lg sm:text-2xl font-bold tracking-tight mt-1">Explore the Market</h2>
+              </div>
+              <button
+                onClick={() => setShowArtifacts(false)}
+                className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border-2 border-black hover:bg-gray-100 transition-colors flex-shrink-0"
+              >
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
+
+            {/* Artifacts List */}
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+              <Link href="/usv-market" onClick={() => setShowArtifacts(false)}>
+                <div className="border-2 border-black bg-white hover:bg-blue-50 p-4 sm:p-6 transition-colors cursor-pointer">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base sm:text-lg tracking-tight mb-2">USV Market Database</h3>
+                      <p className="text-xs sm:text-sm text-gray-700">
+                        Comprehensive directory of companies, suppliers, and capabilities in the unmanned surface vehicle ecosystem
+                      </p>
+                    </div>
+                    <span className="font-mono text-xl sm:text-2xl flex-shrink-0">→</span>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/usv-systems" onClick={() => setShowArtifacts(false)}>
+                <div className="border-2 border-black bg-white hover:bg-blue-50 p-4 sm:p-6 transition-colors cursor-pointer">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base sm:text-lg tracking-tight mb-2">USV System Architecture Breakdown</h3>
+                      <p className="text-xs sm:text-sm text-gray-700">
+                        Technical deep-dive on the major subsystems that comprise modern unmanned surface vehicles
+                      </p>
+                    </div>
+                    <span className="font-mono text-xl sm:text-2xl flex-shrink-0">→</span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

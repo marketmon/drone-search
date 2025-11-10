@@ -171,31 +171,44 @@ function ComponentCard({ component }: { component: SystemComponent }) {
 export default function USVSystems() {
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Grid background pattern */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+      {/* Wave background pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-30">
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="wave-systems" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wave-systems)"/>
+        </svg>
+      </div>
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/markets" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
-                ← MARKETS
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3 sm:gap-6">
+              <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
+                ← HOME
               </Link>
-              <span className="text-xs font-mono tracking-wider text-black">USV DOMAIN</span>
+              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">NEW MARITIME HUB</span>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
               <Link href="/market-scouting">
-                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
-                  SUBMIT DEMAND SIGNAL
+                <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-[10px] sm:text-xs tracking-wider transition-all whitespace-nowrap">
+                  BUILD TECH FASTER
                 </button>
               </Link>
-              <div className="flex gap-4 text-xs font-mono tracking-wider">
+              <div className="hidden md:flex gap-4 text-xs font-mono tracking-wider">
                 <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
-                  MARKET LANDSCAPE
+                  MARKET DATABASE
                 </Link>
-                <Link href="/usv-systems" className="text-black font-bold transition-colors">
+                <Link href="/usv-systems" className="text-black font-bold transition-colors whitespace-nowrap">
                   SYSTEM ARCHITECTURE
+                </Link>
+                <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
+                  ABOUT
                 </Link>
               </div>
             </div>
@@ -204,16 +217,16 @@ export default function USVSystems() {
       </nav>
 
       {/* Content */}
-      <div className="relative max-w-4xl mx-auto px-6 py-16">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
         {/* Header */}
-        <div className="mb-12 border-2 border-black bg-white p-8">
-          <div className="border-b-2 border-black pb-4 mb-4">
-            <span className="text-xs font-mono tracking-wider text-gray-600">TECHNICAL PUBLICATION</span>
-            <h1 className="text-4xl font-bold tracking-tight mt-2">
+        <div className="mb-8 sm:mb-12 border-2 border-black bg-white p-5 sm:p-8">
+          <div className="border-b-2 border-black pb-3 sm:pb-4 mb-3 sm:mb-4">
+            <span className="text-[10px] sm:text-xs font-mono tracking-wider text-gray-600">TECHNICAL PUBLICATION</span>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mt-2">
               USV SYSTEM ARCHITECTURE BREAKDOWN
             </h1>
           </div>
-          <p className="text-gray-700 leading-relaxed text-lg">
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg">
             A comprehensive guide to the major subsystems that comprise modern unmanned surface vehicles,
             from hull design to autonomous software. Understanding these components is essential for
             systems integrators, suppliers, and defense planners.

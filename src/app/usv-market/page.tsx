@@ -126,23 +126,33 @@ function CompanyGridCard({ company }: { company: Company }) {
     shipbuilder: "SHIPBUILDER",
   };
 
+  const categoryColors = {
+    startup: "bg-blue-100 text-blue-700 border-blue-500",
+    legacy: "bg-purple-100 text-purple-700 border-purple-500",
+    shipbuilder: "bg-green-100 text-green-700 border-green-500",
+  };
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger className="w-full">
-        <div className="flex gap-4 items-start p-4 bg-white border-2 border-black hover:bg-gray-50 transition-colors">
-          <div className="w-16 h-16 flex-shrink-0 bg-gray-200 border border-black flex items-center justify-center text-xs text-gray-600 font-mono">
-            IMG
-          </div>
-          <div className="flex-1 min-w-0 text-left">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs font-mono text-gray-500 tracking-wider">{categoryLabels[company.category]}</span>
-                <h3 className="text-lg font-bold text-black tracking-tight">{company.name}</h3>
-              </div>
-              <span className="text-black text-lg font-bold ml-2 font-mono">
+      <Card className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all h-full flex flex-col bg-white">
+        <CollapsibleTrigger className="w-full flex-1 flex flex-col">
+          <CardHeader className="p-4 border-b border-gray-200">
+            <div className="flex items-start justify-between gap-2 mb-3">
+              <span className={`text-[10px] font-mono tracking-wider px-2 py-1 border ${categoryColors[company.category]}`}>
+                {categoryLabels[company.category]}
+              </span>
+              <span className="text-black text-sm font-bold font-mono">
                 {isOpen ? "−" : "+"}
               </span>
             </div>
+            <div className="w-full h-24 bg-gray-100 border border-gray-200 flex items-center justify-center text-xs text-gray-500 font-mono mb-3">
+              IMG
+            </div>
+            <CardTitle className="text-base font-bold tracking-tight text-left">
+              {company.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 pt-3 flex-1">
             <a
               href={company.website}
               target="_blank"
@@ -150,22 +160,22 @@ function CompanyGridCard({ company }: { company: Company }) {
               className="text-xs font-mono text-gray-600 hover:text-black transition-colors inline-block border-b border-gray-400 hover:border-black"
               onClick={(e) => e.stopPropagation()}
             >
-              {company.website}
+              {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
             </a>
+          </CardContent>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="px-4 pb-4 border-t border-gray-200">
+            <p className="text-xs text-gray-700 leading-relaxed">{company.description}</p>
           </div>
-        </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="px-4 py-4 bg-gray-50 border-x-2 border-b-2 border-black -mt-[2px]">
-          <p className="text-sm text-gray-800 leading-relaxed">{company.description}</p>
-        </div>
-      </CollapsibleContent>
+        </CollapsibleContent>
+      </Card>
     </Collapsible>
   );
 }
 
 export default function USVMarketInteractive() {
-  const [view, setView] = useState<"list" | "map">("map");
+  const [view, setView] = useState<"list" | "map">("list");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set(["startup", "legacy", "shipbuilder"]));
   const [contractData, setContractData] = useState<ContractData[]>([]);
@@ -225,31 +235,44 @@ export default function USVMarketInteractive() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Grid background pattern */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+      {/* Wave background pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-30">
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="wave-market" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wave-market)"/>
+        </svg>
+      </div>
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/markets" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
-                MARKETS
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3 sm:gap-6">
+              <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
+                ← HOME
               </Link>
-              <span className="text-xs font-mono tracking-wider text-black">USV DOMAIN</span>
+              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">NEW MARITIME HUB</span>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
               <Link href="/market-scouting">
-                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
-                  SUBMIT DEMAND SIGNAL
+                <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-[10px] sm:text-xs tracking-wider transition-all whitespace-nowrap">
+                  BUILD TECH FASTER
                 </button>
               </Link>
-              <div className="flex gap-4 text-xs font-mono tracking-wider">
+              <div className="hidden md:flex gap-4 text-xs font-mono tracking-wider">
                 <Link href="/usv-market" className="text-black font-bold transition-colors">
-                  MARKET LANDSCAPE
+                  MARKET DATABASE
                 </Link>
-                <Link href="/usv-systems" className="text-gray-600 hover:text-black transition-colors">
+                <Link href="/usv-systems" className="text-gray-600 hover:text-black transition-colors whitespace-nowrap">
                   SYSTEM ARCHITECTURE
+                </Link>
+                <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
+                  ABOUT
                 </Link>
               </div>
             </div>
@@ -260,79 +283,74 @@ export default function USVMarketInteractive() {
       {/* Content */}
       <div className="relative">
         {view === "list" ? (
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            {/* Header */}
-            <div className="mb-8 border-2 border-black bg-white p-8">
-              <div className="border-b-2 border-black pb-4 mb-4">
-                <span className="text-xs font-mono tracking-wider text-gray-600">KEY MARKET PLAYERS</span>
-                <h1 className="text-4xl font-bold tracking-tight mt-2">
-                  USV MARKET LANDSCAPE
-                </h1>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+            {/* Compact Header with Search and Filters */}
+            <div className="mb-4 sm:mb-6 bg-white border-2 border-black p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+                <div>
+                  <span className="text-[10px] sm:text-xs font-mono tracking-wider text-blue-600 font-bold">USV MARKET DATABASE</span>
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight mt-1">
+                    Key Market Players
+                  </h1>
+                </div>
+                <Button
+                  onClick={() => setView("map")}
+                  className="bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 font-mono text-[10px] sm:text-xs tracking-wider px-3 sm:px-4 py-2 rounded-none whitespace-nowrap"
+                >
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                  VIEW MAP
+                </Button>
               </div>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                The core commercial USV market players shaping America's maritime autonomy capabilities.
-              </p>
-              <Button
-                onClick={() => setView("map")}
-                className="bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 font-mono text-xs tracking-wider px-6 py-3 rounded-none"
-              >
-                <MapPin className="w-4 h-4 mr-2" />
-                VIEW MAP WITH GOVERNMENT DATA
-              </Button>
-            </div>
 
-            {/* Search and Filters */}
-            <div className="mb-6 bg-white border-2 border-black p-6">
-              <div className="flex gap-4 items-center mb-4">
+              <div className="flex flex-col gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
                   <Input
                     type="text"
                     placeholder="Search companies..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 border-2 border-gray-300 focus:border-black rounded-none font-mono text-sm"
+                    className="pl-8 sm:pl-10 border-2 border-gray-300 focus:border-black rounded-none font-mono text-xs sm:text-sm"
                   />
                 </div>
-              </div>
-              <div className="flex gap-2 items-center">
-                <Filter className="w-4 h-4 text-gray-600" />
-                <span className="text-xs font-mono text-gray-600 mr-2">FILTER:</span>
-                <Button
-                  onClick={() => toggleCategory("startup")}
-                  variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("startup")
-                    ? "bg-blue-100 border-blue-500 text-blue-700"
-                    : "border-gray-300 text-gray-600"
-                    }`}
-                >
-                  STARTUPS
-                </Button>
-                <Button
-                  onClick={() => toggleCategory("legacy")}
-                  variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("legacy")
-                    ? "bg-purple-100 border-purple-500 text-purple-700"
-                    : "border-gray-300 text-gray-600"
-                    }`}
-                >
-                  LEGACY DEFENSE
-                </Button>
-                <Button
-                  onClick={() => toggleCategory("shipbuilder")}
-                  variant="outline"
-                  className={`border-2 rounded-none font-mono text-xs ${selectedCategories.has("shipbuilder")
-                    ? "bg-green-100 border-green-500 text-green-700"
-                    : "border-gray-300 text-gray-600"
-                    }`}
-                >
-                  SHIPBUILDERS
-                </Button>
+                <div className="flex gap-2 items-center flex-wrap">
+                  <Filter className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 flex-shrink-0" />
+                  <Button
+                    onClick={() => toggleCategory("startup")}
+                    variant="outline"
+                    className={`border-2 rounded-none font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-2 ${selectedCategories.has("startup")
+                      ? "bg-blue-100 border-blue-500 text-blue-700"
+                      : "border-gray-300 text-gray-600"
+                      }`}
+                  >
+                    STARTUPS
+                  </Button>
+                  <Button
+                    onClick={() => toggleCategory("legacy")}
+                    variant="outline"
+                    className={`border-2 rounded-none font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap ${selectedCategories.has("legacy")
+                      ? "bg-purple-100 border-purple-500 text-purple-700"
+                      : "border-gray-300 text-gray-600"
+                      }`}
+                  >
+                    LEGACY DEFENSE
+                  </Button>
+                  <Button
+                    onClick={() => toggleCategory("shipbuilder")}
+                    variant="outline"
+                    className={`border-2 rounded-none font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-2 ${selectedCategories.has("shipbuilder")
+                      ? "bg-green-100 border-green-500 text-green-700"
+                      : "border-gray-300 text-gray-600"
+                      }`}
+                  >
+                    SHIPBUILDERS
+                  </Button>
+                </div>
               </div>
             </div>
 
             {/* Company List */}
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {filteredCompanies.map((company) => (
                 <CompanyGridCard key={company.name} company={company} />
               ))}

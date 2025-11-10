@@ -1,30 +1,41 @@
 import Link from "next/link";
+import { Ship } from "lucide-react";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Grid background pattern */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+      {/* Wave background pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-30">
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="wave-about" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wave-about)"/>
+        </svg>
+      </div>
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="font-mono text-xs tracking-wider text-gray-600 hover:text-black transition-colors">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
               ← HOME
             </Link>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
               <Link href="/market-scouting">
-                <button className="px-4 py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all">
-                  CREATE DEMAND
+                <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-[10px] sm:text-xs tracking-wider transition-all whitespace-nowrap">
+                  BUILD TECH FASTER
                 </button>
               </Link>
-              <div className="flex gap-4 text-xs font-mono tracking-wider">
-                <Link href="/collection" className="text-gray-600 hover:text-black transition-colors">
-                  MARKETS
+              <div className="hidden md:flex gap-4 text-xs font-mono tracking-wider">
+                <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
+                  MARKET DATABASE
                 </Link>
-                <Link href="/portfolio" className="text-gray-600 hover:text-black transition-colors">
-                  PORTFOLIO
+                <Link href="/about" className="text-black font-bold transition-colors">
+                  ABOUT
                 </Link>
               </div>
             </div>
@@ -33,187 +44,144 @@ export default function About() {
       </nav>
 
       {/* Content */}
-      <div className="relative max-w-4xl mx-auto px-6 py-16">
-        <div className="mb-16 border-2 border-black bg-white p-8">
-          <div className="border-b-2 border-black pb-4 mb-4">
-            <span className="text-xs font-mono tracking-wider text-gray-600">ORGANIZATION PROFILE</span>
-            <h1 className="text-5xl font-bold tracking-tight mt-2">ABOUT SYNDICATE 708</h1>
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+        <div className="mb-8 sm:mb-16 border-2 border-black bg-white p-5 sm:p-8">
+          <div className="border-b-2 border-blue-600 pb-3 sm:pb-4 mb-3 sm:mb-4 flex items-center gap-3 sm:gap-4">
+            <Ship className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600 flex-shrink-0" />
+            <div>
+              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-blue-600 block">USV MARKET INTELLIGENCE</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mt-1">NEW MARITIME HUB</h1>
+            </div>
           </div>
-          <p className="text-xl text-gray-700 leading-relaxed">
-            Syndicate 708 is a leading organization dedicated to forging a foundation for American
-            companies to innovate, build, and manufacture with partners in a uniquely American way,
-            defending our ability to compete on the world stage.
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+            The comprehensive directory for America's autonomous maritime ecosystem—connecting engineers, suppliers, and innovators in the unmanned surface vehicle market.
           </p>
         </div>
 
         <div className="space-y-8">
-          {/* Mission Section */}
+          {/* Background Section */}
           <section className="border-2 border-black bg-white p-8">
-            <div className="border-l-4 border-black pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">Our Mission</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">DEFENSE INNOVATION ECOSYSTEM</span>
-            </div>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              For eight years, Syndicate 708 has been a central player in the defense innovation
-              ecosystem, helping organizations navigate the complex landscape of defense technology
-              commercialization and scale.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              We work at the intersection of defense, technology, and entrepreneurship to strengthen
-              American manufacturing capabilities and foster strategic partnerships that enhance
-              national security.
-            </p>
-          </section>
-
-          {/* Ellen Chang - The Difference Maker */}
-          <section className="border-2 border-black bg-white p-8">
-            <div className="mb-8 border-b-2 border-black pb-6">
-              <span className="text-xs font-mono tracking-wider text-gray-600">MANAGING PARTNER</span>
-              <h2 className="text-4xl font-bold tracking-tight mt-2">ELLEN CHANG</h2>
+            <div className="border-l-4 border-blue-600 pl-4 mb-6">
+              <h2 className="text-3xl font-bold tracking-tight">Background</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">WHY WE EXIST</span>
             </div>
 
-            <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
+            <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                Ellen Chang is the central voice and driving force behind Syndicate 708. With decades
-                of distinguished experience across defense, technology, and entrepreneurship, she has
-                established herself as a uniquely positioned leader in the defense innovation ecosystem.
+                We're at the beginning of a transformative era in maritime operations. Unmanned surface vehicles represent a critical capability for the U.S. Navy, Coast Guard, and commercial maritime operations. Yet the market remains fragmented—limited visibility into who's building what, which suppliers are reliable, and how these technologies integrate.
               </p>
 
               <p>
-                As a former <strong>Navy Captain</strong>, Ellen developed deep operational expertise
-                in naval systems and defense operations. This hands-on military experience provides her
-                with an invaluable perspective on what warfighters actually need, not just what companies
-                want to sell them.
+                <strong>New Maritime Hub exists to solve this.</strong> By creating a centralized, curated database of companies, capabilities, and market intelligence, we help engineers and decision-makers find the right partners and move faster from concept to deployment.
               </p>
 
               <p>
-                Her career at <strong>Northrop Grumman</strong>, one of America's largest defense
-                contractors, gave her unparalleled insight into large-scale defense manufacturing,
-                systems integration, and the complexities of working with the Department of Defense.
-                She understands both the operational requirements and the industrial capabilities needed
-                to deliver defense solutions at scale.
-              </p>
-
-              <p>
-                What truly sets Ellen apart is her proven track record of impact. Over her career, she
-                has helped <strong>hundreds of startups</strong> successfully commercialize their
-                technologies, scale their operations, and navigate the labyrinth of defense contracting.
-                Her expertise spans business development, strategic partnerships, government contracting,
-                and defense technology adoption.
-              </p>
-
-              <p>
-                Ellen is also the <strong>Founder and President of Wharton Aerospace</strong>, the
-                premier community for aerospace and defense executives. Through Wharton Aerospace, she
-                has built one of the most powerful networks in the industry, connecting leaders,
-                innovators, and decision-makers across the entire defense ecosystem—from startups to
-                primes, from government stakeholders to investors.
-              </p>
-
-              <p>
-                This unique combination of military operations experience, large-scale defense industry
-                expertise, startup commercialization success, and deep network makes Ellen the central
-                differentiator for Syndicate 708. She doesn't just understand the defense innovation
-                ecosystem—she has spent decades building it, shaping it, and helping companies succeed
-                within it.
+                The defense tech ecosystem thrives on collaboration, not isolation. When companies, engineers, and government stakeholders can see the full picture—who's solving what problems, which technologies are mature, where the gaps exist—we all move faster.
               </p>
             </div>
           </section>
 
-          {/* Team Section */}
+          {/* What Belongs Section */}
           <section className="border-2 border-black bg-white p-8">
-            <div className="border-l-4 border-black pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">Team</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">SUPPORTING PERSONNEL</span>
+            <div className="border-l-4 border-blue-600 pl-4 mb-6">
+              <h2 className="text-3xl font-bold tracking-tight">What Belongs in New Maritime Hub?</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">INCLUSION CRITERIA</span>
             </div>
 
-            <div className="bg-gray-50 border-2 border-gray-300 p-6">
-              <h3 className="text-xl font-bold mb-2 tracking-tight">Ethan Markwalter</h3>
-
-              <div className="text-gray-700">
-                <p className="leading-relaxed">
-                  Ethan is a Wharton School graduate with six years of experience in the deep tech space.
-                  His background includes roles at Orbit Fab and BMNT, and he was a semi-finalist in
-                  Penn's President Innovation Prize. Ethan has worked with numerous startups on
-                  commercialization and scaling strategies, and contributes to Common Mission Project,
-                  revolutionizing education to help students solve pressing national issues.
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-bold text-lg mb-2 text-black">Operational Realm</h3>
+                <p className="text-sm text-gray-700">
+                  Companies operating in the unmanned surface vehicle ecosystem—from complete platform manufacturers to component suppliers. This includes autonomy, propulsion, sensors, communications, and maritime-specific subsystems.
                 </p>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg mb-2 text-black">Market Focus</h3>
+                <p className="text-sm text-gray-700">
+                  Both commercial innovators and defense contractors serving the U.S. maritime market. We focus on companies with operational capabilities or proven track records, not just concepts.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg mb-2 text-black">What We Include</h3>
+                <div className="space-y-2 ml-4 text-sm text-gray-700">
+                  <p>✓ USV platform manufacturers and system integrators</p>
+                  <p>✓ Component and subsystem suppliers (propulsion, sensors, autonomy, communications)</p>
+                  <p>✓ Maritime technology providers with USV-applicable capabilities</p>
+                  <p>✓ Startups and established defense contractors</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg mb-2 text-black">What We Don't Include</h3>
+                <div className="space-y-2 ml-4 text-sm text-gray-700">
+                  <p>✗ Pure aerial or ground autonomy (unless maritime-applicable)</p>
+                  <p>✗ Companies without clear USV market relevance</p>
+                  <p>✗ Research projects without commercialization path</p>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Impact Section */}
+          {/* Initiative Section */}
           <section className="border-2 border-black bg-white p-8">
-            <div className="border-l-4 border-black pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">Our Impact</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">TRACK RECORD</span>
+            <div className="border-l-4 border-blue-600 pl-4 mb-6">
+              <h2 className="text-3xl font-bold tracking-tight">A Scale Forge USA Initiative</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">AMERICAN MANUFACTURING</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 border-2 border-gray-300 p-6">
-                <h3 className="text-xl font-bold mb-3 tracking-tight">8 Years</h3>
-                <p className="text-gray-700 text-sm">
-                  Operating at the center of defense innovation and manufacturing ecosystems
-                </p>
-              </div>
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              <p>
+                New Maritime Hub is part of{" "}
+                <Link href="/scaleforgeusa" className="text-blue-600 font-bold hover:underline">
+                  Scale Forge USA
+                </Link>
+                —an initiative to forge a foundation for American companies to innovate, build, and manufacture with partners in a uniquely American way, defending our ability to compete on the world stage.
+              </p>
 
-              <div className="bg-gray-50 border-2 border-gray-300 p-6">
-                <h3 className="text-xl font-bold mb-3 tracking-tight">Hundreds of Startups</h3>
-                <p className="text-gray-700 text-sm">
-                  Guided through commercialization, scaling, and defense market entry
-                </p>
-              </div>
+              <p>
+                The maritime sector is our first vertical. By creating transparency and connectivity in this market, we're demonstrating how information sharing and collaboration can accelerate American manufacturing and deployment of critical technologies.
+              </p>
 
-              <div className="bg-gray-50 border-2 border-gray-300 p-6">
-                <h3 className="text-xl font-bold mb-3 tracking-tight">Strategic Network</h3>
-                <p className="text-gray-700 text-sm">
-                  Deep connections across primes, startups, shipyards, and government stakeholders
-                </p>
-              </div>
-
-              <div className="bg-gray-50 border-2 border-gray-300 p-6">
-                <h3 className="text-xl font-bold mb-3 tracking-tight">Wharton Aerospace</h3>
-                <p className="text-gray-700 text-sm">
-                  Premier executive community advancing aerospace and defense leadership
-                </p>
-              </div>
+              <p className="text-sm">
+                Scale Forge USA is an endeavor of{" "}
+                <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
+                  Syndicate 708
+                </a>
+                , active since 2017.
+              </p>
             </div>
           </section>
 
-          {/* Expertise Section */}
+          {/* Contribute Section */}
           <section className="border-2 border-black bg-white p-8">
-            <div className="border-l-4 border-black pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">Our Expertise</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">CORE CAPABILITIES</span>
+            <div className="border-l-4 border-blue-600 pl-4 mb-6">
+              <h2 className="text-3xl font-bold tracking-tight">Contribute</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">HELP BUILD THE DATABASE</span>
             </div>
 
-            <div className="space-y-4">
-              <div className="border-l-4 border-black pl-6 py-3 bg-gray-50">
-                <h3 className="font-bold text-lg mb-1 tracking-tight">Defense Technology Commercialization</h3>
-                <p className="text-gray-700 text-sm">
-                  Helping innovative technologies transition from development to deployment
-                </p>
-              </div>
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              <p>
+                This database grows through community contributions. If you see a company missing, information that needs updating, or have insights on the market, we'd love to hear from you.
+              </p>
 
-              <div className="border-l-4 border-black pl-6 py-3 bg-gray-50">
-                <h3 className="font-bold text-lg mb-1 tracking-tight">Strategic Partnerships</h3>
-                <p className="text-gray-700 text-sm">
-                  Connecting companies across the defense industrial base to form powerful collaborations
-                </p>
-              </div>
-
-              <div className="border-l-4 border-black pl-6 py-3 bg-gray-50">
-                <h3 className="font-bold text-lg mb-1 tracking-tight">Manufacturing & Scale</h3>
-                <p className="text-gray-700 text-sm">
-                  Building capabilities for American companies to manufacture and scale domestically
-                </p>
-              </div>
-
-              <div className="border-l-4 border-black pl-6 py-3 bg-gray-50">
-                <h3 className="font-bold text-lg mb-1 tracking-tight">Market Development</h3>
-                <p className="text-gray-700 text-sm">
-                  Comprehensive understanding of defense markets, trends, and opportunities
-                </p>
+              <div className="bg-blue-50 border-2 border-blue-600 p-6">
+                <h3 className="font-bold text-lg mb-3 text-black">Ways to Contribute</h3>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-bold text-black">Add a Company</p>
+                    <p>Use the "Contribute to Database" button on any page to suggest additions. All submissions are reviewed before being added.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-black">Build Tech Faster</p>
+                    <p>Submit a demand signal to tell us what you're building and what challenges you're facing. We'll connect you with suppliers and partners.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-black">Share the Resource</p>
+                    <p>The more engineers and companies that participate, the stronger the ecosystem becomes. Help spread the word.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
