@@ -110,7 +110,7 @@ export default function MarketScouting() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-              ← NEW MARITIME HUB
+              ← USV TECH HUB
             </Link>
             <div className="flex gap-2 sm:gap-4 items-center flex-wrap text-[10px] sm:text-xs font-mono tracking-wider">
               <Link href="/about" className="text-gray-600 hover:text-black transition-colors">

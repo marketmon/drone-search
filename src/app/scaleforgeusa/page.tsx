@@ -46,7 +46,7 @@ export default function Home() {
                 >
                   <MessageSquare className="w-10 h-10" />
                   <div className="space-y-1">
-                    <div>NEW MARITIME HUB</div>
+                    <div>USV TECH HUB</div>
                     <div className="text-xs text-blue-100 font-sans tracking-normal">USV market intelligence</div>
                   </div>
                 </Button>
@@ -77,7 +77,7 @@ export default function Home() {
                 MARKETS
               </Link>
               <Link href="/" className="text-blue-600 hover:text-blue-800 transition-colors font-bold">
-                NEW MARITIME HUB
+                USV TECH HUB
               </Link>
             </div>
             <p className="text-sm text-gray-600 font-mono">

@@ -16,7 +16,7 @@ export default function About() {
             <div className="flex gap-4 items-center">
               <Link href="/">
                 <button className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-blue-600 rounded-none font-mono text-xs tracking-wider transition-all">
-                  NEW MARITIME HUB
+                  USV TECH HUB
                 </button>
               </Link>
               <div className="flex gap-4 text-xs font-mono tracking-wider">
@@ -99,7 +99,7 @@ export default function About() {
                 <p>
                   Visit{" "}
                   <Link href="/" className="text-blue-600 font-bold hover:underline">
-                    New Maritime Hub
+                    USV Tech Hub
                   </Link>
                   {" "}to explore the full database, contribute companies, and connect with suppliers.
                 </p>

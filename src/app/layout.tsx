@@ -14,7 +14,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "Maritime Tech Hub",
+  title: "USV Tech Hub",
   description: "Enabling Scale for American Onshore Initiiatives",
 };
 

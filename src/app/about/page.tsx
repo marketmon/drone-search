@@ -50,7 +50,7 @@ export default function About() {
             <Ship className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600 flex-shrink-0" />
             <div>
               <span className="text-[10px] sm:text-xs font-mono tracking-wider text-blue-600 block">USV MARKET INTELLIGENCE</span>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mt-1">NEW MARITIME HUB</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mt-1">USV TECH HUB</h1>
             </div>
           </div>
           <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
@@ -72,7 +72,7 @@ export default function About() {
               </p>
 
               <p>
-                <strong>New Maritime Hub exists to solve this.</strong> By creating a centralized, curated database of companies, capabilities, and market intelligence, we help engineers and decision-makers find the right partners and move faster from concept to deployment.
+                <strong>USV Tech Hub exists to solve this.</strong> By creating a centralized, curated database of companies, capabilities, and market intelligence, we help engineers and decision-makers find the right partners and move faster from concept to deployment.
               </p>
 
               <p>
@@ -84,7 +84,7 @@ export default function About() {
           {/* What Belongs Section */}
           <section className="border-2 border-black bg-white p-8">
             <div className="border-l-4 border-blue-600 pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">What Belongs in New Maritime Hub?</h2>
+              <h2 className="text-3xl font-bold tracking-tight">What Belongs in USV Tech Hub?</h2>
               <span className="text-xs font-mono text-gray-600 tracking-wider">INCLUSION CRITERIA</span>
             </div>
 
@@ -133,7 +133,7 @@ export default function About() {
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                New Maritime Hub is part of{" "}
+                USV Tech Hub is part of{" "}
                 <Link href="/scaleforgeusa" className="text-blue-600 font-bold hover:underline">
                   Scale Forge USA
                 </Link>

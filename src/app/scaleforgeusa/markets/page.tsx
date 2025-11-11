@@ -16,7 +16,7 @@ export default function Collection() {
             <div className="flex gap-4 items-center">
               <Link href="/">
                 <button className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-blue-600 rounded-none font-mono text-xs tracking-wider transition-all">
-                  NEW MARITIME HUB
+                  USV TECH HUB
                 </button>
               </Link>
               <Link href="/scaleforgeusa/about" className="text-xs font-mono tracking-wider text-gray-600 hover:text-black transition-colors">
@@ -54,13 +54,13 @@ export default function Collection() {
 
             {/* Content Artifacts */}
             <div className="p-6">
-              <h3 className="text-xs font-mono tracking-wider text-gray-600 mb-4">VIEW ON NEW MARITIME HUB</h3>
+              <h3 className="text-xs font-mono tracking-wider text-gray-600 mb-4">VIEW ON USV TECH HUB</h3>
               <div className="space-y-3 mb-6">
                 <Link href="/" className="block">
                   <div className="border-2 border-blue-600 bg-blue-50 hover:bg-blue-100 p-4 transition-colors">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-bold tracking-tight text-blue-900">New Maritime Hub</h4>
+                        <h4 className="font-bold tracking-tight text-blue-900">USV Tech Hub</h4>
                         <p className="text-xs text-blue-700 mt-1">Complete USV market database, system architecture, and community resources</p>
                       </div>
                       <span className="font-mono text-blue-600 text-xl">→</span>

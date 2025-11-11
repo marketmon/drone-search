@@ -192,7 +192,7 @@ export default function USVSystems() {
               <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
                 ← HOME
               </Link>
-              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">NEW MARITIME HUB</span>
+              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">USV TECH HUB</span>
             </div>
             <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
               <Link href="/market-scouting">
