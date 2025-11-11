@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from "react-leaflet";
 import { Icon, LatLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo } from "react";
@@ -23,7 +23,10 @@ interface Company {
   name: string;
   website: string;
   description: string;
-  category: "startup" | "legacy" | "shipbuilder";
+  category: "startup" | "legacy" | "mid-tier";
+  location: string;
+  lat: number;
+  lng: number;
 }
 
 interface MapViewProps {
@@ -68,28 +71,16 @@ function FitBounds({ contractData }: { contractData: ContractData[] }) {
 }
 
 export default function MapView({ contractData, marketCompanies, showOnlyMarketPlayers }: MapViewProps) {
-  // Get unique market company locations (we'll need to geocode these or add coordinates)
-  // For now, we'll try to match them with contract data
+  // Use the lat/lng coordinates from the company data directly
   const marketCompanyMarkers = useMemo(() => {
-    const markers: Array<{ company: Company; lat: number; lng: number }> = [];
-
-    marketCompanies.forEach((company) => {
-      // Try to find this company in the contract data to get coordinates
-      const matchingContract = contractData.find(
-        (contract) => contract.company_name.toLowerCase().includes(company.name.toLowerCase())
-      );
-
-      if (matchingContract) {
-        markers.push({
-          company,
-          lat: matchingContract.lat,
-          lng: matchingContract.lng,
-        });
-      }
-    });
-
-    return markers;
-  }, [marketCompanies, contractData]);
+    return marketCompanies
+      .filter(company => company.lat && company.lng)
+      .map(company => ({
+        company,
+        lat: company.lat,
+        lng: company.lng,
+      }));
+  }, [marketCompanies]);
 
   // Filter out contracts that are from market companies to avoid duplicates
   const otherContracts = useMemo(() => {
@@ -153,7 +144,8 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
   return (
     <MapContainer
       center={center}
-      zoom={4}
+      zoom={3}
+      zoomControl={false}
       style={{ height: "100%", width: "100%" }}
       className="z-0"
     >
@@ -161,6 +153,8 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      <ZoomControl position="topright" />
 
       <FitBounds contractData={contractData} />
 
@@ -172,21 +166,25 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
           icon={marketCompanyIcon}
         >
           <Popup>
-            <div className="min-w-[250px]">
-              <div className="border-b-2 border-blue-500 pb-2 mb-2">
-                <h3 className="font-bold text-lg text-blue-600">{marker.company.name}</h3>
-                <span className="text-xs font-mono text-gray-500 uppercase">
-                  {marker.company.category === "startup" && "STARTUP"}
-                  {marker.company.category === "legacy" && "LEGACY DEFENSE"}
-                  {marker.company.category === "shipbuilder" && "SHIPBUILDER"}
-                </span>
+            <div className="min-w-[280px]">
+              <div className="border-b-2 border-blue-500 pb-3 mb-3">
+                <h3 className="font-bold text-2xl text-blue-600 leading-tight mb-2">{marker.company.name}</h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-mono text-gray-500 uppercase font-bold">
+                    {marker.company.category === "startup" && "STARTUP"}
+                    {marker.company.category === "legacy" && "LEGACY"}
+                    {marker.company.category === "mid-tier" && "MID-TIER"}
+                  </span>
+                  <span className="text-xs text-gray-400">•</span>
+                  <span className="text-xs text-gray-600 font-medium">{marker.company.location}</span>
+                </div>
               </div>
-              <p className="text-sm text-gray-700 mb-3">{marker.company.description}</p>
+              <p className="text-sm text-gray-700 mb-4 leading-relaxed">{marker.company.description}</p>
               <a
                 href={marker.company.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue-600 hover:text-blue-800 font-mono border-b border-blue-400"
+                className="text-sm text-blue-600 hover:text-blue-800 font-mono border-b-2 border-blue-400 hover:border-blue-600 font-medium inline-block"
               >
                 Visit Website →
               </a>

@@ -4,7 +4,8 @@
       "Bash(npx shadcn add:*)",
       "Bash(rm:*)",
       "Bash(npm install:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(dir \"C:\\Users\\Etmar\\development\\other-dev\\forge-demo\\drone-search\\public\")"
     ],
     "deny": [],
     "ask": []
