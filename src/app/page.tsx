@@ -46,10 +46,10 @@ export default function Home() {
       <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-blue-600"></div>
       <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-blue-600"></div>
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-0">
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-0 mb-10 mt-5">
         <div className="max-w-5xl w-full">
           {/* Main content box */}
-          <div className="border-2 border-black bg-white p-6 sm:p-12 md:p-16 space-y-8 sm:space-y-12">
+          <div className="border-2 border-black bg-white p-3 sm:p-6 md:p-8 space-y-8 sm:space-y-12">
             {/* Header */}
             <div className="text-center space-y-4 sm:space-y-6">
               <div className="inline-flex items-center gap-2 sm:gap-3 border-2 border-blue-600 px-4 sm:px-6 py-2 bg-blue-50">
@@ -65,15 +65,11 @@ export default function Home() {
                 The comprehensive directory of innovative companies, and capabilities shaping America's unmanned maritime future
               </p>
 
-              <div className="border-t-2 border-gray-200 pt-4 sm:pt-6 max-w-2xl mx-auto">
-                <p className="text-xs sm:text-sm text-gray-600 px-4 sm:px-0">
-                  Curated market intelligence for engineers, program managers, and decision-makers in the new maritime ecosystem
-                </p>
-              </div>
+
             </div>
 
             {/* CTA Buttons */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <Button
                 size="lg"
                 onClick={() => setShowArtifacts(true)}

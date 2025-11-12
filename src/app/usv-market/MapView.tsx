@@ -3,7 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from "react-leaflet";
 import { Icon, LatLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ContractData {
   lat: number;
@@ -27,12 +27,63 @@ interface Company {
   location: string;
   lat: number;
   lng: number;
+  imageUrl: string;
 }
 
 interface MapViewProps {
   contractData: ContractData[];
   marketCompanies: Company[];
   showOnlyMarketPlayers: boolean;
+}
+
+// Component for company popup content with expandable description
+function CompanyPopupContent({ company }: { company: Company }) {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const truncatedDescription = company.description && company.description.length > 150
+    ? company.description.substring(0, 150).trim() + "..."
+    : company.description;
+
+  return (
+    <div className="min-w-[280px] max-w-[320px]">
+      <div className="border-b-2 border-blue-500 pb-3 mb-3">
+        <h3 className="font-bold text-xl text-blue-600 leading-tight mb-2">{company.name}</h3>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs font-mono text-gray-500 uppercase font-bold">
+            {company.category === "startup" && "STARTUP"}
+            {company.category === "legacy" && "LEGACY"}
+            {company.category === "mid-tier" && "MID-TIER"}
+          </span>
+          <span className="text-xs text-gray-400">•</span>
+          <span className="text-xs text-gray-600 font-medium">{company.location}</span>
+        </div>
+      </div>
+      <div className="mb-4 max-h-[200px] overflow-y-auto">
+        <p className="text-sm text-gray-700 leading-relaxed">
+          {showFullDescription ? company.description : truncatedDescription}
+        </p>
+        {company.description && company.description.length > 150 && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setShowFullDescription(!showFullDescription);
+            }}
+            className="text-xs font-mono text-blue-600 hover:text-blue-800 mt-2 underline"
+          >
+            {showFullDescription ? "SEE LESS" : "SEE MORE"}
+          </button>
+        )}
+      </div>
+      <a
+        href={company.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm text-blue-600 hover:text-blue-800 font-mono border-b-2 border-blue-400 hover:border-blue-600 font-medium inline-block"
+      >
+        Visit Website →
+      </a>
+    </div>
+  );
 }
 
 // Custom icons
@@ -165,30 +216,8 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
           position={[marker.lat, marker.lng]}
           icon={marketCompanyIcon}
         >
-          <Popup>
-            <div className="min-w-[280px]">
-              <div className="border-b-2 border-blue-500 pb-3 mb-3">
-                <h3 className="font-bold text-2xl text-blue-600 leading-tight mb-2">{marker.company.name}</h3>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-gray-500 uppercase font-bold">
-                    {marker.company.category === "startup" && "STARTUP"}
-                    {marker.company.category === "legacy" && "LEGACY"}
-                    {marker.company.category === "mid-tier" && "MID-TIER"}
-                  </span>
-                  <span className="text-xs text-gray-400">•</span>
-                  <span className="text-xs text-gray-600 font-medium">{marker.company.location}</span>
-                </div>
-              </div>
-              <p className="text-sm text-gray-700 mb-4 leading-relaxed">{marker.company.description}</p>
-              <a
-                href={marker.company.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:text-blue-800 font-mono border-b-2 border-blue-400 hover:border-blue-600 font-medium inline-block"
-              >
-                Visit Website →
-              </a>
-            </div>
+          <Popup maxWidth={250}>
+            <CompanyPopupContent company={marker.company} />
           </Popup>
         </Marker>
       ))}
@@ -211,8 +240,8 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
             position={[contract.lat, contract.lng]}
             icon={contractIcon}
           >
-            <Popup maxWidth={300}>
-              <div className="min-w-[280px] max-h-[400px] overflow-y-auto">
+            <Popup maxWidth={320}>
+              <div className="min-w-[280px] max-w-[300px] max-h-[300px] overflow-y-auto">
                 <div className="border-b-2 border-gray-400 pb-2 mb-3">
                   <h3 className="font-bold text-base">{contract.company_name}</h3>
                   <p className="text-xs text-gray-600">

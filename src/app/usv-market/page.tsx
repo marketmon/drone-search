@@ -2,16 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
 import { Footer } from "@/components/footer";
+import { SiteHeader } from "@/components/site-header";
 import { Search, MapPin, Grid3x3, Filter, ExternalLink, FileText, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import {
   Drawer,
@@ -33,6 +29,7 @@ interface Company {
   location: string;
   lat: number;
   lng: number;
+  imageUrl: string;
 }
 
 interface ContractData {
@@ -64,27 +61,212 @@ interface Vehicle {
   googleLink: string;
 }
 
-// Helper function to extract domain from URL for logo API
-function getDomainFromUrl(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.hostname.replace(/^www\./, '');
-  } catch {
-    return '';
-  }
-}
+// State name to abbreviation mapping
+const stateMapping: Record<string, string> = {
+  "alabama": "al", "alaska": "ak", "arizona": "az", "arkansas": "ar", "california": "ca",
+  "colorado": "co", "connecticut": "ct", "delaware": "de", "florida": "fl", "georgia": "ga",
+  "hawaii": "hi", "idaho": "id", "illinois": "il", "indiana": "in", "iowa": "ia",
+  "kansas": "ks", "kentucky": "ky", "louisiana": "la", "maine": "me", "maryland": "md",
+  "massachusetts": "ma", "michigan": "mi", "minnesota": "mn", "mississippi": "ms", "missouri": "mo",
+  "montana": "mt", "nebraska": "ne", "nevada": "nv", "new hampshire": "nh", "new jersey": "nj",
+  "new mexico": "nm", "new york": "ny", "north carolina": "nc", "north dakota": "nd", "ohio": "oh",
+  "oklahoma": "ok", "oregon": "or", "pennsylvania": "pa", "rhode island": "ri", "south carolina": "sc",
+  "south dakota": "sd", "tennessee": "tn", "texas": "tx", "utah": "ut", "vermont": "vt",
+  "virginia": "va", "washington": "wa", "west virginia": "wv", "wisconsin": "wi", "wyoming": "wy",
+  "district of columbia": "dc", "washington dc": "dc"
+};
 
-// Helper function to get logo URL from company website
-function getLogoUrl(websiteUrl: string): string {
-  const domain = getDomainFromUrl(websiteUrl);
-  // Using Clearbit Logo API - provides high quality company logos
-  return `https://logo.clearbit.com/${domain}`;
+// Helper function to check if location matches search term (including state name/abbreviation matching)
+function locationMatchesSearch(location: string, searchTerm: string): boolean {
+  const locationLower = location.toLowerCase();
+  const searchLower = searchTerm.toLowerCase().trim();
+
+  // Direct match
+  if (locationLower.includes(searchLower)) {
+    return true;
+  }
+
+  // Check if search term is a full state name - if so, also check for abbreviation
+  if (stateMapping[searchLower]) {
+    const abbreviation = stateMapping[searchLower];
+    // Check for abbreviation with word boundaries (e.g., "RI" not in "MARINE")
+    const abbrevRegex = new RegExp(`\\b${abbreviation}\\b`, 'i');
+    if (abbrevRegex.test(location)) {
+      return true;
+    }
+  }
+
+  // Check if search term is a partial match for any state name
+  // For example, "flo" should match "florida" → "fl"
+  for (const [stateName, abbrev] of Object.entries(stateMapping)) {
+    if (stateName.startsWith(searchLower) && searchLower.length >= 2) {
+      // Found a state that starts with the search term
+      const stateAbbrevRegex = new RegExp(`\\b${abbrev}\\b`, 'i');
+      if (stateAbbrevRegex.test(location)) {
+        return true;
+      }
+      // Also check if the full state name is in the location
+      if (locationLower.includes(stateName)) {
+        return true;
+      }
+    }
+  }
+
+  // Check if search term is a state abbreviation - if so, also check for full name
+  const abbrevRegex = new RegExp(`\\b${searchLower}\\b`, 'i');
+  if (abbrevRegex.test(location)) {
+    // Found exact abbreviation match
+    return true;
+  }
+
+  // Check if the location contains a state abbreviation that matches the search term's full name
+  for (const [stateName, abbrev] of Object.entries(stateMapping)) {
+    if (stateName === searchLower) {
+      const stateAbbrevRegex = new RegExp(`\\b${abbrev}\\b`, 'i');
+      if (stateAbbrevRegex.test(location)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 // Helper function to format spec value or show N/A
 function formatSpec(value: string, unit: string = ""): string {
   if (!value || value.trim() === "") return "N/A";
   return `${value}${unit ? " " + unit : ""}`;
+}
+
+function CompanyDrawer({ company, vehicleCount, onViewVehicles, isOpen, onClose }: {
+  company: Company;
+  vehicleCount: number;
+  onViewVehicles: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [logoError, setLogoError] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  // Reset description state when drawer opens with new company
+  useEffect(() => {
+    if (isOpen) {
+      setShowFullDescription(false);
+    }
+  }, [isOpen, company.name]);
+
+  const categoryLabels = {
+    startup: "STARTUP",
+    legacy: "LEGACY",
+    "mid-tier": "MID-TIER",
+  };
+
+  const categoryColors = {
+    startup: "bg-blue-100 text-blue-700 border-blue-500",
+    legacy: "bg-purple-100 text-purple-700 border-purple-500",
+    "mid-tier": "bg-green-100 text-green-700 border-green-500",
+  };
+
+  // Truncate description to ~150 characters
+  const truncatedDescription = company.description && company.description.length > 150
+    ? company.description.substring(0, 150).trim() + "..."
+    : company.description;
+
+  return (
+    <Drawer open={isOpen} onOpenChange={onClose}>
+      <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
+        <DrawerHeader className="border-b border-gray-300 pb-3 bg-white">
+          <DrawerTitle className="text-lg sm:text-2xl font-bold text-black">
+            {company.name}
+          </DrawerTitle>
+        </DrawerHeader>
+
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="space-y-4">
+            {/* Category Badge */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${categoryColors[company.category]}`}>
+                {categoryLabels[company.category]}
+              </span>
+              {vehicleCount > 0 && (
+                <span className="text-xs font-mono text-blue-700 bg-blue-50 px-3 py-1.5 border border-blue-300">
+                  {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
+                </span>
+              )}
+            </div>
+
+            {/* Logo */}
+            <div className="w-full h-32 bg-gray-100 border-2 border-gray-200 flex items-center justify-center overflow-hidden">
+              {company.imageUrl && !logoError ? (
+                <img
+                  src={company.imageUrl}
+                  alt={`${company.name} logo`}
+                  className="max-w-full max-h-full object-contain p-4"
+                  onError={() => setLogoError(true)}
+                />
+              ) : (
+                <span className="text-sm text-gray-500 font-mono">NO IMAGE</span>
+              )}
+            </div>
+
+            {/* Location */}
+            {company.location && (
+              <div>
+                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">LOCATION</span>
+                <p className="text-sm text-gray-700">{company.location}</p>
+              </div>
+            )}
+
+            {/* Description */}
+            {company.description && (
+              <div>
+                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">DESCRIPTION</span>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {showFullDescription ? company.description : truncatedDescription}
+                </p>
+                {company.description.length > 150 && (
+                  <button
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                    className="text-xs font-mono text-blue-600 hover:text-blue-800 mt-2 underline cursor-pointer"
+                  >
+                    {showFullDescription ? "SEE LESS" : "SEE MORE"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Website */}
+            <div>
+              <span className="text-xs font-mono text-gray-600 font-bold block mb-1">WEBSITE</span>
+              <a
+                href={company.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-mono text-blue-600 hover:text-blue-800 transition-colors inline-block border-b border-blue-400 hover:border-blue-800 break-all"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
+              </a>
+            </div>
+
+            {/* Vehicle Button */}
+            <Button
+              onClick={onViewVehicles}
+              disabled={vehicleCount === 0}
+              className={`w-full font-mono text-xs tracking-wider px-4 py-3 rounded-none transition-all ${vehicleCount > 0
+                ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 cursor-pointer"
+                : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
+                }`}
+            >
+              {vehicleCount > 0
+                ? `VIEW ${vehicleCount} VEHICLE${vehicleCount > 1 ? 'S' : ''}`
+                : 'NO VEHICLES AVAILABLE'}
+            </Button>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
 }
 
 function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
@@ -248,13 +430,11 @@ function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
   );
 }
 
-function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
+function CompanyGridCard({ company, vehicleCount, onClick }: {
   company: Company;
   vehicleCount: number;
-  onViewVehicles: () => void;
-  vehicles?: Vehicle[];
+  onClick: () => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
   const categoryLabels = {
@@ -269,125 +449,50 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
     "mid-tier": "bg-green-100 text-green-700 border-green-500",
   };
 
-  // Calculate quick stats for preview
-  const quickStats = useMemo(() => {
-    if (!vehicles || vehicles.length === 0) return null;
-
-    const lengths = vehicles.map(v => parseFloat(v.length)).filter(v => !isNaN(v));
-    const ranges = vehicles.map(v => parseFloat(v.range?.replace(/,/g, '') || '0')).filter(v => !isNaN(v) && v > 0);
-    const speeds = vehicles.map(v => parseFloat(v.topSpeed)).filter(v => !isNaN(v));
-
-    return {
-      lengthRange: lengths.length ? `${Math.min(...lengths)}-${Math.max(...lengths)}ft` : null,
-      maxRange: ranges.length ? `${Math.max(...ranges)}nm` : null,
-      maxSpeed: speeds.length ? `${Math.max(...speeds)}kts` : null,
-    };
-  }, [vehicles]);
-
-  const handleVehicleBadgeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (vehicleCount > 0) {
-      onViewVehicles();
-    }
-  };
+  const description = company.description || "";
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all flex flex-col bg-white">
-        <CollapsibleTrigger className="w-full flex-1 flex flex-col">
-          <CardHeader className="p-3 sm:p-4 border-b border-gray-200">
-            <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
-                  {categoryLabels[company.category]}
-                </span>
-                {vehicleCount > 0 && (
-                  <div
-                    onClick={handleVehicleBadgeClick}
-                    className="text-[10px] sm:text-xs font-mono text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-blue-300 hover:bg-blue-100 hover:border-blue-400 transition-colors cursor-pointer"
-                    title="Click to view vehicles"
-                  >
-                    {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
-                  </div>
-                )}
-              </div>
-              <span className="text-black text-sm font-bold font-mono flex-shrink-0 cursor-pointer">
-                {isOpen ? "−" : "+"}
+    <Card
+      className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all flex flex-col bg-white cursor-pointer"
+      onClick={onClick}
+    >
+      <CardHeader className="p-3 sm:p-4">
+        <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
+              {categoryLabels[company.category]}
+            </span>
+            {vehicleCount > 0 && (
+              <span className="text-[10px] sm:text-xs font-mono text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-blue-300">
+                {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
               </span>
-            </div>
-            <div className="w-full h-20 sm:h-24 bg-gray-100 border border-gray-200 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
-              {!logoError ? (
-                <img
-                  src={getLogoUrl(company.website)}
-                  alt={`${company.name} logo`}
-                  className="max-w-full max-h-full object-contain p-2"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <span className="text-xs text-gray-500 font-mono">IMG</span>
-              )}
-            </div>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
-              {company.name}
-            </CardTitle>
-
-            {/* Quick Stats Preview */}
-            {quickStats && (
-              <div className="flex gap-1.5 sm:gap-2 flex-wrap text-[9px] sm:text-[10px] font-mono text-gray-700">
-                {quickStats.lengthRange && (
-                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
-                    {quickStats.lengthRange}
-                  </span>
-                )}
-                {quickStats.maxSpeed && (
-                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
-                    ↑{quickStats.maxSpeed}
-                  </span>
-                )}
-                {quickStats.maxRange && (
-                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
-                    {quickStats.maxRange}
-                  </span>
-                )}
-              </div>
             )}
-          </CardHeader>
-          <CardContent className="p-3 sm:p-4 pt-2 sm:pt-3 flex-1">
-            <a
-              href={company.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] sm:text-xs font-mono text-gray-600 hover:text-black transition-colors inline-block border-b border-gray-400 hover:border-black break-all"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-            </a>
-          </CardContent>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="px-3 sm:px-4 pb-3 sm:pb-4 border-t border-gray-200 space-y-2 sm:space-y-3">
-            <p className="text-xs text-gray-700 leading-relaxed">{company.description}</p>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (vehicleCount > 0) {
-                  onViewVehicles();
-                }
-              }}
-              disabled={vehicleCount === 0}
-              className={`w-full font-mono text-[10px] sm:text-xs tracking-wider px-3 sm:px-4 py-2 rounded-none transition-all ${vehicleCount > 0
-                ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 cursor-pointer"
-                : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
-                }`}
-            >
-              {vehicleCount > 0
-                ? `VIEW ${vehicleCount} VEHICLE${vehicleCount > 1 ? 'S' : ''}`
-                : 'NO VEHICLES AVAILABLE'}
-            </Button>
           </div>
-        </CollapsibleContent>
-      </Card>
-    </Collapsible>
+        </div>
+        <div className="w-full h-20 sm:h-24 bg-gray-100 border border-gray-200 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
+          {company.imageUrl && !logoError ? (
+            <img
+              src={company.imageUrl}
+              alt={`${company.name} logo`}
+              className="max-w-full max-h-full object-contain p-2"
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            <span className="text-xs text-gray-500 font-mono">NO IMAGE</span>
+          )}
+        </div>
+        <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
+          {company.name}
+        </CardTitle>
+
+        {/* Company Description - 2 lines max */}
+        {description && (
+          <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
+            {description}
+          </p>
+        )}
+      </CardHeader>
+    </Card>
   );
 }
 
@@ -403,7 +508,12 @@ export default function USVMarketInteractive() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [vehiclesByCompany, setVehiclesByCompany] = useState<Map<string, Vehicle[]>>(new Map());
   const [selectedCompanyForVehicles, setSelectedCompanyForVehicles] = useState<string | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+  const [isFeedbackWidgetOpen, setIsFeedbackWidgetOpen] = useState(false);
+  const [mapSearchTerm, setMapSearchTerm] = useState("");
+  const [selectedMapCompany, setSelectedMapCompany] = useState<Company | null>(null);
+  const [selectedMapContract, setSelectedMapContract] = useState<ContractData | null>(null);
 
   // Load company data on mount
   useEffect(() => {
@@ -439,6 +549,7 @@ export default function USVMarketInteractive() {
               description: row.Description || "",
               lat: row.Lat || 0,
               lng: row.Lng || 0,
+              imageUrl: row["Image URL"] || "",
             }));
           setMarketCompanies(companies);
           setIsLoadingCompanies(false);
@@ -538,11 +649,31 @@ export default function USVMarketInteractive() {
   const filteredCompanies = useMemo(() => {
     return marketCompanies.filter((company) => {
       const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        company.description.toLowerCase().includes(searchTerm.toLowerCase());
+        company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        locationMatchesSearch(company.location, searchTerm);
       const matchesCategory = selectedCategories.has(company.category);
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, selectedCategories, marketCompanies]);
+
+  const filteredMapCompanies = useMemo(() => {
+    return marketCompanies.filter((company) => {
+      if (!mapSearchTerm) return true;
+      return company.name.toLowerCase().includes(mapSearchTerm.toLowerCase()) ||
+        company.description.toLowerCase().includes(mapSearchTerm.toLowerCase()) ||
+        locationMatchesSearch(company.location, mapSearchTerm);
+    });
+  }, [mapSearchTerm, marketCompanies]);
+
+  const filteredMapContracts = useMemo(() => {
+    if (!mapSearchTerm) return contractData;
+    return contractData.filter((contract) => {
+      return contract.company_name.toLowerCase().includes(mapSearchTerm.toLowerCase()) ||
+        contract.product.toLowerCase().includes(mapSearchTerm.toLowerCase()) ||
+        contract.city.toLowerCase().includes(mapSearchTerm.toLowerCase()) ||
+        locationMatchesSearch(`${contract.city}, ${contract.state}`, mapSearchTerm);
+    });
+  }, [mapSearchTerm, contractData]);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -560,34 +691,7 @@ export default function USVMarketInteractive() {
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3 sm:gap-6">
-              <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-                ← HOME
-              </Link>
-              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">USV TECH HUB</span>
-            </div>
-            <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
-              <Link href="/market-scouting">
-                <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-[10px] sm:text-xs tracking-wider transition-all whitespace-nowrap">
-                  BUILD TECH FASTER
-                </button>
-              </Link>
-              <div className="hidden md:flex gap-4 text-xs font-mono tracking-wider">
-                <Link href="/usv-market" className="text-black font-bold transition-colors">
-                  MARKET DATABASE
-                </Link>
-
-                <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                  ABOUT
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader />
 
       {/* Content */}
       <div className="relative">
@@ -605,21 +709,31 @@ export default function USVMarketInteractive() {
                       USV Market Database
                     </h1>
                     <p className="text-xl sm:text-2xl md:text-3xl text-blue-100 font-medium mb-3">
-                      Key Market Players
+                      Key Market Players in the US
                     </p>
                     <p className="text-sm sm:text-base text-blue-200 max-w-2xl">
                       {marketCompanies.length} companies shaping the unmanned maritime future
                     </p>
                   </div>
-                  <Button
-                    onClick={() => setView("map")}
-                    className="bg-white hover:bg-gray-100 text-blue-600 border-2 border-white font-mono text-sm sm:text-base tracking-wider px-6 py-4 
-                    rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(255,255,255,0.5)]
-                    cursor-pointer"
-                  >
-                    <MapPin className="w-5 h-5 mr-2" />
-                    VIEW MAP
-                  </Button>
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      onClick={() => setView("map")}
+                      className="bg-white hover:bg-gray-100 text-blue-600 border-2 border-white font-mono text-sm sm:text-base tracking-wider px-6 py-4
+                      rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(255,255,255,0.5)]
+                      cursor-pointer"
+                    >
+                      <MapPin className="w-5 h-5 mr-2" />
+                      VIEW MAP
+                    </Button>
+                    <Button
+                      onClick={() => setIsFeedbackWidgetOpen(true)}
+                      className="bg-white hover:bg-blue-900 hover:text-white text-black border-2 border-blue-400 font-mono text-sm sm:text-base tracking-wider px-6 py-4
+                      rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(59,130,246,0.5)]
+                      cursor-pointer"
+                    >
+                      ADD TO DATABASE
+                    </Button>
+                  </div>
                 </div>
               </div>
 
@@ -630,7 +744,7 @@ export default function USVMarketInteractive() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       type="text"
-                      placeholder="Search companies..."
+                      placeholder="Search companies, locations, or descriptions..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10 border-2 border-gray-300 focus:border-blue-600 rounded-none font-mono text-sm h-12"
@@ -645,7 +759,7 @@ export default function USVMarketInteractive() {
                         : "bg-white border-black text-black hover:bg-gray-100"
                         }`}
                     >
-                      STARTUPS
+                      STARTUP
                     </Button>
                     <Button
                       onClick={() => toggleCategory("mid-tier")}
@@ -663,7 +777,7 @@ export default function USVMarketInteractive() {
                         : "bg-white border-black text-black hover:bg-gray-100"
                         }`}
                     >
-                      LEGACY
+                      LEGACY PRIME
                     </Button>
                   </div>
                 </div>
@@ -686,8 +800,7 @@ export default function USVMarketInteractive() {
                       key={company.name}
                       company={company}
                       vehicleCount={vehiclesByCompany.get(company.name)?.length || 0}
-                      vehicles={vehiclesByCompany.get(company.name)}
-                      onViewVehicles={() => setSelectedCompanyForVehicles(company.name)}
+                      onClick={() => setSelectedCompany(company)}
                     />
                   ))}
                 </div>
@@ -701,100 +814,148 @@ export default function USVMarketInteractive() {
             )}
           </div>
         ) : (
-          <div className="h-[calc(100vh-80px)] w-full relative">
-            {/* Map Hero Controls */}
-            {!isLegendCollapsed ? (
-              <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white border-2 border-black shadow-lg max-w-[280px] sm:max-w-[360px]">
-                {/* Hero Header */}
-                <div className="bg-blue-600 p-3 sm:p-5 border-b-2 border-black relative">
-                  <button
-                    onClick={() => setIsLegendCollapsed(true)}
-                    className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-white hover:bg-gray-100 border border-blue-400 transition-colors"
-                    title="Collapse legend"
-                  >
-                    <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-                  </button>
-                  <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white leading-tight pr-8">
-                    USV Market Database
-                  </h2>
-                  <p className="text-sm sm:text-base md:text-lg text-blue-100 mt-1 sm:mt-2 font-medium">
-                    Geographic View
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-blue-200 mt-1">
-                    {marketCompanies.length} key players mapped
-                  </p>
-                </div>
-
-                {/* Controls */}
-                <div className="p-2 sm:p-4">
-                  <Button
-                    onClick={() => setView("list")}
-                    className="bg-white hover:bg-gray-100 text-black border-2 border-black font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none mb-2 sm:mb-4 w-full"
-                  >
-                    <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                    VIEW LIST
-                  </Button>
-
-                  <div className="border-t-2 border-gray-200 pt-2 sm:pt-4 mb-2 sm:mb-4">
-                    <div className="text-[10px] sm:text-xs font-mono text-gray-600 mb-2 sm:mb-3 font-bold">FILTER:</div>
-                    <Button
-                      onClick={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
-                      className={`w-full font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none transition-all ${showOnlyMarketPlayers
-                        ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
-                        : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
-                        }`}
+          <div className="w-full py-4 sm:py-6 px-4 sm:px-6">
+            {/* Desktop: Flex row with sidebar left, Mobile: Flex column with sidebar bottom */}
+            <div className="max-w-7xl mx-auto h-[calc(100vh-200px)] min-h-[500px] relative border-2 border-black">
+              {/* Map Hero Controls */}
+              {!isLegendCollapsed ? (
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white border-2 border-black shadow-lg max-w-[280px] sm:max-w-[360px] max-h-[calc(100%-80px)] overflow-y-auto">
+                  {/* Hero Header */}
+                  <div className="bg-blue-600 p-3 sm:p-5 border-b-2 border-black relative">
+                    <button
+                      onClick={() => setIsLegendCollapsed(true)}
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-white hover:bg-gray-100 border border-blue-400 transition-colors"
+                      title="Collapse legend"
                     >
-                      <Filter className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                      <span className="hidden sm:inline">{showOnlyMarketPlayers ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}</span>
-                      <span className="sm:hidden">{showOnlyMarketPlayers ? "ALL" : "KEY ONLY"}</span>
+                      <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                    </button>
+                    <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white leading-tight pr-8">
+                      USV Market Database
+                    </h2>
+                    <p className="text-sm sm:text-base md:text-lg text-blue-100 mt-1 sm:mt-2 font-medium">
+                      Geographic View
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-blue-200 mt-1">
+                      {marketCompanies.length} key players mapped
+                    </p>
+                  </div>
+
+                  {/* Controls */}
+                  <div className="p-2 sm:p-4">
+                    <Button
+                      onClick={() => setView("list")}
+                      className="bg-white hover:bg-gray-100 text-black border-2 border-black font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none mb-2 sm:mb-4 w-full"
+                    >
+                      <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      VIEW LIST
                     </Button>
-                  </div>
 
-                  <div className="space-y-2 sm:space-y-3 border-t-2 border-gray-200 pt-2 sm:pt-4">
-                    <div className="text-[10px] sm:text-xs font-mono text-gray-600 font-bold">LEGEND:</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full border-2 border-white shadow flex-shrink-0"></div>
-                      <span className="text-[10px] sm:text-xs font-medium">Key Players ({marketCompanies.length})</span>
+                    <div className="border-t-2 border-gray-200 pt-2 sm:pt-4 mb-2 sm:mb-4">
+                      <div className="text-[10px] sm:text-xs font-mono text-gray-600 mb-2 sm:mb-3 font-bold">FILTER:</div>
+                      <Button
+                        onClick={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
+                        className={`w-full font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none transition-all ${showOnlyMarketPlayers
+                          ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
+                          : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
+                          }`}
+                      >
+                        <Filter className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        <span className="hidden sm:inline">{showOnlyMarketPlayers ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}</span>
+                        <span className="sm:hidden">{showOnlyMarketPlayers ? "ALL" : "KEY ONLY"}</span>
+                      </Button>
                     </div>
-                    {!showOnlyMarketPlayers && (
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-500 rounded-full flex-shrink-0"></div>
-                        <span className="text-[10px] sm:text-xs font-medium">Gov. Contractors ({contractData.length})</span>
+
+                    <div className="space-y-2 sm:space-y-3 border-t-2 border-gray-200 pt-2 sm:pt-4">
+                      <div className="text-[10px] sm:text-xs font-mono text-gray-600 font-bold">
+                        {mapSearchTerm ? `RESULTS (${filteredMapCompanies.length + (showOnlyMarketPlayers ? 0 : filteredMapContracts.length)})` : 'LEGEND:'}
                       </div>
-                    )}
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full border-2 border-white shadow flex-shrink-0"></div>
+                        <span className="text-[10px] sm:text-xs font-medium">Key Players ({filteredMapCompanies.length})</span>
+                      </div>
+                      {!showOnlyMarketPlayers && (
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-500 rounded-full flex-shrink-0"></div>
+                          <span className="text-[10px] sm:text-xs font-medium">Gov. Contractors ({filteredMapContracts.length})</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsLegendCollapsed(false)}
-                className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white hover:bg-gray-100 border-2 border-black shadow-lg p-2 sm:p-3 transition-all group"
-                title="Expand legend"
-              >
-                <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-black group-hover:text-blue-600 transition-colors" />
-              </button>
-            )}
+              ) : (
+                <button
+                  onClick={() => setIsLegendCollapsed(false)}
+                  className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white hover:bg-gray-100 border-2 border-black shadow-lg p-2 sm:p-3 transition-all group"
+                  title="Expand legend"
+                >
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-black group-hover:text-blue-600 transition-colors" />
+                </button>
+              )}
 
-            {isLoadingContracts ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
-                  <p className="font-mono text-sm text-gray-600">Loading government contract data...</p>
+              {isLoadingContracts ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+                    <p className="font-mono text-sm text-gray-600">Loading government contract data...</p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <MapView
-                contractData={contractData}
-                marketCompanies={marketCompanies}
-                showOnlyMarketPlayers={showOnlyMarketPlayers}
-              />
-            )}
+              ) : (
+                <>
+                  <MapView
+                    contractData={filteredMapContracts}
+                    marketCompanies={filteredMapCompanies}
+                    showOnlyMarketPlayers={showOnlyMarketPlayers}
+                  />
+                  {/* Data Attribution Footer */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t-2 border-black px-3 py-2 z-[999]">
+                    <p className="text-[9px] sm:text-xs text-gray-600 font-mono text-center">
+                      Government contract data sourced from{" "}
+                      <a
+                        href="https://www.usaspending.gov"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        USAspending.gov
+                      </a>
+                      {" "}and{" "}
+                      <a
+                        href="https://www.sbir.gov"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        SBIR.gov
+                      </a>
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
 
       {/* Content Feedback Widget */}
-      <ContentFeedbackWidget contentType="usv-market-landscape" />
+      <ContentFeedbackWidget
+        contentType="usv-market-landscape"
+        isOpen={isFeedbackWidgetOpen}
+        onOpenChange={setIsFeedbackWidgetOpen}
+      />
+
+      {/* Company Drawer */}
+      {selectedCompany && (
+        <CompanyDrawer
+          company={selectedCompany}
+          vehicleCount={vehiclesByCompany.get(selectedCompany.name)?.length || 0}
+          onViewVehicles={() => {
+            setSelectedCompanyForVehicles(selectedCompany.name);
+            setSelectedCompany(null);
+          }}
+          isOpen={!!selectedCompany}
+          onClose={() => setSelectedCompany(null)}
+        />
+      )}
 
       {/* Vehicle Dialog */}
       {selectedCompanyForVehicles && (

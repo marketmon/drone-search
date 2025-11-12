@@ -9,10 +9,16 @@ import Link from "next/link";
 interface ContentFeedbackWidgetProps {
   contentType: string;
   contentSection?: string;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ContentFeedbackWidget({ contentType, contentSection }: ContentFeedbackWidgetProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function ContentFeedbackWidget({ contentType, contentSection, isOpen: externalIsOpen, onOpenChange }: ContentFeedbackWidgetProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = onOpenChange || setInternalIsOpen;
   const [submitted, setSubmitted] = useState(false);
   const [showMarketScoutingOffer, setShowMarketScoutingOffer] = useState(false);
   const [formData, setFormData] = useState({
@@ -44,13 +50,7 @@ export function ContentFeedbackWidget({ contentType, contentSection }: ContentFe
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="bg-white hover:bg-gray-100 text-black border-2 border-black rounded-none font-mono text-xs tracking-wider transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(0,0,0,1)]"
-          size="lg"
-        >
-          CONTRIBUTE TO DATABASE
-        </Button>
+
       </div>
     );
   }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Footer } from "@/components/footer";
+import { SiteHeader } from "@/components/site-header";
 import { ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function MarketScouting() {
@@ -80,9 +81,9 @@ export default function MarketScouting() {
             Thanks for sharing what you're working on. We'll reach out soon to see how Scale Forge can help you build faster.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/markets">
+            <Link href="/usv-market">
               <Button className="bg-black text-white hover:bg-gray-800 rounded-none border-2 border-black font-mono text-xs tracking-wider transition-all">
-                ← BACK TO MARKETS
+                ← BACK TO USV DATABASE
               </Button>
             </Link>
           </div>
@@ -98,32 +99,16 @@ export default function MarketScouting() {
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="wave-scouting" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
-              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
-              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5" />
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#wave-scouting)"/>
+          <rect width="100%" height="100%" fill="url(#wave-scouting)" />
         </svg>
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-              ← USV TECH HUB
-            </Link>
-            <div className="flex gap-2 sm:gap-4 items-center flex-wrap text-[10px] sm:text-xs font-mono tracking-wider">
-              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                ABOUT
-              </Link>
-              <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-                MARKET DATABASE
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader />
 
       <div className="relative max-w-4xl mx-auto px-6 py-12">
         {/* Header */}

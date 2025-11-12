@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
 import { Footer } from "@/components/footer";
+import { SiteHeader } from "@/components/site-header";
 import {
   Collapsible,
   CollapsibleContent,
@@ -186,36 +187,7 @@ export default function USVSystems() {
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white border-b-2 border-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3 sm:gap-6">
-              <Link href="/" className="font-mono text-[10px] sm:text-xs tracking-wider text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-                ← HOME
-              </Link>
-              <span className="text-[10px] sm:text-xs font-mono tracking-wider text-black font-bold hidden sm:inline">USV TECH HUB</span>
-            </div>
-            <div className="flex gap-2 sm:gap-4 items-center flex-wrap">
-              <Link href="/market-scouting">
-                <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-mono text-[10px] sm:text-xs tracking-wider transition-all whitespace-nowrap">
-                  BUILD TECH FASTER
-                </button>
-              </Link>
-              <div className="hidden md:flex gap-4 text-xs font-mono tracking-wider">
-                <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
-                  MARKET DATABASE
-                </Link>
-                <Link href="/usv-systems" className="text-black font-bold transition-colors whitespace-nowrap">
-                  SYSTEM ARCHITECTURE
-                </Link>
-                <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                  ABOUT
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader />
 
       {/* Content */}
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
