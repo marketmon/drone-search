@@ -11,7 +11,13 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
-import { Search, MapPin, Grid3x3, Filter } from "lucide-react";
+import { Search, MapPin, Grid3x3, Filter, ExternalLink, FileText } from "lucide-react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import dynamic from "next/dynamic";
 import Papa from "papaparse";
 
@@ -42,6 +48,21 @@ interface ContractData {
   company_url: string;
 }
 
+interface Vehicle {
+  name: string;
+  length: string;
+  range: string;
+  endurance: string;
+  seastate: string;
+  topSpeed: string;
+  payload: string;
+  propulsion: string;
+  auxPropulsion: string;
+  company: string;
+  source: string;
+  googleLink: string;
+}
+
 // Helper function to extract domain from URL for logo API
 function getDomainFromUrl(url: string): string {
   try {
@@ -59,7 +80,112 @@ function getLogoUrl(websiteUrl: string): string {
   return `https://logo.clearbit.com/${domain}`;
 }
 
-function CompanyGridCard({ company }: { company: Company }) {
+// Helper function to format spec value or show N/A
+function formatSpec(value: string, unit: string = ""): string {
+  if (!value || value.trim() === "") return "N/A";
+  return `${value}${unit ? " " + unit : ""}`;
+}
+
+function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
+  companyName: string;
+  vehicles: Vehicle[];
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const handleSpecSheetClick = (vehicle: Vehicle) => {
+    const params = new URLSearchParams({
+      vehicle: vehicle.name,
+      company: companyName,
+      link: vehicle.googleLink,
+    });
+    window.open(`/spec-sheet?${params.toString()}`, '_blank');
+  };
+
+  // Table View Component
+  const TableView = () => (
+    <div className="overflow-x-auto">
+      <table className="w-full border border-gray-300 text-sm">
+        <thead className="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">NAME</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">LENGTH</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">RANGE</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">SPEED</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PAYLOAD</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PROPULSION</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">SPEC SHEET</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white">
+          {vehicles.map((vehicle, index) => {
+            return (
+              <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="p-3 text-black">
+                  <div className="flex items-center gap-2">
+                    {vehicle.name}
+                    {vehicle.source && (
+                      <a
+                        href={vehicle.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                </td>
+                <td className="p-3 font-mono text-black">{formatSpec(vehicle.length, 'ft')}</td>
+                <td className="p-3 font-mono text-black">{formatSpec(vehicle.range, 'nm')}</td>
+                <td className="p-3 font-mono text-black">{formatSpec(vehicle.topSpeed, 'kts')}</td>
+                <td className="p-3 font-mono text-black">{formatSpec(vehicle.payload, 'lbs')}</td>
+                <td className="p-3 font-mono text-black">{formatSpec(vehicle.propulsion)}</td>
+                <td className="p-3">
+                  {vehicle.googleLink ? (
+                    <button
+                      onClick={() => handleSpecSheetClick(vehicle)}
+                      className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                      title="View spec sheet"
+                    >
+                      <FileText className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <span className="text-gray-400">—</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  return (
+    <Drawer open={isOpen} onOpenChange={onClose}>
+      <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
+        <DrawerHeader className="border-b border-gray-300 pb-3 bg-white">
+          <DrawerTitle className="text-2xl font-bold text-black">
+            {companyName} — {vehicles.length} Vehicle{vehicles.length > 1 ? 's' : ''}
+          </DrawerTitle>
+        </DrawerHeader>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4">
+          <TableView />
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
+  company: Company;
+  vehicleCount: number;
+  onViewVehicles: () => void;
+  vehicles?: Vehicle[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
@@ -75,15 +201,48 @@ function CompanyGridCard({ company }: { company: Company }) {
     "mid-tier": "bg-green-100 text-green-700 border-green-500",
   };
 
+  // Calculate quick stats for preview
+  const quickStats = useMemo(() => {
+    if (!vehicles || vehicles.length === 0) return null;
+
+    const lengths = vehicles.map(v => parseFloat(v.length)).filter(v => !isNaN(v));
+    const ranges = vehicles.map(v => parseFloat(v.range?.replace(/,/g, '') || '0')).filter(v => !isNaN(v) && v > 0);
+    const speeds = vehicles.map(v => parseFloat(v.topSpeed)).filter(v => !isNaN(v));
+
+    return {
+      lengthRange: lengths.length ? `${Math.min(...lengths)}-${Math.max(...lengths)}ft` : null,
+      maxRange: ranges.length ? `${Math.max(...ranges)}nm` : null,
+      maxSpeed: speeds.length ? `${Math.max(...speeds)}kts` : null,
+    };
+  }, [vehicles]);
+
+  const handleVehicleBadgeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (vehicleCount > 0) {
+      onViewVehicles();
+    }
+  };
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all h-full flex flex-col bg-white">
         <CollapsibleTrigger className="w-full flex-1 flex flex-col">
           <CardHeader className="p-4 border-b border-gray-200">
             <div className="flex items-start justify-between gap-2 mb-3">
-              <span className={`text-[10px] font-mono tracking-wider px-2 py-1 border ${categoryColors[company.category]}`}>
-                {categoryLabels[company.category]}
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-[10px] font-mono tracking-wider px-2 py-1 border ${categoryColors[company.category]}`}>
+                  {categoryLabels[company.category]}
+                </span>
+                {vehicleCount > 0 && (
+                  <div
+                    onClick={handleVehicleBadgeClick}
+                    className="text-xs font-mono text-blue-700 bg-blue-50 px-2 py-1 border border-blue-300 hover:bg-blue-100 hover:border-blue-400 transition-colors cursor-pointer"
+                    title="Click to view vehicles"
+                  >
+                    {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
+                  </div>
+                )}
+              </div>
               <span className="text-black text-sm font-bold font-mono">
                 {isOpen ? "−" : "+"}
               </span>
@@ -100,9 +259,30 @@ function CompanyGridCard({ company }: { company: Company }) {
                 <span className="text-xs text-gray-500 font-mono">IMG</span>
               )}
             </div>
-            <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight text-left text-black leading-tight">
+            <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
               {company.name}
             </CardTitle>
+
+            {/* Quick Stats Preview */}
+            {quickStats && (
+              <div className="flex gap-2 flex-wrap text-[10px] font-mono text-gray-700">
+                {quickStats.lengthRange && (
+                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                    {quickStats.lengthRange}
+                  </span>
+                )}
+                {quickStats.maxSpeed && (
+                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                    ↑{quickStats.maxSpeed}
+                  </span>
+                )}
+                {quickStats.maxRange && (
+                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                    {quickStats.maxRange}
+                  </span>
+                )}
+              </div>
+            )}
           </CardHeader>
           <CardContent className="p-4 pt-3 flex-1">
             <a
@@ -117,8 +297,26 @@ function CompanyGridCard({ company }: { company: Company }) {
           </CardContent>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="px-4 pb-4 border-t border-gray-200">
+          <div className="px-4 pb-4 border-t border-gray-200 space-y-3">
             <p className="text-xs text-gray-700 leading-relaxed">{company.description}</p>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (vehicleCount > 0) {
+                  onViewVehicles();
+                }
+              }}
+              disabled={vehicleCount === 0}
+              className={`w-full font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${
+                vehicleCount > 0
+                  ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
+                  : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
+              }`}
+            >
+              {vehicleCount > 0
+                ? `VIEW ${vehicleCount} VEHICLE${vehicleCount > 1 ? 'S' : ''}`
+                : 'NO VEHICLES AVAILABLE'}
+            </Button>
           </div>
         </CollapsibleContent>
       </Card>
@@ -135,10 +333,14 @@ export default function USVMarketInteractive() {
   const [isLoadingContracts, setIsLoadingContracts] = useState(false);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
   const [showOnlyMarketPlayers, setShowOnlyMarketPlayers] = useState(false);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehiclesByCompany, setVehiclesByCompany] = useState<Map<string, Vehicle[]>>(new Map());
+  const [selectedCompanyForVehicles, setSelectedCompanyForVehicles] = useState<string | null>(null);
 
   // Load company data on mount
   useEffect(() => {
     loadCompanyData();
+    loadVehicleData();
   }, []);
 
   // Load contract data when switching to map view
@@ -206,6 +408,52 @@ export default function USVMarketInteractive() {
     } catch (error) {
       console.error("Error loading contract data:", error);
       setIsLoadingContracts(false);
+    }
+  };
+
+  const loadVehicleData = async () => {
+    try {
+      const response = await fetch("/usv_vehicles_matched_to_company.csv");
+      const csvText = await response.text();
+
+      Papa.parse(csvText, {
+        header: true,
+        complete: (results) => {
+          const data = results.data as any[];
+          const vehicleData: Vehicle[] = data
+            .filter(row => row.Name && row.Company)
+            .map(row => ({
+              name: row.Name || "",
+              length: row["Length (ft)"] || "",
+              range: row["Range (nm)"] || "",
+              endurance: row["Endurance (days)"] || "",
+              seastate: row.Seastate || "",
+              topSpeed: row["Top Speed (kts)"] || "",
+              payload: row["Payload (lbs)"] || "",
+              propulsion: row.Propulsion || "",
+              auxPropulsion: row["Aux Propulsion"] || "",
+              company: row.Company || "",
+              source: row.Source || "",
+              googleLink: row["Google Link"] || "",
+            }));
+
+          setVehicles(vehicleData);
+
+          // Group vehicles by company
+          const grouped = new Map<string, Vehicle[]>();
+          vehicleData.forEach(vehicle => {
+            const companyVehicles = grouped.get(vehicle.company) || [];
+            companyVehicles.push(vehicle);
+            grouped.set(vehicle.company, companyVehicles);
+          });
+          setVehiclesByCompany(grouped);
+        },
+        error: (error: Error) => {
+          console.error("Error parsing vehicle CSV:", error);
+        }
+      });
+    } catch (error) {
+      console.error("Error loading vehicle data:", error);
     }
   };
 
@@ -364,7 +612,13 @@ export default function USVMarketInteractive() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {filteredCompanies.map((company) => (
-                    <CompanyGridCard key={company.name} company={company} />
+                    <CompanyGridCard
+                      key={company.name}
+                      company={company}
+                      vehicleCount={vehiclesByCompany.get(company.name)?.length || 0}
+                      vehicles={vehiclesByCompany.get(company.name)}
+                      onViewVehicles={() => setSelectedCompanyForVehicles(company.name)}
+                    />
                   ))}
                 </div>
 
@@ -453,6 +707,16 @@ export default function USVMarketInteractive() {
 
       {/* Content Feedback Widget */}
       <ContentFeedbackWidget contentType="usv-market-landscape" />
+
+      {/* Vehicle Dialog */}
+      {selectedCompanyForVehicles && (
+        <VehicleDialog
+          companyName={selectedCompanyForVehicles}
+          vehicles={vehiclesByCompany.get(selectedCompanyForVehicles) || []}
+          isOpen={!!selectedCompanyForVehicles}
+          onClose={() => setSelectedCompanyForVehicles(null)}
+        />
+      )}
     </div>
   );
 }
