@@ -11,7 +11,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
-import { Search, MapPin, Grid3x3, Filter, ExternalLink, FileText } from "lucide-react";
+import { Footer } from "@/components/footer";
+import { Search, MapPin, Grid3x3, Filter, ExternalLink, FileText, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -101,7 +102,68 @@ function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
     window.open(`/spec-sheet?${params.toString()}`, '_blank');
   };
 
-  // Table View Component
+  // Mobile Card View Component
+  const MobileCardView = () => (
+    <div className="space-y-3">
+      {vehicles.map((vehicle, index) => (
+        <div key={index} className="border-2 border-gray-300 bg-white">
+          <div className="bg-gray-100 border-b-2 border-gray-300 p-3 flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-base text-black mb-1 break-words">{vehicle.name}</h3>
+              <div className="flex items-center gap-2 flex-wrap">
+                {vehicle.source && (
+                  <a
+                    href={vehicle.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 text-xs flex items-center gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Source</span>
+                  </a>
+                )}
+              </div>
+            </div>
+            {vehicle.googleLink && (
+              <button
+                onClick={() => handleSpecSheetClick(vehicle)}
+                className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 flex items-center gap-1 font-mono text-xs tracking-wider whitespace-nowrap flex-shrink-0"
+                title="View spec sheet"
+              >
+                <FileText className="w-4 h-4" />
+                SPEC
+              </button>
+            )}
+          </div>
+          <div className="p-3 grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <span className="font-mono text-gray-600 font-bold block mb-0.5">LENGTH</span>
+              <span className="font-mono text-black">{formatSpec(vehicle.length, 'ft')}</span>
+            </div>
+            <div>
+              <span className="font-mono text-gray-600 font-bold block mb-0.5">RANGE</span>
+              <span className="font-mono text-black">{formatSpec(vehicle.range, 'nm')}</span>
+            </div>
+            <div>
+              <span className="font-mono text-gray-600 font-bold block mb-0.5">TOP SPEED</span>
+              <span className="font-mono text-black">{formatSpec(vehicle.topSpeed, 'kts')}</span>
+            </div>
+            <div>
+              <span className="font-mono text-gray-600 font-bold block mb-0.5">PAYLOAD</span>
+              <span className="font-mono text-black">{formatSpec(vehicle.payload, 'lbs')}</span>
+            </div>
+            <div className="col-span-2">
+              <span className="font-mono text-gray-600 font-bold block mb-0.5">PROPULSION</span>
+              <span className="font-mono text-black">{formatSpec(vehicle.propulsion)}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Desktop Table View Component
   const TableView = () => (
     <div className="overflow-x-auto">
       <table className="w-full border border-gray-300 text-sm">
@@ -110,7 +172,7 @@ function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">NAME</th>
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">LENGTH</th>
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">RANGE</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">SPEED</th>
+            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">TOP SPEED</th>
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PAYLOAD</th>
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PROPULSION</th>
             <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">SPEC SHEET</th>
@@ -145,7 +207,7 @@ function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
                   {vehicle.googleLink ? (
                     <button
                       onClick={() => handleSpecSheetClick(vehicle)}
-                      className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                      className="text-blue-600 hover:text-blue-800 flex items-center gap-1 hover:cursor-pointer"
                       title="View spec sheet"
                     >
                       <FileText className="w-4 h-4" />
@@ -166,14 +228,20 @@ function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
         <DrawerHeader className="border-b border-gray-300 pb-3 bg-white">
-          <DrawerTitle className="text-2xl font-bold text-black">
+          <DrawerTitle className="text-lg sm:text-2xl font-bold text-black">
             {companyName} — {vehicles.length} Vehicle{vehicles.length > 1 ? 's' : ''}
           </DrawerTitle>
         </DrawerHeader>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
-          <TableView />
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">
+          {/* Show card view on mobile, table view on desktop */}
+          <div className="md:hidden">
+            <MobileCardView />
+          </div>
+          <div className="hidden md:block">
+            <TableView />
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
@@ -191,7 +259,7 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
 
   const categoryLabels = {
     startup: "STARTUP",
-    legacy: "LEGACY DEFENSE",
+    legacy: "LEGACY",
     "mid-tier": "MID-TIER",
   };
 
@@ -225,29 +293,29 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all h-full flex flex-col bg-white">
+      <Card className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all flex flex-col bg-white">
         <CollapsibleTrigger className="w-full flex-1 flex flex-col">
-          <CardHeader className="p-4 border-b border-gray-200">
-            <div className="flex items-start justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className={`text-[10px] font-mono tracking-wider px-2 py-1 border ${categoryColors[company.category]}`}>
+          <CardHeader className="p-3 sm:p-4 border-b border-gray-200">
+            <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
                   {categoryLabels[company.category]}
                 </span>
                 {vehicleCount > 0 && (
                   <div
                     onClick={handleVehicleBadgeClick}
-                    className="text-xs font-mono text-blue-700 bg-blue-50 px-2 py-1 border border-blue-300 hover:bg-blue-100 hover:border-blue-400 transition-colors cursor-pointer"
+                    className="text-[10px] sm:text-xs font-mono text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-blue-300 hover:bg-blue-100 hover:border-blue-400 transition-colors cursor-pointer"
                     title="Click to view vehicles"
                   >
                     {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
                   </div>
                 )}
               </div>
-              <span className="text-black text-sm font-bold font-mono">
+              <span className="text-black text-sm font-bold font-mono flex-shrink-0 cursor-pointer">
                 {isOpen ? "−" : "+"}
               </span>
             </div>
-            <div className="w-full h-24 bg-gray-100 border border-gray-200 flex items-center justify-center mb-3 overflow-hidden">
+            <div className="w-full h-20 sm:h-24 bg-gray-100 border border-gray-200 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
               {!logoError ? (
                 <img
                   src={getLogoUrl(company.website)}
@@ -259,37 +327,37 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
                 <span className="text-xs text-gray-500 font-mono">IMG</span>
               )}
             </div>
-            <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
+            <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
               {company.name}
             </CardTitle>
 
             {/* Quick Stats Preview */}
             {quickStats && (
-              <div className="flex gap-2 flex-wrap text-[10px] font-mono text-gray-700">
+              <div className="flex gap-1.5 sm:gap-2 flex-wrap text-[9px] sm:text-[10px] font-mono text-gray-700">
                 {quickStats.lengthRange && (
-                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
                     {quickStats.lengthRange}
                   </span>
                 )}
                 {quickStats.maxSpeed && (
-                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
                     ↑{quickStats.maxSpeed}
                   </span>
                 )}
                 {quickStats.maxRange && (
-                  <span className="bg-gray-100 px-2 py-1 border border-gray-200">
+                  <span className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-gray-200">
                     {quickStats.maxRange}
                   </span>
                 )}
               </div>
             )}
           </CardHeader>
-          <CardContent className="p-4 pt-3 flex-1">
+          <CardContent className="p-3 sm:p-4 pt-2 sm:pt-3 flex-1">
             <a
               href={company.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-mono text-gray-600 hover:text-black transition-colors inline-block border-b border-gray-400 hover:border-black"
+              className="text-[10px] sm:text-xs font-mono text-gray-600 hover:text-black transition-colors inline-block border-b border-gray-400 hover:border-black break-all"
               onClick={(e) => e.stopPropagation()}
             >
               {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
@@ -297,7 +365,7 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
           </CardContent>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="px-4 pb-4 border-t border-gray-200 space-y-3">
+          <div className="px-3 sm:px-4 pb-3 sm:pb-4 border-t border-gray-200 space-y-2 sm:space-y-3">
             <p className="text-xs text-gray-700 leading-relaxed">{company.description}</p>
             <Button
               onClick={(e) => {
@@ -307,11 +375,10 @@ function CompanyGridCard({ company, vehicleCount, onViewVehicles, vehicles }: {
                 }
               }}
               disabled={vehicleCount === 0}
-              className={`w-full font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${
-                vehicleCount > 0
-                  ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
-                  : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
-              }`}
+              className={`w-full font-mono text-[10px] sm:text-xs tracking-wider px-3 sm:px-4 py-2 rounded-none transition-all ${vehicleCount > 0
+                ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 cursor-pointer"
+                : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
+                }`}
             >
               {vehicleCount > 0
                 ? `VIEW ${vehicleCount} VEHICLE${vehicleCount > 1 ? 'S' : ''}`
@@ -336,6 +403,7 @@ export default function USVMarketInteractive() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [vehiclesByCompany, setVehiclesByCompany] = useState<Map<string, Vehicle[]>>(new Map());
   const [selectedCompanyForVehicles, setSelectedCompanyForVehicles] = useState<string | null>(null);
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
 
   // Load company data on mount
   useEffect(() => {
@@ -545,7 +613,9 @@ export default function USVMarketInteractive() {
                   </div>
                   <Button
                     onClick={() => setView("map")}
-                    className="bg-white hover:bg-gray-100 text-blue-600 border-2 border-white font-mono text-sm sm:text-base tracking-wider px-6 py-4 rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(255,255,255,0.5)]"
+                    className="bg-white hover:bg-gray-100 text-blue-600 border-2 border-white font-mono text-sm sm:text-base tracking-wider px-6 py-4 
+                    rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(255,255,255,0.5)]
+                    cursor-pointer"
                   >
                     <MapPin className="w-5 h-5 mr-2" />
                     VIEW MAP
@@ -570,7 +640,7 @@ export default function USVMarketInteractive() {
                     <span className="text-xs font-mono text-gray-600 font-bold mr-2">FILTER:</span>
                     <Button
                       onClick={() => toggleCategory("startup")}
-                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 transition-all ${selectedCategories.has("startup")
+                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 transition-all cursor-pointer ${selectedCategories.has("startup")
                         ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
                         : "bg-white border-black text-black hover:bg-gray-100"
                         }`}
@@ -579,7 +649,7 @@ export default function USVMarketInteractive() {
                     </Button>
                     <Button
                       onClick={() => toggleCategory("mid-tier")}
-                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 whitespace-nowrap transition-all ${selectedCategories.has("mid-tier")
+                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 whitespace-nowrap transition-all cursor-pointer ${selectedCategories.has("mid-tier")
                         ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
                         : "bg-white border-black text-black hover:bg-gray-100"
                         }`}
@@ -588,7 +658,7 @@ export default function USVMarketInteractive() {
                     </Button>
                     <Button
                       onClick={() => toggleCategory("legacy")}
-                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 whitespace-nowrap transition-all ${selectedCategories.has("legacy")
+                      className={`border-2 rounded-none font-mono text-xs px-4 py-2 whitespace-nowrap transition-all cursor-pointer ${selectedCategories.has("legacy")
                         ? "bg-purple-600 border-purple-600 text-white hover:bg-purple-700"
                         : "bg-white border-black text-black hover:bg-gray-100"
                         }`}
@@ -610,7 +680,7 @@ export default function USVMarketInteractive() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
                   {filteredCompanies.map((company) => (
                     <CompanyGridCard
                       key={company.name}
@@ -633,59 +703,77 @@ export default function USVMarketInteractive() {
         ) : (
           <div className="h-[calc(100vh-80px)] w-full relative">
             {/* Map Hero Controls */}
-            <div className="absolute top-4 left-4 z-[1000] bg-white border-2 border-black shadow-lg max-w-[360px]">
-              {/* Hero Header */}
-              <div className="bg-blue-600 p-5 border-b-2 border-black">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
-                  USV Market Database
-                </h2>
-                <p className="text-base sm:text-lg text-blue-100 mt-2 font-medium">
-                  Geographic View
-                </p>
-                <p className="text-xs text-blue-200 mt-1">
-                  {marketCompanies.length} key players mapped
-                </p>
-              </div>
-
-              {/* Controls */}
-              <div className="p-4">
-                <Button
-                  onClick={() => setView("list")}
-                  className="bg-white hover:bg-gray-100 text-black border-2 border-black font-mono text-xs tracking-wider px-4 py-3 rounded-none mb-4 w-full"
-                >
-                  <Grid3x3 className="w-4 h-4 mr-2" />
-                  VIEW KEY PLAYERS LIST
-                </Button>
-
-                <div className="border-t-2 border-gray-200 pt-4 mb-4">
-                  <div className="text-xs font-mono text-gray-600 mb-3 font-bold">FILTER:</div>
-                  <Button
-                    onClick={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
-                    className={`w-full font-mono text-xs tracking-wider px-4 py-3 rounded-none transition-all ${showOnlyMarketPlayers
-                      ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
-                      : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
-                      }`}
+            {!isLegendCollapsed ? (
+              <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white border-2 border-black shadow-lg max-w-[280px] sm:max-w-[360px]">
+                {/* Hero Header */}
+                <div className="bg-blue-600 p-3 sm:p-5 border-b-2 border-black relative">
+                  <button
+                    onClick={() => setIsLegendCollapsed(true)}
+                    className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-white hover:bg-gray-100 border border-blue-400 transition-colors"
+                    title="Collapse legend"
                   >
-                    <Filter className="w-4 h-4 mr-2" />
-                    {showOnlyMarketPlayers ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}
-                  </Button>
+                    <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                  </button>
+                  <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white leading-tight pr-8">
+                    USV Market Database
+                  </h2>
+                  <p className="text-sm sm:text-base md:text-lg text-blue-100 mt-1 sm:mt-2 font-medium">
+                    Geographic View
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-blue-200 mt-1">
+                    {marketCompanies.length} key players mapped
+                  </p>
                 </div>
 
-                <div className="space-y-3 border-t-2 border-gray-200 pt-4">
-                  <div className="text-xs font-mono text-gray-600 font-bold">LEGEND:</div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                    <span className="text-xs font-medium">Market Defining ({marketCompanies.length})</span>
+                {/* Controls */}
+                <div className="p-2 sm:p-4">
+                  <Button
+                    onClick={() => setView("list")}
+                    className="bg-white hover:bg-gray-100 text-black border-2 border-black font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none mb-2 sm:mb-4 w-full"
+                  >
+                    <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    VIEW LIST
+                  </Button>
+
+                  <div className="border-t-2 border-gray-200 pt-2 sm:pt-4 mb-2 sm:mb-4">
+                    <div className="text-[10px] sm:text-xs font-mono text-gray-600 mb-2 sm:mb-3 font-bold">FILTER:</div>
+                    <Button
+                      onClick={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
+                      className={`w-full font-mono text-[10px] sm:text-xs tracking-wider px-2 sm:px-4 py-2 sm:py-3 rounded-none transition-all ${showOnlyMarketPlayers
+                        ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
+                        : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
+                        }`}
+                    >
+                      <Filter className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">{showOnlyMarketPlayers ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}</span>
+                      <span className="sm:hidden">{showOnlyMarketPlayers ? "ALL" : "KEY ONLY"}</span>
+                    </Button>
                   </div>
-                  {!showOnlyMarketPlayers && (
+
+                  <div className="space-y-2 sm:space-y-3 border-t-2 border-gray-200 pt-2 sm:pt-4">
+                    <div className="text-[10px] sm:text-xs font-mono text-gray-600 font-bold">LEGEND:</div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                      <span className="text-xs font-medium">Gov. Contractors ({contractData.length})</span>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full border-2 border-white shadow flex-shrink-0"></div>
+                      <span className="text-[10px] sm:text-xs font-medium">Key Players ({marketCompanies.length})</span>
                     </div>
-                  )}
+                    {!showOnlyMarketPlayers && (
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-500 rounded-full flex-shrink-0"></div>
+                        <span className="text-[10px] sm:text-xs font-medium">Gov. Contractors ({contractData.length})</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <button
+                onClick={() => setIsLegendCollapsed(false)}
+                className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] bg-white hover:bg-gray-100 border-2 border-black shadow-lg p-2 sm:p-3 transition-all group"
+                title="Expand legend"
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-black group-hover:text-blue-600 transition-colors" />
+              </button>
+            )}
 
             {isLoadingContracts ? (
               <div className="flex items-center justify-center h-full">
@@ -717,6 +805,9 @@ export default function USVMarketInteractive() {
           onClose={() => setSelectedCompanyForVehicles(null)}
         />
       )}
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
+import { Footer } from "@/components/footer";
 import {
   Collapsible,
   CollapsibleContent,
@@ -306,6 +307,9 @@ export default function USVSystems() {
 
       {/* Content Validation Widget */}
       <ContentFeedbackWidget contentType="usv-systems-schematic" />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Footer } from "@/components/footer";
 import { ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function MarketScouting() {
@@ -338,6 +339,9 @@ export default function MarketScouting() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/footer";
 import { Ship, MessageSquare, Database, X } from "lucide-react";
 
 export default function Home() {
@@ -99,31 +100,11 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
-          {/* Attribution footer */}
-          <div className="mt-6 sm:mt-8 text-center mb-3 space-y-2 px-4">
-            <div className="flex flex-wrap gap-3 sm:gap-4 justify-center text-[10px] sm:text-xs font-mono tracking-wider">
-              <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-                ABOUT
-              </Link>
-              <Link href="/usv-market" className="text-gray-600 hover:text-black transition-colors">
-                MARKET DATABASE
-              </Link>
-
-            </div>
-            <p className="text-xs sm:text-sm text-gray-600 font-mono">
-              A{" "}
-              <a href="https://scaleforgeusa.com" className="text-black font-bold hover:underline">
-                Scale Forge USA
-              </a>
-              {" "}initiative by{" "}
-              <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
-                Syndicate 708
-              </a>
-            </p>
-          </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Artifacts Modal */}
       {showArtifacts && (

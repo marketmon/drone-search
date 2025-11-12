@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Ship } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function About() {
   return (
@@ -187,6 +188,9 @@ export default function About() {
           </section>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
