@@ -11,11 +11,11 @@ export default function About() {
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="wave-about" x="0" y="0" width="100" height="40" patternUnits="userSpaceOnUse">
-              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5"/>
-              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1"/>
+              <path d="M0 20 Q 25 10, 50 20 T 100 20" fill="none" stroke="#3b82f630" strokeWidth="1.5" />
+              <path d="M0 25 Q 25 15, 50 25 T 100 25" fill="none" stroke="#3b82f620" strokeWidth="1" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#wave-about)"/>
+          <rect width="100%" height="100%" fill="url(#wave-about)" />
         </svg>
       </div>
 
@@ -106,17 +106,13 @@ export default function About() {
           {/* Initiative Section */}
           <section className="border-2 border-black bg-white p-8">
             <div className="border-l-4 border-blue-600 pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">A Scale Forge USA Initiative</h2>
+              <h2 className="text-3xl font-bold tracking-tight">A Syndicate 708 Initiative</h2>
               <span className="text-xs font-mono text-gray-600 tracking-wider">AMERICAN MANUFACTURING</span>
             </div>
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                USV Tech Hub is part of{" "}
-                <Link href="/scaleforgeusa" className="text-blue-600 font-bold hover:underline">
-                  Scale Forge USA
-                </Link>
-                —an initiative to forge a foundation for American companies to innovate, build, and manufacture with partners in a uniquely American way, defending our ability to compete on the world stage.
+                Our mission is to forge a foundation for American companies to innovate, build, and manufacture with partners in a uniquely American way, defending our ability to compete on the world stage.
               </p>
 
               <p>
@@ -124,7 +120,7 @@ export default function About() {
               </p>
 
               <p className="text-sm">
-                Scale Forge USA is an endeavor of{" "}
+                USV Tech Hub is an endeavor of{" "}
                 <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
                   Syndicate 708
                 </a>

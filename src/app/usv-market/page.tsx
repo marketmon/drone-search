@@ -2,499 +2,28 @@
 
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ContentFeedbackWidget } from "@/components/content-feedback-widget";
 import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
-import { Search, MapPin, Grid3x3, Filter, ExternalLink, FileText, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { Search, MapPin, Grid3x3, Filter, Minus, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import Papa from "papaparse";
 
+// Types
+import { Company, ContractData, Vehicle } from "./types";
+
+// Utils
+import { locationMatchesSearch } from "./utils";
+
+// Components
+import { CompanyDrawer } from "./components/CompanyDrawer";
+import { VehicleDialog } from "./components/VehicleDialog";
+import { CompanyGridCard } from "./components/CompanyGridCard";
+import { StructuredData } from "./components/StructuredData";
+
 // Dynamically import map component (Leaflet needs window object)
 const MapView = dynamic(() => import("./MapView"), { ssr: false });
-
-interface Company {
-  name: string;
-  website: string;
-  description: string;
-  category: "startup" | "legacy" | "mid-tier";
-  location: string;
-  lat: number;
-  lng: number;
-  imageUrl: string;
-}
-
-interface ContractData {
-  lat: number;
-  lng: number;
-  company_name: string;
-  product: string;
-  contract_amount: number;
-  start_date: string;
-  city: string;
-  state: string;
-  contract_id: string;
-  source: string;
-  company_url: string;
-}
-
-interface Vehicle {
-  name: string;
-  length: string;
-  range: string;
-  endurance: string;
-  seastate: string;
-  topSpeed: string;
-  payload: string;
-  propulsion: string;
-  auxPropulsion: string;
-  company: string;
-  source: string;
-  googleLink: string;
-}
-
-// State name to abbreviation mapping
-const stateMapping: Record<string, string> = {
-  "alabama": "al", "alaska": "ak", "arizona": "az", "arkansas": "ar", "california": "ca",
-  "colorado": "co", "connecticut": "ct", "delaware": "de", "florida": "fl", "georgia": "ga",
-  "hawaii": "hi", "idaho": "id", "illinois": "il", "indiana": "in", "iowa": "ia",
-  "kansas": "ks", "kentucky": "ky", "louisiana": "la", "maine": "me", "maryland": "md",
-  "massachusetts": "ma", "michigan": "mi", "minnesota": "mn", "mississippi": "ms", "missouri": "mo",
-  "montana": "mt", "nebraska": "ne", "nevada": "nv", "new hampshire": "nh", "new jersey": "nj",
-  "new mexico": "nm", "new york": "ny", "north carolina": "nc", "north dakota": "nd", "ohio": "oh",
-  "oklahoma": "ok", "oregon": "or", "pennsylvania": "pa", "rhode island": "ri", "south carolina": "sc",
-  "south dakota": "sd", "tennessee": "tn", "texas": "tx", "utah": "ut", "vermont": "vt",
-  "virginia": "va", "washington": "wa", "west virginia": "wv", "wisconsin": "wi", "wyoming": "wy",
-  "district of columbia": "dc", "washington dc": "dc"
-};
-
-// Helper function to check if location matches search term (including state name/abbreviation matching)
-function locationMatchesSearch(location: string, searchTerm: string): boolean {
-  const locationLower = location.toLowerCase();
-  const searchLower = searchTerm.toLowerCase().trim();
-
-  // Direct match
-  if (locationLower.includes(searchLower)) {
-    return true;
-  }
-
-  // Check if search term is a full state name - if so, also check for abbreviation
-  if (stateMapping[searchLower]) {
-    const abbreviation = stateMapping[searchLower];
-    // Check for abbreviation with word boundaries (e.g., "RI" not in "MARINE")
-    const abbrevRegex = new RegExp(`\\b${abbreviation}\\b`, 'i');
-    if (abbrevRegex.test(location)) {
-      return true;
-    }
-  }
-
-  // Check if search term is a partial match for any state name
-  // For example, "flo" should match "florida" → "fl"
-  for (const [stateName, abbrev] of Object.entries(stateMapping)) {
-    if (stateName.startsWith(searchLower) && searchLower.length >= 2) {
-      // Found a state that starts with the search term
-      const stateAbbrevRegex = new RegExp(`\\b${abbrev}\\b`, 'i');
-      if (stateAbbrevRegex.test(location)) {
-        return true;
-      }
-      // Also check if the full state name is in the location
-      if (locationLower.includes(stateName)) {
-        return true;
-      }
-    }
-  }
-
-  // Check if search term is a state abbreviation - if so, also check for full name
-  const abbrevRegex = new RegExp(`\\b${searchLower}\\b`, 'i');
-  if (abbrevRegex.test(location)) {
-    // Found exact abbreviation match
-    return true;
-  }
-
-  // Check if the location contains a state abbreviation that matches the search term's full name
-  for (const [stateName, abbrev] of Object.entries(stateMapping)) {
-    if (stateName === searchLower) {
-      const stateAbbrevRegex = new RegExp(`\\b${abbrev}\\b`, 'i');
-      if (stateAbbrevRegex.test(location)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-// Helper function to format spec value or show N/A
-function formatSpec(value: string, unit: string = ""): string {
-  if (!value || value.trim() === "") return "N/A";
-  return `${value}${unit ? " " + unit : ""}`;
-}
-
-function CompanyDrawer({ company, vehicleCount, onViewVehicles, isOpen, onClose }: {
-  company: Company;
-  vehicleCount: number;
-  onViewVehicles: () => void;
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  const [logoError, setLogoError] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState(false);
-
-  // Reset description state when drawer opens with new company
-  useEffect(() => {
-    if (isOpen) {
-      setShowFullDescription(false);
-    }
-  }, [isOpen, company.name]);
-
-  const categoryLabels = {
-    startup: "STARTUP",
-    legacy: "LEGACY",
-    "mid-tier": "MID-TIER",
-  };
-
-  const categoryColors = {
-    startup: "bg-blue-100 text-blue-700 border-blue-500",
-    legacy: "bg-purple-100 text-purple-700 border-purple-500",
-    "mid-tier": "bg-green-100 text-green-700 border-green-500",
-  };
-
-  // Truncate description to ~150 characters
-  const truncatedDescription = company.description && company.description.length > 150
-    ? company.description.substring(0, 150).trim() + "..."
-    : company.description;
-
-  return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
-        <DrawerHeader className="border-b border-gray-300 pb-3 bg-white">
-          <DrawerTitle className="text-lg sm:text-2xl font-bold text-black">
-            {company.name}
-          </DrawerTitle>
-        </DrawerHeader>
-
-        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="space-y-4">
-            {/* Category Badge */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${categoryColors[company.category]}`}>
-                {categoryLabels[company.category]}
-              </span>
-              {vehicleCount > 0 && (
-                <span className="text-xs font-mono text-blue-700 bg-blue-50 px-3 py-1.5 border border-blue-300">
-                  {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
-                </span>
-              )}
-            </div>
-
-            {/* Logo */}
-            <div className="w-full h-32 bg-gray-100 border-2 border-gray-200 flex items-center justify-center overflow-hidden">
-              {company.imageUrl && !logoError ? (
-                <img
-                  src={company.imageUrl}
-                  alt={`${company.name} logo`}
-                  className="max-w-full max-h-full object-contain p-4"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <span className="text-sm text-gray-500 font-mono">NO IMAGE</span>
-              )}
-            </div>
-
-            {/* Location */}
-            {company.location && (
-              <div>
-                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">LOCATION</span>
-                <p className="text-sm text-gray-700">{company.location}</p>
-              </div>
-            )}
-
-            {/* Description */}
-            {company.description && (
-              <div>
-                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">DESCRIPTION</span>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {showFullDescription ? company.description : truncatedDescription}
-                </p>
-                {company.description.length > 150 && (
-                  <button
-                    onClick={() => setShowFullDescription(!showFullDescription)}
-                    className="text-xs font-mono text-blue-600 hover:text-blue-800 mt-2 underline cursor-pointer"
-                  >
-                    {showFullDescription ? "SEE LESS" : "SEE MORE"}
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Website */}
-            <div>
-              <span className="text-xs font-mono text-gray-600 font-bold block mb-1">WEBSITE</span>
-              <a
-                href={company.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-mono text-blue-600 hover:text-blue-800 transition-colors inline-block border-b border-blue-400 hover:border-blue-800 break-all"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-              </a>
-            </div>
-
-            {/* Vehicle Button */}
-            <Button
-              onClick={onViewVehicles}
-              disabled={vehicleCount === 0}
-              className={`w-full font-mono text-xs tracking-wider px-4 py-3 rounded-none transition-all ${vehicleCount > 0
-                ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 cursor-pointer"
-                : "bg-gray-200 text-gray-500 border-2 border-gray-300 cursor-not-allowed"
-                }`}
-            >
-              {vehicleCount > 0
-                ? `VIEW ${vehicleCount} VEHICLE${vehicleCount > 1 ? 'S' : ''}`
-                : 'NO VEHICLES AVAILABLE'}
-            </Button>
-          </div>
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-function VehicleDialog({ companyName, vehicles, isOpen, onClose }: {
-  companyName: string;
-  vehicles: Vehicle[];
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  const handleSpecSheetClick = (vehicle: Vehicle) => {
-    const params = new URLSearchParams({
-      vehicle: vehicle.name,
-      company: companyName,
-      link: vehicle.googleLink,
-    });
-    window.open(`/spec-sheet?${params.toString()}`, '_blank');
-  };
-
-  // Mobile Card View Component
-  const MobileCardView = () => (
-    <div className="space-y-3">
-      {vehicles.map((vehicle, index) => (
-        <div key={index} className="border-2 border-gray-300 bg-white">
-          <div className="bg-gray-100 border-b-2 border-gray-300 p-3 flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-base text-black mb-1 break-words">{vehicle.name}</h3>
-              <div className="flex items-center gap-2 flex-wrap">
-                {vehicle.source && (
-                  <a
-                    href={vehicle.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-xs flex items-center gap-1"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    <span>Source</span>
-                  </a>
-                )}
-              </div>
-            </div>
-            {vehicle.googleLink && (
-              <button
-                onClick={() => handleSpecSheetClick(vehicle)}
-                className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 flex items-center gap-1 font-mono text-xs tracking-wider whitespace-nowrap flex-shrink-0"
-                title="View spec sheet"
-              >
-                <FileText className="w-4 h-4" />
-                SPEC
-              </button>
-            )}
-          </div>
-          <div className="p-3 grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <span className="font-mono text-gray-600 font-bold block mb-0.5">LENGTH</span>
-              <span className="font-mono text-black">{formatSpec(vehicle.length, 'ft')}</span>
-            </div>
-            <div>
-              <span className="font-mono text-gray-600 font-bold block mb-0.5">RANGE</span>
-              <span className="font-mono text-black">{formatSpec(vehicle.range, 'nm')}</span>
-            </div>
-            <div>
-              <span className="font-mono text-gray-600 font-bold block mb-0.5">TOP SPEED</span>
-              <span className="font-mono text-black">{formatSpec(vehicle.topSpeed, 'kts')}</span>
-            </div>
-            <div>
-              <span className="font-mono text-gray-600 font-bold block mb-0.5">PAYLOAD</span>
-              <span className="font-mono text-black">{formatSpec(vehicle.payload, 'lbs')}</span>
-            </div>
-            <div className="col-span-2">
-              <span className="font-mono text-gray-600 font-bold block mb-0.5">PROPULSION</span>
-              <span className="font-mono text-black">{formatSpec(vehicle.propulsion)}</span>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  // Desktop Table View Component
-  const TableView = () => (
-    <div className="overflow-x-auto">
-      <table className="w-full border border-gray-300 text-sm">
-        <thead className="bg-gray-100 border-b border-gray-300">
-          <tr>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">NAME</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">LENGTH</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">RANGE</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">TOP SPEED</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PAYLOAD</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">PROPULSION</th>
-            <th className="text-left p-3 font-mono text-xs font-bold text-gray-700">SPEC SHEET</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          {vehicles.map((vehicle, index) => {
-            return (
-              <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="p-3 text-black">
-                  <div className="flex items-center gap-2">
-                    {vehicle.name}
-                    {vehicle.source && (
-                      <a
-                        href={vehicle.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                </td>
-                <td className="p-3 font-mono text-black">{formatSpec(vehicle.length, 'ft')}</td>
-                <td className="p-3 font-mono text-black">{formatSpec(vehicle.range, 'nm')}</td>
-                <td className="p-3 font-mono text-black">{formatSpec(vehicle.topSpeed, 'kts')}</td>
-                <td className="p-3 font-mono text-black">{formatSpec(vehicle.payload, 'lbs')}</td>
-                <td className="p-3 font-mono text-black">{formatSpec(vehicle.propulsion)}</td>
-                <td className="p-3">
-                  {vehicle.googleLink ? (
-                    <button
-                      onClick={() => handleSpecSheetClick(vehicle)}
-                      className="text-blue-600 hover:text-blue-800 flex items-center gap-1 hover:cursor-pointer"
-                      title="View spec sheet"
-                    >
-                      <FileText className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
-        <DrawerHeader className="border-b border-gray-300 pb-3 bg-white">
-          <DrawerTitle className="text-lg sm:text-2xl font-bold text-black">
-            {companyName} — {vehicles.length} Vehicle{vehicles.length > 1 ? 's' : ''}
-          </DrawerTitle>
-        </DrawerHeader>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">
-          {/* Show card view on mobile, table view on desktop */}
-          <div className="md:hidden">
-            <MobileCardView />
-          </div>
-          <div className="hidden md:block">
-            <TableView />
-          </div>
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-function CompanyGridCard({ company, vehicleCount, onClick }: {
-  company: Company;
-  vehicleCount: number;
-  onClick: () => void;
-}) {
-  const [logoError, setLogoError] = useState(false);
-
-  const categoryLabels = {
-    startup: "STARTUP",
-    legacy: "LEGACY",
-    "mid-tier": "MID-TIER",
-  };
-
-  const categoryColors = {
-    startup: "bg-blue-100 text-blue-700 border-blue-500",
-    legacy: "bg-purple-100 text-purple-700 border-purple-500",
-    "mid-tier": "bg-green-100 text-green-700 border-green-500",
-  };
-
-  const description = company.description || "";
-
-  return (
-    <Card
-      className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all flex flex-col bg-white cursor-pointer"
-      onClick={onClick}
-    >
-      <CardHeader className="p-3 sm:p-4">
-        <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-            <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
-              {categoryLabels[company.category]}
-            </span>
-            {vehicleCount > 0 && (
-              <span className="text-[10px] sm:text-xs font-mono text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-blue-300">
-                {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
-              </span>
-            )}
-          </div>
-        </div>
-        <div className="w-full h-20 sm:h-24 bg-gray-100 border border-gray-200 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
-          {company.imageUrl && !logoError ? (
-            <img
-              src={company.imageUrl}
-              alt={`${company.name} logo`}
-              className="max-w-full max-h-full object-contain p-2"
-              onError={() => setLogoError(true)}
-            />
-          ) : (
-            <span className="text-xs text-gray-500 font-mono">NO IMAGE</span>
-          )}
-        </div>
-        <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-left text-black leading-tight mb-2">
-          {company.name}
-        </CardTitle>
-
-        {/* Company Description - 2 lines max */}
-        {description && (
-          <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
-            {description}
-          </p>
-        )}
-      </CardHeader>
-    </Card>
-  );
-}
 
 export default function USVMarketInteractive() {
   const [view, setView] = useState<"list" | "map">("list");
@@ -510,7 +39,6 @@ export default function USVMarketInteractive() {
   const [selectedCompanyForVehicles, setSelectedCompanyForVehicles] = useState<string | null>(null);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
-  const [isFeedbackWidgetOpen, setIsFeedbackWidgetOpen] = useState(false);
   const [mapSearchTerm, setMapSearchTerm] = useState("");
   const [selectedMapCompany, setSelectedMapCompany] = useState<Company | null>(null);
   const [selectedMapContract, setSelectedMapContract] = useState<ContractData | null>(null);
@@ -677,6 +205,9 @@ export default function USVMarketInteractive() {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      {/* Structured Data for SEO */}
+      <StructuredData companies={marketCompanies} />
+
       {/* Wave background pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-30">
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -725,14 +256,15 @@ export default function USVMarketInteractive() {
                       <MapPin className="w-5 h-5 mr-2" />
                       VIEW MAP
                     </Button>
-                    <Button
-                      onClick={() => setIsFeedbackWidgetOpen(true)}
-                      className="bg-white hover:bg-blue-900 hover:text-white text-black border-2 border-blue-400 font-mono text-sm sm:text-base tracking-wider px-6 py-4
-                      rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(59,130,246,0.5)]
-                      cursor-pointer"
-                    >
-                      ADD TO DATABASE
-                    </Button>
+                    <Link href="/usv-market/contribution">
+                      <Button
+                        className="bg-white hover:bg-blue-900 hover:text-white text-black border-2 border-blue-400 font-mono text-sm sm:text-base tracking-wider px-6 py-4
+                        rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(59,130,246,0.5)]
+                        cursor-pointer w-full"
+                      >
+                        ADD TO DATABASE
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -935,13 +467,6 @@ export default function USVMarketInteractive() {
           </div>
         )}
       </div>
-
-      {/* Content Feedback Widget */}
-      <ContentFeedbackWidget
-        contentType="usv-market-landscape"
-        isOpen={isFeedbackWidgetOpen}
-        onOpenChange={setIsFeedbackWidgetOpen}
-      />
 
       {/* Company Drawer */}
       {selectedCompany && (
