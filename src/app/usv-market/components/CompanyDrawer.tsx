@@ -58,7 +58,10 @@ export function CompanyDrawer({
                 {categoryLabels[company.category]}
               </span>
               {vehicleCount > 0 && (
-                <span className="text-xs font-mono text-blue-700 bg-blue-50 px-3 py-1.5 border border-blue-300">
+                <span onClick={onViewVehicles}
+                  className="text-xs font-mono text-blue-700 bg-blue-50 px-3 
+                py-1.5 border border-blue-300
+                cursor-pointer hover:bg-blue-200 hover:border-blue-700">
                   {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
                 </span>
               )}

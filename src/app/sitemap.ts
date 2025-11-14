@@ -8,13 +8,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 1,
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/usv-market`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 1,
     },
     {
       url: `${baseUrl}/market-scouting`,
