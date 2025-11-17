@@ -14,20 +14,32 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "USV Tech Hub | Unmanned Surface Vehicle Technology & Market Intelligence",
-  description: "Enabling Scale for American Onshore Initiatives. Comprehensive database of USV companies, market intelligence, and maritime robotics technology.",
-  keywords: ["USV", "unmanned surface vehicles", "maritime robotics", "autonomous boats", "marine technology", "defense contractors"],
-  authors: [{ name: "USV Tech Hub" }],
+  title: "USV Tech Hub | Unmanned Surface Vehicle Market Database",
+  description: "Explore the comprehensive USV market database featuring key players in unmanned surface vehicles. Browse companies, vehicles, government contracts, and maritime robotics capabilities in the United States.",
+  keywords: [
+    "USV companies",
+    "unmanned surface vehicle manufacturers",
+    "maritime robotics companies",
+    "autonomous boat manufacturers",
+    "USV contractors",
+    "unmanned maritime systems",
+    "defense contractors USV",
+    "USV database",
+    "marine technology companies",
+    "USV Tech Hub",
+    "naval robotics"
+  ],
   openGraph: {
-    title: "USV Tech Hub",
-    description: "Enabling Scale for American Onshore Initiatives",
+    title: "USV Tech Hub | Unmanned Surface Vehicle Market Database",
+    description: "Explore the comprehensive USV market database featuring key players, vehicles, and government contracts in unmanned maritime systems.",
     type: "website",
+    url: "https://usvtechhub.com",
     images: ["/usvhub_logo.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "USV Tech Hub",
-    description: "Enabling Scale for American Onshore Initiatives",
+    title: "USV Tech Hub | USV Market Database",
+    description: "Explore the comprehensive USV market database featuring key players, vehicles, and government contracts in unmanned maritime systems.",
     images: ["/usvhub_logo.jpg"],
   },
 };

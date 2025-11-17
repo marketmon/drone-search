@@ -237,10 +237,10 @@ export default function USVMarketInteractive() {
                       <span className="text-xs font-mono tracking-wider text-blue-100 font-bold">DATABASE</span>
                     </div>
                     <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white leading-none mb-4">
-                      USV Market Database
+                      USV Hub
                     </h1>
                     <p className="text-xl sm:text-2xl md:text-3xl text-blue-100 font-medium mb-3">
-                      Key Market Players in the US
+                      Key Players in the US
                     </p>
                     <p className="text-sm sm:text-base text-blue-200 max-w-2xl">
                       {marketCompanies.length} companies shaping the unmanned maritime future
@@ -262,7 +262,7 @@ export default function USVMarketInteractive() {
                         rounded-none whitespace-nowrap transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[-4px_-4px_0px_0px_rgba(59,130,246,0.5)]
                         cursor-pointer w-full"
                       >
-                        ADD TO DATABASE
+                        CONTRIBUTE TO DATABASE
                       </Button>
                     </Link>
                   </div>
@@ -408,7 +408,7 @@ export default function USVMarketInteractive() {
                       {!showOnlyMarketPlayers && (
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-500 rounded-full flex-shrink-0"></div>
-                          <span className="text-[10px] sm:text-xs font-medium">Gov. Contractors ({filteredMapContracts.length})</span>
+                          <span className="text-[10px] sm:text-xs font-medium">Organizations with Gov. Contracts ({filteredMapContracts.length})</span>
                         </div>
                       )}
                     </div>

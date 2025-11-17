@@ -7,6 +7,10 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   const isActive = (path: string) => {
+    // Treat home page (/) as the same as /usv-market
+    if (path === "/usv-market" && pathname === "/") {
+      return true;
+    }
     return pathname === path;
   };
 
@@ -27,16 +31,17 @@ export function SiteHeader() {
                 : "text-gray-600 hover:text-black"
                 }`}
             >
-              MARKET DATABASE
+              USV DATABASE
             </Link>
+
             <Link
-              href="/market-scouting"
-              className={`transition-colors whitespace-nowrap ${isActive("/market-scouting")
+              href="/usv-market/contribution"
+              className={`transition-colors whitespace-nowrap ${isActive("/usv-market/contribution")
                 ? "text-black border-b-2 border-black pb-0.5"
                 : "text-gray-600 hover:text-black"
                 }`}
             >
-              BUILD WITH US
+              CONTRIBUTE
             </Link>
 
             <Link

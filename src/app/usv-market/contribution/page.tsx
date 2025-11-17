@@ -49,7 +49,7 @@ export default function ContributionFormPage() {
                 <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
                     <iframe
                         src="https://docs.google.com/forms/d/e/1FAIpQLSfGnz8I8ShNJXI7saYNWf5nZdjPgTqB18pYHAcYVwAtMrhPYg/viewform?embedded=true"
-                        className="w-full h-[2000px] sm:h-[1800px] md:h-[1727px]"
+                        className="w-full h-[600px] sm:h-[700px] md:h-[800px]"
                         frameBorder="0"
                         marginHeight={0}
                         marginWidth={0}
