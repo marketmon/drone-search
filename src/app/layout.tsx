@@ -14,7 +14,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "USV Tech Hub | Unmanned Surface Vehicle Market Database",
+  title: "USV Hub | Unmanned Surface Vehicle Market Database",
   description: "Explore the comprehensive USV market database featuring key players in unmanned surface vehicles. Browse companies, vehicles, government contracts, and maritime robotics capabilities in the United States.",
   keywords: [
     "USV companies",
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
     "naval robotics"
   ],
   openGraph: {
-    title: "USV Tech Hub | Unmanned Surface Vehicle Market Database",
+    title: "USV Hub | Unmanned Surface Vehicle Market Database",
     description: "Explore the comprehensive USV market database featuring key players, vehicles, and government contracts in unmanned maritime systems.",
     type: "website",
-    url: "https://usvtechhub.com",
+    url: "https://usvhub.com",
     images: ["/usvhub_logo.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "USV Tech Hub | USV Market Database",
+    title: "USV Hub | USV Market Database",
     description: "Explore the comprehensive USV market database featuring key players, vehicles, and government contracts in unmanned maritime systems.",
     images: ["/usvhub_logo.jpg"],
   },
