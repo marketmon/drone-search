@@ -51,6 +51,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5N3Q8BKLBT"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-5N3Q8BKLBT');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} ${merriweather.variable} antialiased font-inter bg-black text-white min-h-screen`}
       >
