@@ -9,7 +9,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Company } from "../types";
-import { categoryLabels, categoryColors } from "../utils";
+import { categoryLabels, categoryColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
 
 interface CompanyDrawerProps {
   company: Company;
@@ -52,14 +52,31 @@ export function CompanyDrawer({
 
         <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="space-y-4">
-            {/* Category Badge */}
+            {/* Entity Type & Category Badges */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${categoryColors[company.category]}`}>
-                {categoryLabels[company.category]}
+              {/* Entity Type Badge */}
+              <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${entityTypeColors[company.entityType]}`}>
+                {entityTypeLabels[company.entityType]}
               </span>
+
+              {/* Category Badge - only for USV platforms and boatbuilders */}
+              {(company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category && (
+                <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${categoryColors[company.category]}`}>
+                  {categoryLabels[company.category]}
+                </span>
+              )}
+
+              {/* Funding Badge */}
+              {company.funding && (
+                <span className="text-xs font-mono text-green-700 bg-green-50 px-3 py-1.5 border border-green-300 font-bold">
+                  {formatFunding(company.funding)} RAISED
+                </span>
+              )}
+
+              {/* Vehicle Count Badge */}
               {vehicleCount > 0 && (
                 <span onClick={onViewVehicles}
-                  className="text-xs font-mono text-blue-700 bg-blue-50 px-3 
+                  className="text-xs font-mono text-blue-700 bg-blue-50 px-3
                 py-1.5 border border-blue-300
                 cursor-pointer hover:bg-blue-200 hover:border-blue-700">
                   {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}
@@ -104,6 +121,23 @@ export function CompanyDrawer({
                     {showFullDescription ? "SEE LESS" : "SEE MORE"}
                   </button>
                 )}
+              </div>
+            )}
+
+            {/* Portfolio Companies - Only for Investors */}
+            {company.entityType === "investor" && company.portfolioCompanies && (
+              <div>
+                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">PORTFOLIO COMPANIES</span>
+                <div className="flex flex-wrap gap-2">
+                  {company.portfolioCompanies.split(',').map((companyName, index) => (
+                    <span
+                      key={index}
+                      className="text-xs font-mono text-blue-700 bg-blue-50 px-2 py-1 border border-blue-300"
+                    >
+                      {companyName.trim()}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
 

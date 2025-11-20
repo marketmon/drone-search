@@ -19,11 +19,11 @@ export function SiteHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div
-            className="font-mono text-[10px] sm:text-xs  text-gray-600 transition-colors whitespace-nowrap"
+            className="font-mono text-sm sm:text-md text-gray-600 transition-colors whitespace-nowrap"
           >
             USV HUB
           </div>
-          <div className="flex gap-3 sm:gap-4 text-[10px] sm:text-xs font-mono tracking-wider">
+          <div className="flex gap-3 sm:gap-4 text-sm sm:text-md font-mono tracking-wider">
             <Link
               href="/usv-market"
               className={`transition-colors whitespace-nowrap ${isActive("/usv-market")

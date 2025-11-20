@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Company } from "../types";
-import { categoryLabels, categoryColors } from "../utils";
+import { categoryLabels, categoryColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
 
 interface CompanyGridCardProps {
   company: Company;
@@ -19,6 +19,7 @@ export function CompanyGridCard({
   const [logoError, setLogoError] = useState(false);
 
   const description = company.description || "";
+  const fundingDisplay = formatFunding(company.funding);
 
   return (
     <Card
@@ -28,9 +29,26 @@ export function CompanyGridCard({
       <CardHeader className="p-1 sm:p-2">
         <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-            <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
-              {categoryLabels[company.category]}
+            {/* Entity Type Badge */}
+            <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${entityTypeColors[company.entityType]}`}>
+              {entityTypeLabels[company.entityType]}
             </span>
+
+            {/* Category Badge - only for USV platforms and boatbuilders */}
+            {(company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category && (
+              <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
+                {categoryLabels[company.category]}
+              </span>
+            )}
+
+            {/* Funding Badge */}
+            {fundingDisplay && (
+              <span className="text-[10px] sm:text-xs font-mono text-green-700 bg-green-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-green-300 font-bold">
+                {fundingDisplay}
+              </span>
+            )}
+
+            {/* Vehicle Count Badge */}
             {vehicleCount > 0 && (
               <span className="text-[10px] sm:text-xs font-mono text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-0.5 sm:py-1 border border-blue-300">
                 {vehicleCount} {vehicleCount === 1 ? 'VEHICLE' : 'VEHICLES'}

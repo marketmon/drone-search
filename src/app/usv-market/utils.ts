@@ -76,14 +76,56 @@ export function formatSpec(value: string, unit: string = ""): string {
 }
 
 // Category labels and colors
-export const categoryLabels = {
+export const categoryLabels: Record<string, string> = {
   startup: "STARTUP",
   legacy: "LEGACY",
   "mid-tier": "MID-TIER",
+  "new prime": "NEW PRIME",
+  "": "",
 };
 
-export const categoryColors = {
+export const categoryColors: Record<string, string> = {
   startup: "bg-blue-100 text-blue-700 border-blue-500",
   legacy: "bg-purple-100 text-purple-700 border-purple-500",
   "mid-tier": "bg-green-100 text-green-700 border-green-500",
+  "new prime": "bg-orange-100 text-orange-700 border-orange-500",
+  "": "",
 };
+
+// Entity type labels and colors
+export const entityTypeLabels: Record<string, string> = {
+  "usv platform": "USV PLATFORM",
+  "boatbuilder": "BOATBUILDER",
+  "investor": "INVESTOR",
+  "university": "UNIVERSITY",
+  "research institute": "RESEARCH",
+  "incubator": "INCUBATOR",
+  "gov. agency": "GOV. AGENCY",
+  "association": "ASSOCIATION",
+};
+
+export const entityTypeColors: Record<string, string> = {
+  "usv platform": "bg-blue-100 text-blue-700 border-blue-500",
+  "boatbuilder": "bg-blue-100 text-blue-700 border-blue-500",
+  "investor": "bg-amber-100 text-amber-700 border-amber-500",
+  "university": "bg-indigo-100 text-indigo-700 border-indigo-500",
+  "research institute": "bg-teal-100 text-teal-700 border-teal-500",
+  "incubator": "bg-pink-100 text-pink-700 border-pink-500",
+  "gov. agency": "bg-slate-100 text-slate-700 border-slate-500",
+  "association": "bg-cyan-100 text-cyan-700 border-cyan-500",
+};
+
+// Helper function to format funding amount
+export function formatFunding(funding?: number): string {
+  if (!funding || funding === 0) return "";
+  if (funding >= 1000000000) {
+    return `$${(funding / 1000000000).toFixed(1)}B`;
+  }
+  if (funding >= 1000000) {
+    return `$${(funding / 1000000).toFixed(0)}M`;
+  }
+  if (funding >= 1000) {
+    return `$${(funding / 1000).toFixed(0)}K`;
+  }
+  return `$${funding}`;
+}

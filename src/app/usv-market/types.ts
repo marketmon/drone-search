@@ -1,12 +1,26 @@
+export type EntityType =
+  | "usv platform"
+  | "boatbuilder"
+  | "incubator"
+  | "research institute"
+  | "gov. agency"
+  | "university"
+  | "association"
+  | "investor";
+
 export interface Company {
   name: string;
   website: string;
   description: string;
-  category: "startup" | "legacy" | "mid-tier";
+  category: "startup" | "legacy" | "mid-tier" | "new prime" | "";
   location: string;
   lat: number;
   lng: number;
   imageUrl: string;
+  funding?: number;
+  entityType: EntityType;
+  country: string;
+  portfolioCompanies?: string; // Comma-separated list for investors
 }
 
 export interface ContractData {
