@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ChevronDown, Check } from "lucide-react";
+import { Search, ChevronDown, Check, Info } from "lucide-react";
+import { FilterInfoDialog } from "./FilterInfoDialog";
 
 interface SearchAndFiltersProps {
   searchTerm: string;
@@ -45,6 +46,7 @@ export function SearchAndFilters({
 }: SearchAndFiltersProps) {
   const [entityTypeDropdownOpen, setEntityTypeDropdownOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -111,131 +113,144 @@ export function SearchAndFilters({
             <span className="text-xs font-mono text-gray-600 font-bold">FILTER:</span>
             <Button
               onClick={onToggleMapFilter}
-              className={`font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${
-                mapFilterActive
-                  ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
-                  : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
-              }`}
+              className={`font-mono text-xs tracking-wider px-4 py-2 rounded-none transition-all ${mapFilterActive
+                ? "bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700"
+                : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
+                }`}
             >
-              {mapFilterActive ? "SHOW ALL CONTRACTORS" : "SHOW ONLY KEY PLAYERS"}
+              {mapFilterActive ? "SHOW CONTRACTS & KEY PLAYERS" : "SHOW ONLY KEY PLAYERS"}
             </Button>
           </div>
         )}
         {/* Filter Dropdowns */}
         {showFilters && (
-          <div className="flex gap-3 items-center flex-wrap">
-            <span className="text-xs font-mono text-gray-600 font-bold">FILTERS:</span>
+          <div className="flex gap-3 items-center flex-wrap justify-between">
+            <div className="flex gap-3 items-center flex-wrap">
+              <span className="text-xs font-mono text-gray-600 font-bold">FILTERS:</span>
 
-            {/* Entity Type Dropdown */}
-          <div className="relative filter-dropdown">
-            <Button
-              onClick={toggleEntityTypeDropdown}
-              className="bg-white hover:bg-gray-50 text-black border-2 border-black font-mono text-xs px-4 py-2 rounded-none flex items-center gap-2"
-            >
-              ENTITY TYPE ({selectedEntityTypes.size})
-              <ChevronDown className="w-4 h-4" />
-            </Button>
-            {entityTypeDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-white border-2 border-black shadow-lg z-[100] min-w-[250px] max-w-[280px]">
-                <div className="flex gap-2 p-2 border-b-2 border-gray-200">
-                  <button
-                    onClick={onSelectAllEntityTypes}
-                    className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
-                  >
-                    SELECT ALL
-                  </button>
-                  <button
-                    onClick={onDeselectAllEntityTypes}
-                    className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
-                  >
-                    CLEAR
-                  </button>
-                </div>
-                <div className="p-2 max-h-[240px] overflow-y-auto">
-                  {entityTypes.map((type) => (
-                    <label
-                      key={type.value}
-                      className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer font-mono text-sm"
-                    >
-                      <div className="flex items-center gap-2 flex-1">
-                        <div className="w-4 h-4 border-2 border-black flex items-center justify-center flex-shrink-0">
-                          {selectedEntityTypes.has(type.value) && <Check className="w-3 h-3" />}
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={selectedEntityTypes.has(type.value)}
-                          onChange={() => onToggleEntityType(type.value)}
-                          className="sr-only"
-                        />
-                        <span>{type.label}</span>
-                      </div>
-                      <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                        {statistics.entityTypeCounts[type.value] || 0}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Category Dropdown */}
-          {showCategoryFilter && (
-            <div className="relative filter-dropdown">
-              <Button
-                onClick={toggleCategoryDropdown}
-                className="bg-white hover:bg-gray-50 text-black border-2 border-black font-mono text-xs px-4 py-2 rounded-none flex items-center gap-2"
-              >
-                CATEGORY ({selectedCategories.size})
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-              {categoryDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 bg-white border-2 border-black shadow-lg z-[100] min-w-[200px] max-w-[240px]">
-                  <div className="flex gap-2 p-2 border-b-2 border-gray-200">
-                    <button
-                      onClick={onSelectAllCategories}
-                      className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
-                    >
-                      SELECT ALL
-                    </button>
-                    <button
-                      onClick={onDeselectAllCategories}
-                      className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
-                    >
-                      CLEAR
-                    </button>
-                  </div>
-                  <div className="p-2 max-h-[180px] overflow-y-auto">
-                    {categories.map((cat) => (
-                      <label
-                        key={cat.value}
-                        className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer font-mono text-sm"
+              {/* Entity Type Dropdown */}
+              <div className="relative filter-dropdown">
+                <Button
+                  onClick={toggleEntityTypeDropdown}
+                  className="bg-white hover:bg-gray-50 text-black border-2 border-black font-mono text-xs px-4 py-2 rounded-none flex items-center gap-2"
+                >
+                  ENTITY TYPE ({selectedEntityTypes.size})
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+                {entityTypeDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-1 bg-white border-2 border-black shadow-lg z-[100] min-w-[250px] max-w-[280px]">
+                    <div className="flex gap-2 p-2 border-b-2 border-gray-200">
+                      <button
+                        onClick={onSelectAllEntityTypes}
+                        className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
                       >
-                        <div className="flex items-center gap-2 flex-1">
-                          <div className="w-4 h-4 border-2 border-black flex items-center justify-center flex-shrink-0">
-                            {selectedCategories.has(cat.value) && <Check className="w-3 h-3" />}
+                        SELECT ALL
+                      </button>
+                      <button
+                        onClick={onDeselectAllEntityTypes}
+                        className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
+                      >
+                        CLEAR
+                      </button>
+                    </div>
+                    <div className="p-2 max-h-[240px] overflow-y-auto">
+                      {entityTypes.map((type) => (
+                        <label
+                          key={type.value}
+                          className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer font-mono text-sm"
+                        >
+                          <div className="flex items-center gap-2 flex-1">
+                            <div className="w-4 h-4 border-2 border-black flex items-center justify-center flex-shrink-0">
+                              {selectedEntityTypes.has(type.value) && <Check className="w-3 h-3" />}
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={selectedEntityTypes.has(type.value)}
+                              onChange={() => onToggleEntityType(type.value)}
+                              className="sr-only"
+                            />
+                            <span>{type.label}</span>
                           </div>
-                          <input
-                            type="checkbox"
-                            checked={selectedCategories.has(cat.value)}
-                            onChange={() => onToggleCategory(cat.value)}
-                            className="sr-only"
-                          />
-                          <span>{cat.label}</span>
-                        </div>
-                        <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                          {statistics.categoryCounts[cat.value] || 0}
-                        </span>
-                      </label>
-                    ))}
+                          <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                            {statistics.entityTypeCounts[type.value] || 0}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
+                )}
+              </div>
+
+              {/* Category Dropdown */}
+              {showCategoryFilter && (
+                <div className="relative filter-dropdown">
+                  <Button
+                    onClick={toggleCategoryDropdown}
+                    className="bg-white hover:bg-gray-50 text-black border-2 border-black font-mono text-xs px-4 py-2 rounded-none flex items-center gap-2"
+                  >
+                    CATEGORY ({selectedCategories.size})
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                  {categoryDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border-2 border-black shadow-lg z-[100] min-w-[200px] max-w-[240px]">
+                      <div className="flex gap-2 p-2 border-b-2 border-gray-200">
+                        <button
+                          onClick={onSelectAllCategories}
+                          className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
+                        >
+                          SELECT ALL
+                        </button>
+                        <button
+                          onClick={onDeselectAllCategories}
+                          className="flex-1 text-xs font-mono px-2 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300"
+                        >
+                          CLEAR
+                        </button>
+                      </div>
+                      <div className="p-2 max-h-[180px] overflow-y-auto">
+                        {categories.map((cat) => (
+                          <label
+                            key={cat.value}
+                            className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer font-mono text-sm"
+                          >
+                            <div className="flex items-center gap-2 flex-1">
+                              <div className="w-4 h-4 border-2 border-black flex items-center justify-center flex-shrink-0">
+                                {selectedCategories.has(cat.value) && <Check className="w-3 h-3" />}
+                              </div>
+                              <input
+                                type="checkbox"
+                                checked={selectedCategories.has(cat.value)}
+                                onChange={() => onToggleCategory(cat.value)}
+                                className="sr-only"
+                              />
+                              <span>{cat.label}</span>
+                            </div>
+                            <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                              {statistics.categoryCounts[cat.value] || 0}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
+
+            {/* Info Button - Far Right */}
+            <button
+              onClick={() => setInfoDialogOpen(true)}
+              className="w-9 h-9 border-2 border-black bg-white cursor-pointer flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-colors group"
+              title="Learn about entity types and categories"
+            >
+              <Info className="w-5 h-5 text-black group-hover:text-white transition-colors" />
+            </button>
           </div>
         )}
       </div>
+
+      {/* Info Dialog */}
+      <FilterInfoDialog isOpen={infoDialogOpen} onClose={() => setInfoDialogOpen(false)} />
     </div>
   );
 }

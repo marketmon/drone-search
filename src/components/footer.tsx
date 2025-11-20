@@ -16,14 +16,14 @@ export function Footer() {
             href="/usv-market"
             className="text-xs font-mono text-gray-600 hover:text-black transition-colors tracking-wider"
           >
-            MARKET DATABASE
+            DATABASE
           </Link>
           <span className="hidden sm:inline text-gray-300">|</span>
           <Link
-            href="/market-scouting"
+            href="/usv-market/contribution"
             className="text-xs font-mono text-gray-600 hover:text-black transition-colors tracking-wider"
           >
-            MARKET SCOUTING
+            CONTRIBUTE
           </Link>
         </div>
       </div>

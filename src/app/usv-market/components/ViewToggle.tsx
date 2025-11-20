@@ -16,38 +16,61 @@ export function ViewToggle({ viewType, onViewTypeChange, dataView = "entities", 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
         {/* Data View Toggle - only show in grid/table view */}
         {viewType !== "map" && onDataViewChange && (
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center flex-wrap justify-center w-full sm:w-auto">
             <span className="text-xs font-mono text-gray-600 font-bold mr-1">DATA:</span>
-            <Button
-              onClick={() => onDataViewChange("entities")}
-              className={`border-2 cursor-pointer rounded-none font-mono text-xs px-3 py-2 transition-all ${dataView === "entities"
-                ? "bg-black text-white border-black"
-                : "bg-white text-black border-black hover:bg-gray-100"
-                }`}
-            >
-              <Building2 className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">ENTITIES</span>
-            </Button>
-            <Button
-              onClick={() => onDataViewChange("contracts")}
-              className={`border-2 cursor-pointer rounded-none font-mono text-xs px-3 py-2 transition-all ${dataView === "contracts"
-                ? "bg-black text-white border-black"
-                : "bg-white text-black border-black hover:bg-gray-100"
-                }`}
-            >
-              <FileText className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">CONTRACTS</span>
-            </Button>
-            <Button
-              onClick={() => onDataViewChange("vehicles")}
-              className={`border-2 cursor-pointer rounded-none font-mono text-xs px-3 py-2 transition-all ${dataView === "vehicles"
-                ? "bg-black text-white border-black"
-                : "bg-white text-black border-black hover:bg-gray-100"
-                }`}
-            >
-              <Ship className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">VEHICLES</span>
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => onDataViewChange("entities")}
+                className={`border-2 cursor-pointer rounded-none font-mono px-2 sm:px-3 py-2 transition-all text-xs flex items-center overflow-hidden group ${dataView === "entities"
+                  ? "bg-black text-white border-black"
+                  : "bg-white text-black border-black hover:bg-gray-100"
+                  }`}
+                title="Entities"
+              >
+                <Building2 className="w-4 h-4 flex-shrink-0" />
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
+                  dataView === "entities"
+                    ? "max-w-[100px] opacity-100"
+                    : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
+                }`}>
+                  ENTITIES
+                </span>
+              </Button>
+              <Button
+                onClick={() => onDataViewChange("contracts")}
+                className={`border-2 cursor-pointer rounded-none font-mono px-2 sm:px-3 py-2 transition-all text-xs flex items-center overflow-hidden group ${dataView === "contracts"
+                  ? "bg-black text-white border-black"
+                  : "bg-white text-black border-black hover:bg-gray-100"
+                  }`}
+                title="Contracts"
+              >
+                <FileText className="w-4 h-4 flex-shrink-0" />
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
+                  dataView === "contracts"
+                    ? "max-w-[100px] opacity-100"
+                    : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
+                }`}>
+                  CONTRACTS
+                </span>
+              </Button>
+              <Button
+                onClick={() => onDataViewChange("vehicles")}
+                className={`border-2 cursor-pointer rounded-none font-mono px-2 sm:px-3 py-2 transition-all text-xs flex items-center overflow-hidden group ${dataView === "vehicles"
+                  ? "bg-black text-white border-black"
+                  : "bg-white text-black border-black hover:bg-gray-100"
+                  }`}
+                title="Vehicles"
+              >
+                <Ship className="w-4 h-4 flex-shrink-0" />
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
+                  dataView === "vehicles"
+                    ? "max-w-[100px] opacity-100"
+                    : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
+                }`}>
+                  VEHICLES
+                </span>
+              </Button>
+            </div>
           </div>
         )}
 
