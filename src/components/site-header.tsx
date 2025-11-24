@@ -36,15 +36,16 @@ export function SiteHeader() {
   };
 
   return (
-    <nav className={`sticky top-0 z-50 bg-white border-b-2 border-black transition-transform duration-300 ${
-      isVisible ? "translate-y-0" : "-translate-y-full"
-    }`}>
+    <nav className={`sticky top-0 z-50 bg-white border-b-2 border-black transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
           {/* Logo */}
-          <div className="font-mono text-base sm:text-md text-gray-600 transition-colors whitespace-nowrap text-center sm:text-left">
-            USV HUB
-          </div>
+          <Link href="/">
+            <div className="font-mono text-base sm:text-md text-gray-600 transition-colors whitespace-nowrap text-center sm:text-left">
+              USV HUB
+            </div>
+          </Link>
 
           {/* Navigation Links */}
           <div className="flex justify-center sm:justify-end gap-4 sm:gap-4 text-xs sm:text-md font-mono tracking-wider">
@@ -76,6 +77,13 @@ export function SiteHeader() {
                 }`}
             >
               ABOUT
+            </Link>
+
+            <Link
+              href="/about#community"
+              className="transition-colors whitespace-nowrap text-gray-600 hover:text-black"
+            >
+              JOIN
             </Link>
           </div>
         </div>

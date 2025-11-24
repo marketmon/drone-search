@@ -106,8 +106,8 @@ export default function About() {
           {/* Initiative Section */}
           <section className="border-2 border-black bg-white p-8">
             <div className="border-l-4 border-blue-600 pl-4 mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">A Syndicate 708 Initiative</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">AMERICAN MANUFACTURING</span>
+              <h2 className="text-3xl font-bold tracking-tight">Localize Opportunity</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">RESTORE AMERICAN MANUFACTURING</span>
             </div>
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
@@ -119,13 +119,7 @@ export default function About() {
                 The maritime sector is our first vertical. By creating transparency and connectivity in this market, we're demonstrating how information sharing and collaboration can accelerate American manufacturing and deployment of critical technologies.
               </p>
 
-              <p className="text-sm">
-                USV Tech Hub is an endeavor of{" "}
-                <a href="https://syndicate708.com" target="_blank" className="text-black font-bold hover:underline">
-                  Syndicate 708
-                </a>
-                , active since 2017.
-              </p>
+
             </div>
           </section>
 
@@ -158,6 +152,55 @@ export default function About() {
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* Community Section */}
+          <section id="community" className="border-2 border-black bg-white p-8">
+            <div className="border-l-4 border-blue-600 pl-4 mb-6">
+              <h2 className="text-3xl font-bold tracking-tight">Join the Community</h2>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">CONNECT & COLLABORATE</span>
+            </div>
+
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              <p>
+                Interested in joining the conversation? We're gauging interest for a dedicated Slack community where USV engineers, founders, suppliers, and operators can connect, collaborate, and advance the industry together.
+              </p>
+
+              <div className="pt-2">
+                <a
+                  href="https://forms.gle/Y1kJ34ZPvyaikgxq7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-6 py-3 bg-blue-600 text-white font-mono text-sm tracking-wider border-2 border-black hover:bg-blue-700 transition-colors"
+                >
+                  JOIN SLACK COMMUNITY
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* About the Creator */}
+          <section className="border-2 border-black bg-white p-8">
+
+
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              <p>
+                USV Hub was created and is maintained by{" "}
+                <a
+                  href="https://www.linkedin.com/in/ethan-markwalter/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                >
+                  Ethan Markwalter
+                </a>
+              </p>
+
+              <p className="text-sm">
+                Questions, feedback, or want to contribute?{" "}
+                <span className="font-mono">ethan[at]syndicate708[dot]com</span>
+              </p>
             </div>
           </section>
         </div>
