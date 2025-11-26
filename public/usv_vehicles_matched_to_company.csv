@@ -4,11 +4,11 @@ Cutlass,14,300,,,20,200,,,Saronic Technologies,https://www.saronic.com/vessels,
 Corsair,24,"1,000",,,35,1000,,,Saronic Technologies,https://www.saronic.com/vessels,
 Mirage,40,"2,000",,,35,2000,,,Saronic Technologies,https://www.saronic.com/vessels,
 Cipher,60,"3,000",,,35,10000,,,Saronic Technologies,https://www.saronic.com/vessels,
-Marauder,150,"3,500",,,18,88184.9,,,Saronic,https://www.saronic.com/vessels,
+Marauder,150,"3,500",,,18,88184.9,,,Saronic Technologies,https://www.saronic.com/vessels,
 Rampage,14,150,,,15,300,Electric,,HavocAI,https://www.havocai.com/maritime-systems,
 Kaikoa,42,,,,40,3640,,,HavocAI,https://www.havocai.com/maritime-systems,
 Atlas,100,7440,,,25,35840,,,HavocAI,https://www.havocai.com/maritime-systems,
--UNAMED-,150,,,,,,,,Blue Water Autonomy,,
+-Unamed-,150,,,,,,,,Blue Water Autonomy,,
 GARC,16,1600,,5,40,1000,Diesel,,BlackSea Tech/MAPC,https://www.blacksea.tech/garc,http://drive.google.com/file/d/1hN3_-R1Iq3OzahsAVPRk5MfPwmU7DFtE/view
 Surveyor,65,,100,,6,,Wind (Sail),Diesel,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1AfGfNzSEH-xZckoE7X4wRwhHcIion_6J/view
 Voyager,33,,100,,5,,Wind (Sail),Eletric,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/19j3znGRFVdq4RYh_cY-xOTHDkcLQ-3hk/view
@@ -56,6 +56,9 @@ Q-Boat 1250,4.2,,,,4.5,10,,,Teledyne Technologies,https://www.teledynemarine.com
 Z-Boat 1250,4.2,,,,2.9,10,,,Teledyne Technologies,https://www.teledynemarine.com/en-us/products/Pages/zboat1250.aspx,https://drive.google.com/file/d/1rppfLpoZT0pz1ocDMtDRDk2IRnI4Yn8-/view
 Q-Boat 1800RP,5.9,,,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1800rp,https://drive.google.com/file/d/1OvtDT0pGvTCRbSWlegS2DtN3I58puHDe/view
 Z-Boat 1800,5.9,,0.167,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800,https://drive.google.com/file/d/1kCMfws0m8C-GUJVBJOUQNLs4-E-2T1eQ/view
-"Z-Boat 1800T - Trimble Edition
-",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
--UNAMED-,34,300,,,40,,Diesel,,BAE Systems US,https://www.baesystems.com/en/product/uncrewed-surface-vessel,https://drive.google.com/file/d/1qWAkEzsgrFOuyXm6LD3dbTpzAL5UHj-S/preview
+"Z-Boat 1800T - Trimble Edition",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
+-Unamed-,34,300,,,40,,Diesel,,BAE Systems US,https://www.baesystems.com/en/product/uncrewed-surface-vessel,https://drive.google.com/file/d/1qWAkEzsgrFOuyXm6LD3dbTpzAL5UHj-S/preview
+NeedleFish,46,,,,,,,,Ocean Infinity,https://oceaninfinity.com/news/ocean-infinity-launches-needlefish-usv-in-kuwait/,
+WAM-V® 8,8,,0.5,,6,100,Electric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-8/,
+WAM-V® 16,17.4,,0.3,,11,425,Eletric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-16/,
+WAM-V® 22,23,,3,,20,600,Gas,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-22/,
