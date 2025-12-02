@@ -14,9 +14,9 @@ export function useStatistics(marketCompanies: Company[]) {
       // Count by entity type
       entityTypeCounts[company.entityType] = (entityTypeCounts[company.entityType] || 0) + 1;
 
-      // Count by category (only for USV platforms and boatbuilders)
-      if ((company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category) {
-        categoryCounts[company.category] = (categoryCounts[company.category] || 0) + 1;
+      // Count by category (only for USV platforms)
+      if (company.entityCategory === "usv platform" && company.companyType) {
+        categoryCounts[company.companyType] = (categoryCounts[company.companyType] || 0) + 1;
       }
     });
 
