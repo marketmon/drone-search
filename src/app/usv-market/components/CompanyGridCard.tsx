@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Company } from "../types";
-import { categoryLabels, categoryColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
+import { entityCategoryLabels, entityCategoryColors, companyTypeLabels, companyTypeColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
 
 interface CompanyGridCardProps {
   company: Company;
@@ -34,10 +34,17 @@ export function CompanyGridCard({
               {entityTypeLabels[company.entityType]}
             </span>
 
-            {/* Category Badge - only for USV platforms and boatbuilders */}
-            {(company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category && (
-              <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${categoryColors[company.category]}`}>
-                {categoryLabels[company.category]}
+            {/* Entity Category Badge */}
+            {company.entityCategory && (
+              <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${entityCategoryColors[company.entityCategory]}`}>
+                {entityCategoryLabels[company.entityCategory]}
+              </span>
+            )}
+
+            {/* Company Type Badge - only for companies */}
+            {company.entityType === "company" && company.companyType && (
+              <span className={`text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 border ${companyTypeColors[company.companyType]}`}>
+                {companyTypeLabels[company.companyType]}
               </span>
             )}
 

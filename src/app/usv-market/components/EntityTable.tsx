@@ -1,7 +1,7 @@
 "use client";
 
 import { Company, Vehicle } from "../types";
-import { entityTypeLabels, entityTypeColors, categoryLabels, categoryColors, formatFunding } from "../utils";
+import { entityTypeLabels, entityTypeColors, entityCategoryLabels, entityCategoryColors, companyTypeLabels, companyTypeColors, formatFunding } from "../utils";
 
 interface EntityTableProps {
   companies: Company[];
@@ -16,8 +16,9 @@ export function EntityTable({ companies, vehiclesByCompany, onCompanyClick }: En
         <thead className="bg-gray-100 border-b-2 border-black">
           <tr>
             <th className="text-left px-4 py-3 font-bold text-xs">ENTITY NAME</th>
-            <th className="text-left px-4 py-3 font-bold text-xs">TYPE</th>
-            <th className="text-left px-4 py-3 font-bold text-xs">CATEGORY</th>
+            <th className="text-left px-4 py-3 font-bold text-xs">ENTITY TYPE</th>
+            <th className="text-left px-4 py-3 font-bold text-xs">ENTITY CATEGORY</th>
+            <th className="text-left px-4 py-3 font-bold text-xs">COMPANY TYPE</th>
             <th className="text-left px-4 py-3 font-bold text-xs">LOCATION</th>
             <th className="text-left px-4 py-3 font-bold text-xs">FUNDING</th>
             <th className="text-left px-4 py-3 font-bold text-xs">VEHICLES</th>
@@ -38,10 +39,18 @@ export function EntityTable({ companies, vehiclesByCompany, onCompanyClick }: En
                 </span>
               </td>
               <td className="px-4 py-3">
-                {(company.entityType === "usv platform" || company.entityType === "boatbuilder") &&
-                  company.category ? (
-                  <span className={`text-[10px] px-2 py-1 border ${categoryColors[company.category]}`}>
-                    {categoryLabels[company.category]}
+                {company.entityCategory ? (
+                  <span className={`text-[10px] px-2 py-1 border ${entityCategoryColors[company.entityCategory]}`}>
+                    {entityCategoryLabels[company.entityCategory]}
+                  </span>
+                ) : (
+                  <span className="text-gray-400">—</span>
+                )}
+              </td>
+              <td className="px-4 py-3">
+                {company.entityType === "company" && company.companyType ? (
+                  <span className={`text-[10px] px-2 py-1 border ${companyTypeColors[company.companyType]}`}>
+                    {companyTypeLabels[company.companyType]}
                   </span>
                 ) : (
                   <span className="text-gray-400">—</span>

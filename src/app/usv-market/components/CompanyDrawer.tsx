@@ -9,7 +9,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Company } from "../types";
-import { categoryLabels, categoryColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
+import { entityCategoryLabels, entityCategoryColors, companyTypeLabels, companyTypeColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
 
 interface CompanyDrawerProps {
   company: Company;
@@ -59,10 +59,17 @@ export function CompanyDrawer({
                 {entityTypeLabels[company.entityType]}
               </span>
 
-              {/* Category Badge - only for USV platforms and boatbuilders */}
-              {(company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category && (
-                <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${categoryColors[company.category]}`}>
-                  {categoryLabels[company.category]}
+              {/* Entity Category Badge */}
+              {company.entityCategory && (
+                <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${entityCategoryColors[company.entityCategory]}`}>
+                  {entityCategoryLabels[company.entityCategory]}
+                </span>
+              )}
+
+              {/* Company Type Badge - only for companies */}
+              {company.entityType === "company" && company.companyType && (
+                <span className={`text-xs font-mono tracking-wider px-3 py-1.5 border ${companyTypeColors[company.companyType]}`}>
+                  {companyTypeLabels[company.companyType]}
                 </span>
               )}
 

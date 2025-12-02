@@ -134,18 +134,24 @@ export default function USVMarketInteractive() {
               searchTerm={viewType === "map" ? mapSearchTerm : filters.searchTerm}
               onSearchChange={viewType === "map" ? setMapSearchTerm : filters.setSearchTerm}
               selectedEntityTypes={filters.selectedEntityTypes}
-              selectedCategories={filters.selectedCategories}
+              selectedEntityCategories={filters.selectedEntityCategories}
+              selectedCompanyTypes={filters.selectedCompanyTypes}
               onToggleEntityType={filters.toggleEntityType}
-              onToggleCategory={filters.toggleCategory}
+              onToggleEntityCategory={filters.toggleEntityCategory}
+              onToggleCompanyType={filters.toggleCompanyType}
               onSelectAllEntityTypes={filters.selectAllEntityTypes}
               onDeselectAllEntityTypes={filters.deselectAllEntityTypes}
-              onSelectAllCategories={filters.selectAllCategories}
-              onDeselectAllCategories={filters.deselectAllCategories}
+              onSelectAllEntityCategories={filters.selectAllEntityCategories}
+              onDeselectAllEntityCategories={filters.deselectAllEntityCategories}
+              onSelectAllCompanyTypes={filters.selectAllCompanyTypes}
+              onDeselectAllCompanyTypes={filters.deselectAllCompanyTypes}
+              availableEntityCategories={filters.availableEntityCategories}
               statistics={filters.dynamicFilterCounts}
               showFilters={viewType !== "map" && dataView === "entities"}
               showMapFilter={viewType === "map"}
               onToggleMapFilter={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
               mapFilterActive={showOnlyMarketPlayers}
+              allEntities={marketCompanies}
             />
           </div>
 

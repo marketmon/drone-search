@@ -1,28 +1,38 @@
 import { useState, useMemo } from "react";
-import { Company } from "../types";
+import { Company, EntityType, EntityCategory } from "../types";
 import { locationMatchesSearch } from "../utils";
+
+// Define entity category relationships
+const entityCategoryMap: Record<EntityType, EntityCategory[]> = {
+  company: ["usv platform", "usv integrator", "autonomy provider", "payload"],
+  partner: ["university", "research institute", "incubator", "non-profit/association", "framework"],
+  government: ["civil", "military"],
+  investor: [], // No entity categories for investors
+};
 
 export function useFilters(marketCompanies: Company[]) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(
+
+  // Level 1: Entity Type (company/partner/government/investor)
+  const [selectedEntityTypes, setSelectedEntityTypes] = useState<Set<string>>(
+    new Set(["company", "partner", "government", "investor"])
+  );
+
+  // Level 2: Entity Category (usv platform, usv integrator, etc.)
+  const [selectedEntityCategories, setSelectedEntityCategories] = useState<Set<string>>(
+    new Set([
+      "usv platform", "usv integrator", "autonomy provider", "payload",
+      "university", "research institute", "incubator", "non-profit/association", "framework",
+      "civil", "military"
+    ])
+  );
+
+  // Level 3: Company Type (startup/legacy/mid-tier/new prime) - only for companies
+  const [selectedCompanyTypes, setSelectedCompanyTypes] = useState<Set<string>>(
     new Set(["startup", "legacy", "mid-tier", "new prime"])
   );
-  const [selectedEntityTypes, setSelectedEntityTypes] = useState<Set<string>>(
-    new Set(["usv platform", "boatbuilder", "incubator", "research institute", "gov. agency", "university", "association", "investor"])
-  );
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(category)) {
-        newSet.delete(category);
-      } else {
-        newSet.add(category);
-      }
-      return newSet;
-    });
-  };
-
+  // Toggle functions for each level
   const toggleEntityType = (entityType: string) => {
     setSelectedEntityTypes((prev) => {
       const newSet = new Set(prev);
@@ -35,39 +45,95 @@ export function useFilters(marketCompanies: Company[]) {
     });
   };
 
-  const selectAllCategories = () => {
-    setSelectedCategories(new Set(["startup", "legacy", "mid-tier", "new prime"]));
+  const toggleEntityCategory = (category: string) => {
+    setSelectedEntityCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
   };
 
-  const deselectAllCategories = () => {
-    setSelectedCategories(new Set());
+  const toggleCompanyType = (companyType: string) => {
+    setSelectedCompanyTypes((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(companyType)) {
+        newSet.delete(companyType);
+      } else {
+        newSet.add(companyType);
+      }
+      return newSet;
+    });
   };
 
+  // Select/Deselect all functions
   const selectAllEntityTypes = () => {
-    setSelectedEntityTypes(
-      new Set(["usv platform", "boatbuilder", "incubator", "research institute", "gov. agency", "university", "association", "investor"])
-    );
+    setSelectedEntityTypes(new Set(["company", "partner", "government", "investor"]));
   };
 
   const deselectAllEntityTypes = () => {
     setSelectedEntityTypes(new Set());
   };
 
+  const selectAllEntityCategories = () => {
+    setSelectedEntityCategories(
+      new Set([
+        "usv platform", "usv integrator", "autonomy provider", "payload",
+        "university", "research institute", "incubator", "non-profit/association", "framework",
+        "civil", "military"
+      ])
+    );
+  };
+
+  const deselectAllEntityCategories = () => {
+    setSelectedEntityCategories(new Set());
+  };
+
+  const selectAllCompanyTypes = () => {
+    setSelectedCompanyTypes(new Set(["startup", "legacy", "mid-tier", "new prime"]));
+  };
+
+  const deselectAllCompanyTypes = () => {
+    setSelectedCompanyTypes(new Set());
+  };
+
+  // Get available entity categories based on selected entity types
+  const availableEntityCategories = useMemo(() => {
+    const categories = new Set<string>();
+    selectedEntityTypes.forEach(entityType => {
+      const categoriesForType = entityCategoryMap[entityType as EntityType] || [];
+      categoriesForType.forEach(cat => categories.add(cat));
+    });
+    return Array.from(categories);
+  }, [selectedEntityTypes]);
+
+  // Main filtering logic
   const filteredCompanies = useMemo(() => {
     const filtered = marketCompanies.filter((company) => {
+      // Level 0: Search term
       const matchesSearch =
         company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
         locationMatchesSearch(company.location, searchTerm);
 
+      // Level 1: Entity Type
       const matchesEntityType = selectedEntityTypes.has(company.entityType);
 
-      const matchesCategory =
-        company.entityType === "usv platform" || company.entityType === "boatbuilder"
-          ? selectedCategories.has(company.category)
-          : true;
+      // Level 2: Entity Category (if applicable)
+      const matchesEntityCategory = company.entityCategory
+        ? selectedEntityCategories.has(company.entityCategory)
+        : true; // If no category, pass this filter
 
-      return matchesSearch && matchesEntityType && matchesCategory;
+      // Level 3: Company Type (only for companies)
+      const matchesCompanyType =
+        company.entityType === "company" && company.companyType
+          ? selectedCompanyTypes.has(company.companyType)
+          : true; // Non-companies or companies without type pass this filter
+
+      return matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType;
     });
 
     // Shuffle the filtered results
@@ -78,59 +144,93 @@ export function useFilters(marketCompanies: Company[]) {
     }
 
     return shuffled;
-  }, [searchTerm, selectedCategories, selectedEntityTypes, marketCompanies]);
+  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, marketCompanies]);
 
   // Dynamic filter counts based on current selections
   const dynamicFilterCounts = useMemo(() => {
-    // For entity type counts: filter by search and selected categories only
+    // Entity Type counts (filter by search, entity categories, and company types)
     const entityTypeCounts: Record<string, number> = {};
 
     marketCompanies.forEach((company) => {
       const matchesSearch =
         company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
         locationMatchesSearch(company.location, searchTerm);
 
-      const matchesCategory =
-        company.entityType === "usv platform" || company.entityType === "boatbuilder"
-          ? selectedCategories.has(company.category)
+      const matchesEntityCategory = company.entityCategory
+        ? selectedEntityCategories.has(company.entityCategory)
+        : true;
+
+      const matchesCompanyType =
+        company.entityType === "company" && company.companyType
+          ? selectedCompanyTypes.has(company.companyType)
           : true;
 
-      if (matchesSearch && matchesCategory) {
+      if (matchesSearch && matchesEntityCategory && matchesCompanyType) {
         entityTypeCounts[company.entityType] = (entityTypeCounts[company.entityType] || 0) + 1;
       }
     });
 
-    // For category counts: filter by search and selected entity types only
-    const categoryCounts: Record<string, number> = {};
+    // Entity Category counts (filter by search, entity types, and company types)
+    const entityCategoryCounts: Record<string, number> = {};
 
     marketCompanies.forEach((company) => {
       const matchesSearch =
         company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
         locationMatchesSearch(company.location, searchTerm);
 
       const matchesEntityType = selectedEntityTypes.has(company.entityType);
 
-      if (matchesSearch && matchesEntityType && (company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category) {
-        categoryCounts[company.category] = (categoryCounts[company.category] || 0) + 1;
+      const matchesCompanyType =
+        company.entityType === "company" && company.companyType
+          ? selectedCompanyTypes.has(company.companyType)
+          : true;
+
+      if (matchesSearch && matchesEntityType && matchesCompanyType && company.entityCategory) {
+        entityCategoryCounts[company.entityCategory] = (entityCategoryCounts[company.entityCategory] || 0) + 1;
       }
     });
 
-    return { entityTypeCounts, categoryCounts };
-  }, [searchTerm, selectedCategories, selectedEntityTypes, marketCompanies]);
+    // Company Type counts (filter by search, entity types, and entity categories - only for companies)
+    const companyTypeCounts: Record<string, number> = {};
+
+    marketCompanies.forEach((company) => {
+      const matchesSearch =
+        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        locationMatchesSearch(company.location, searchTerm);
+
+      const matchesEntityType = selectedEntityTypes.has(company.entityType);
+
+      const matchesEntityCategory = company.entityCategory
+        ? selectedEntityCategories.has(company.entityCategory)
+        : true;
+
+      if (matchesSearch && matchesEntityType && matchesEntityCategory && company.entityType === "company" && company.companyType) {
+        companyTypeCounts[company.companyType] = (companyTypeCounts[company.companyType] || 0) + 1;
+      }
+    });
+
+    return { entityTypeCounts, entityCategoryCounts, companyTypeCounts };
+  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, marketCompanies]);
 
   return {
     searchTerm,
     setSearchTerm,
-    selectedCategories,
     selectedEntityTypes,
-    toggleCategory,
+    selectedEntityCategories,
+    selectedCompanyTypes,
     toggleEntityType,
-    selectAllCategories,
-    deselectAllCategories,
+    toggleEntityCategory,
+    toggleCompanyType,
     selectAllEntityTypes,
     deselectAllEntityTypes,
+    selectAllEntityCategories,
+    deselectAllEntityCategories,
+    selectAllCompanyTypes,
+    deselectAllCompanyTypes,
+    availableEntityCategories,
     filteredCompanies,
     dynamicFilterCounts,
   };

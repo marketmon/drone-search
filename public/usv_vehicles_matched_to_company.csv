@@ -1,64 +1,71 @@
-Name,Length (ft),Range (nm),Endurance (days),Seastate,Top Speed (kts),Payload (lbs),Propulsion,Aux Propulsion,Company,Source,Google Link
-Spyglass,6,30,,,20,40,,,Saronic Technologies,https://www.saronic.com/vessels,
-Cutlass,14,300,,,20,200,,,Saronic Technologies,https://www.saronic.com/vessels,
-Corsair,24,"1,000",,,35,1000,,,Saronic Technologies,https://www.saronic.com/vessels,
-Mirage,40,"2,000",,,35,2000,,,Saronic Technologies,https://www.saronic.com/vessels,
-Cipher,60,"3,000",,,35,10000,,,Saronic Technologies,https://www.saronic.com/vessels,
-Marauder,150,"3,500",,,18,88184.9,,,Saronic Technologies,https://www.saronic.com/vessels,
-Rampage,14,150,,,15,300,Electric,,HavocAI,https://www.havocai.com/maritime-systems,
-Kaikoa,42,,,,40,3640,,,HavocAI,https://www.havocai.com/maritime-systems,
-Atlas,100,7440,,,25,35840,,,HavocAI,https://www.havocai.com/maritime-systems,
--Unamed-,150,,,,,,,,Blue Water Autonomy,,
-GARC,16,1600,,5,40,1000,Diesel,,BlackSea Tech/MAPC,https://www.blacksea.tech/garc,http://drive.google.com/file/d/1hN3_-R1Iq3OzahsAVPRk5MfPwmU7DFtE/view
-Surveyor,65,,100,,6,,Wind (Sail),Diesel,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1AfGfNzSEH-xZckoE7X4wRwhHcIion_6J/view
-Voyager,33,,100,,5,,Wind (Sail),Eletric,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/19j3znGRFVdq4RYh_cY-xOTHDkcLQ-3hk/view
-Explorer,23,Unlimited,365,,3,,Wind (Sail),,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1kyOJT3LezW3pskZnaEYqTBllW85ykIIe/view
-Lightfish,11,,180,6,4,,Electric,,Seasats,https://seasats.com/the-lightfish/,https://drive.google.com/file/d/1vtsXFyIRkAObikCt2IKa2Sj24dtC5pyQ/view
-Quickfish,17,400,,6,34,600,Gas or Diesel,,Seasats,https://seasats.com/the-quickfish/,https://drive.google.com/file/d/1jo0g2eK7igNLfvzyfynJQy0VKlzusiWS/view
-CUSV,39,1200,,4,35,,,,Textron Systems,https://www.naval-technology.com/projects/fleet-class-common-unmanned-surface-vessel-cusv/,
-TSUNAMI 21,24,1000,,4,40,2800,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
-TSUNAMI 25,25,1000,,4,40,3642,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
-U-Ranger MH,36,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
-U-Ranger MS,23,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
-MiniRanger,16,10,0.25,,18,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
-C-Worker 15,49,,21,,12,22046.2,Diesel,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-worker-15-uncrewed-surface-vehicle,https://drive.google.com/file/d/1LeZsOMQJdiqn277MQLkdBv4Z14m0AOQq/view
-C-Worker 24,78,,40,,10,154324,Diesel,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-worker-24-uncrewed-surface-vehicle,https://drive.google.com/file/d/17rYxbKraiDduoh5wONnJu6NopSuSk4QE/view
-Shadow Fox ASV,42,,,,40,4140,Gas,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/shadow-fox-autonomous-surface-vehicle,https://drive.google.com/file/u/1/d/1B8kjQx4ByjZN-Y4xN99AenDzalZ0hXIq/view?usp=drive_open
-C-Target 13 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-13-asv,
-C-Target 9 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-9-asv,
-C-Target 6 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-6-asv,
-Polecat ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/polecat-autonomous-surface-vehicle,
-Romulus,190,2500,,,25,,,,Huntington Ingalls Industries,https://hii.com/product/romulus-usvs/,
-VANGUARD (OUSV3),,,,,,,,,Austal USA,https://www.austal.com/ships/autonomous-ships,
-Vantage 25,82,1200,,,20,55115,Diesel,,Austal USA,https://www.austal.com/ships/autonomous-ships,https://drive.google.com/file/d/1SUeFNmuXMw0XkZ-zDsjIPGdTf5hzHYAA/view
-Vantage 55,180,6000,,,25,220462,Diesel-Electric,,Austal USA,https://www.austal.com/ships/autonomous-ships,https://drive.google.com/file/d/1SUeFNmuXMw0XkZ-zDsjIPGdTf5hzHYAA/view
-EPF13,,,,,,,,,Austal USA,https://www.austal.com/ships/autonomous-ships,
-Sea Archer,37,1500,,,40,2000,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
-Sea Ranger,,34000,,,,,,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
-Sea Specter,65,2200,,,,10200,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
-Sea Hunter,132,10000,90,,27,,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
-Variant 7,,,,,,,,,Blue Ops (Red Cat Holdings),https://blueops.com/usv-solutions/variant7/,
-Selkie,23,400,30,,30,660,Diesel,,Sea Machines Robotics,https://sea-machines.com/selkie/,https://drive.google.com/file/d/11ElmPE_DZSLDNQJJcwLs6H5OT9LNq25s/view
-Storm Runner,26,700,,,40,1000,Diesel,,Sea Machines Robotics,https://sea-machines.com/stormrunner/,https://drive.google.com/file/d/1c4GUIa5NqaH_5wARh4_9kxdy4A4CCeV4/view
-AHI Scout-18,,,,,,,,,Amidon Heavy Industries,https://amidonheavyindustries.com/#scout,
-SP-48,16,,,,5,154,Electric,,SeaTrac,https://www.seatrac.com/the-seatrac-system/hardware-the-boat/,https://drive.google.com/file/d/16bEsyDfnIFg8z-yBt5xRd25eliP2zHqR/view
-Devil Ray T38,38,,,,100,4000,Diesel,,MARTAC,https://martacsystems.com/products/t38/,
-Devil Ray T24,24,,,,60,1800,Diesel,,MARTAC,https://martacsystems.com/products/t24/,
-MANTAS T12,12,,,,30,140,Electric,,MARTAC,https://martacsystems.com/products/t12/,
-Challenger,46,400,1.8,,45,16975.6,Diesel,,Swiftships,https://swiftships.com/vessels/46-feet-challenger/,https://drive.google.com/file/d/1iy3SWTPDOgbS-rcm3oYYdmjRtxhbo--F/view
-Anaconda,,,,,,,,,Swiftships,https://swiftships.com/autonomous-solutions/anaconda/,
-Riley Claire aka Nomad,,,,,,,,,Swiftships,https://swiftships.com/autonomous-solutions/riley-claire-aka-nomad/,
-GHOST,65,407,,4,35,4060,,,General Dynamics,https://gdmissionsystems.com/shipboard-integration-and-combat-systems/ghost,https://drive.google.com/file/d/1olDwQ2SPSI2Tor1xdfMEgfO4NgSNfGxi/view
-Endurance 7.0,23,,6,,10,,Diesel Electric,,SeaRobotics,https://searobotics.com/products/autonomous-surface-vehicles/sr-endurance-class/,https://drive.google.com/file/d/14kwUNu0Cj_A0JVjSpTF8RYN5u20F0zrS/view
-Wave Glider SV3,10,,365,,2,154,Wave Energy,,Liquid Robotics (Boeing),https://www.liquid-robotics.com/wave-glider/overview/,https://drive.google.com/file/d/1O6r1T5E49SN1adyLCURiVkgVKtLogMzt/view
-Wave Glider SV5,17,,,,2,474,Wave Energy,,Liquid Robotics (Boeing),https://www.liquid-robotics.com/wave-glider/overview/,https://drive.google.com/file/d/1i404ztloX0Ge3X0xp67dqbWxN_vhhGBx/view
-Q-Boat 1250,4.2,,,,4.5,10,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1250,https://drive.google.com/file/d/10y2HF2FsCl0uFz_5pcliWDh61YiVsRdT/view
-Z-Boat 1250,4.2,,,,2.9,10,,,Teledyne Technologies,https://www.teledynemarine.com/en-us/products/Pages/zboat1250.aspx,https://drive.google.com/file/d/1rppfLpoZT0pz1ocDMtDRDk2IRnI4Yn8-/view
-Q-Boat 1800RP,5.9,,,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1800rp,https://drive.google.com/file/d/1OvtDT0pGvTCRbSWlegS2DtN3I58puHDe/view
-Z-Boat 1800,5.9,,0.167,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800,https://drive.google.com/file/d/1kCMfws0m8C-GUJVBJOUQNLs4-E-2T1eQ/view
-"Z-Boat 1800T - Trimble Edition",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
--Unamed-,34,300,,,40,,Diesel,,BAE Systems US,https://www.baesystems.com/en/product/uncrewed-surface-vessel,https://drive.google.com/file/d/1qWAkEzsgrFOuyXm6LD3dbTpzAL5UHj-S/preview
-NeedleFish,46,,,,,,,,Ocean Infinity,https://oceaninfinity.com/news/ocean-infinity-launches-needlefish-usv-in-kuwait/,
-WAM-V® 8,8,,0.5,,6,100,Electric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-8/,
-WAM-V® 16,17.4,,0.3,,11,425,Eletric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-16/,
-WAM-V® 22,23,,3,,20,600,Gas,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-22/,
+Date Added,Name,Length (ft),Range (nm),Endurance (days),Seastate,Top Speed (kts),Payload (lbs),Propulsion,Aux Propulsion,Company,Source,Google Link
+11/24/25,Spyglass,6,30,,,20,40,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Cutlass,14,300,,,20,200,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Corsair,24,"1,000",,,35,1000,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Mirage,40,"2,000",,,35,2000,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Cipher,60,"3,000",,,35,10000,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Marauder,150,"3,500",,,18,88184.9,,,Saronic Technologies,https://www.saronic.com/vessels,
+11/24/25,Rampage,14,150,,,15,300,Electric,,HavocAI,https://www.havocai.com/maritime-systems,
+11/24/25,Kaikoa,42,,,,40,3640,,,HavocAI,https://www.havocai.com/maritime-systems,
+11/24/25,Atlas,100,7440,,,25,35840,,,HavocAI,https://www.havocai.com/maritime-systems,
+11/24/25,-Unamed-,150,,,,,,,,Blue Water Autonomy,,
+11/24/25,GARC,16,1600,,5,40,1000,Diesel,,BlackSea Tech/MAPC,https://www.blacksea.tech/garc,http://drive.google.com/file/d/1hN3_-R1Iq3OzahsAVPRk5MfPwmU7DFtE/view
+11/24/25,Surveyor,65,,100,,6,,Wind (Sail),Diesel,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1AfGfNzSEH-xZckoE7X4wRwhHcIion_6J/view
+11/24/25,Voyager,33,,100,,5,,Wind (Sail),Eletric,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/19j3znGRFVdq4RYh_cY-xOTHDkcLQ-3hk/view
+11/24/25,Explorer,23,Unlimited,365,,3,,Wind (Sail),,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1kyOJT3LezW3pskZnaEYqTBllW85ykIIe/view
+11/24/25,Lightfish,11,,180,6,4,,Electric,,Seasats,https://seasats.com/the-lightfish/,https://drive.google.com/file/d/1vtsXFyIRkAObikCt2IKa2Sj24dtC5pyQ/view
+11/24/25,Quickfish,17,400,,6,34,600,Gas or Diesel,,Seasats,https://seasats.com/the-quickfish/,https://drive.google.com/file/d/1jo0g2eK7igNLfvzyfynJQy0VKlzusiWS/view
+11/24/25,CUSV,39,1200,,4,35,,,,Textron Systems,https://www.naval-technology.com/projects/fleet-class-common-unmanned-surface-vessel-cusv/,
+11/24/25,TSUNAMI 21,24,1000,,4,40,2800,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
+11/24/25,TSUNAMI 25,25,1000,,4,40,3642,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
+11/24/25,U-Ranger MH,36,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
+11/24/25,U-Ranger MS,23,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
+11/24/25,MiniRanger,16,10,0.25,,18,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/uncrewed-surface-vehicles-usvs,
+11/24/25,C-Worker 15,49,,21,,12,22046.2,Diesel,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-worker-15-uncrewed-surface-vehicle,https://drive.google.com/file/d/1LeZsOMQJdiqn277MQLkdBv4Z14m0AOQq/view
+11/24/25,C-Worker 24,78,,40,,10,154324,Diesel,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-worker-24-uncrewed-surface-vehicle,https://drive.google.com/file/d/17rYxbKraiDduoh5wONnJu6NopSuSk4QE/view
+11/24/25,Shadow Fox ASV,42,,,,40,4140,Gas,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/shadow-fox-autonomous-surface-vehicle,https://drive.google.com/file/u/1/d/1B8kjQx4ByjZN-Y4xN99AenDzalZ0hXIq/view?usp=drive_open
+11/24/25,C-Target 13 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-13-asv,
+11/24/25,C-Target 9 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-9-asv,
+11/24/25,C-Target 6 ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/c-target-6-asv,
+11/24/25,Polecat ASV,,,,,,,,,L3Harris Technologies,https://www.l3harris.com/all-capabilities/polecat-autonomous-surface-vehicle,
+11/24/25,Romulus,190,2500,,,25,,,,Huntington Ingalls Industries,https://hii.com/product/romulus-usvs/,
+11/24/25,VANGUARD (OUSV3),,,,,,,,,Austal USA,https://www.austal.com/ships/autonomous-ships,
+11/24/25,Vantage 25,82,1200,,,20,55115,Diesel,,Austal USA,https://www.austal.com/ships/autonomous-ships,https://drive.google.com/file/d/1SUeFNmuXMw0XkZ-zDsjIPGdTf5hzHYAA/view
+11/24/25,Vantage 55,180,6000,,,25,220462,Diesel-Electric,,Austal USA,https://www.austal.com/ships/autonomous-ships,https://drive.google.com/file/d/1SUeFNmuXMw0XkZ-zDsjIPGdTf5hzHYAA/view
+11/24/25,EPF13,,,,,,,,,Austal USA,https://www.austal.com/ships/autonomous-ships,
+11/24/25,Sea Archer,37,1500,,,40,2000,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
+11/24/25,Sea Ranger,,34000,,,,,,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
+11/24/25,Sea Specter,65,2200,,,,10200,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
+11/24/25,Sea Hunter,132,10000,90,,27,,Diesel,,Leidos,https://www.leidos.com/capabilities/integrated-systems/autonomy-and-autonomous-solutions,
+11/24/25,Variant 7,,,,,,,,,Blue Ops (Red Cat Holdings),https://blueops.com/usv-solutions/variant7/,
+11/24/25,Selkie,23,400,30,,30,660,Diesel,,Sea Machines Robotics,https://sea-machines.com/selkie/,https://drive.google.com/file/d/11ElmPE_DZSLDNQJJcwLs6H5OT9LNq25s/view
+11/24/25,Storm Runner,26,700,,,40,1000,Diesel,,Sea Machines Robotics,https://sea-machines.com/stormrunner/,https://drive.google.com/file/d/1c4GUIa5NqaH_5wARh4_9kxdy4A4CCeV4/view
+11/24/25,AHI Scout-18,,,,,,,,,Amidon Heavy Industries,https://amidonheavyindustries.com/#scout,
+11/24/25,SP-48,16,,,,5,154,Electric,,SeaTrac,https://www.seatrac.com/the-seatrac-system/hardware-the-boat/,https://drive.google.com/file/d/16bEsyDfnIFg8z-yBt5xRd25eliP2zHqR/view
+11/24/25,Devil Ray T38,38,,,,100,4000,Diesel,,MARTAC,https://martacsystems.com/products/t38/,
+11/24/25,Devil Ray T24,24,,,,60,1800,Diesel,,MARTAC,https://martacsystems.com/products/t24/,
+11/24/25,MANTAS T12,12,,,,30,140,Electric,,MARTAC,https://martacsystems.com/products/t12/,
+11/24/25,Challenger,46,400,1.8,,45,16975.6,Diesel,,Swiftships,https://swiftships.com/vessels/46-feet-challenger/,https://drive.google.com/file/d/1iy3SWTPDOgbS-rcm3oYYdmjRtxhbo--F/view
+11/24/25,Anaconda,,,,,,,,,Swiftships,https://swiftships.com/autonomous-solutions/anaconda/,
+11/24/25,Riley Claire aka Nomad,,,,,,,,,Swiftships,https://swiftships.com/autonomous-solutions/riley-claire-aka-nomad/,
+11/24/25,GHOST,65,407,,4,35,4060,,,General Dynamics,https://gdmissionsystems.com/shipboard-integration-and-combat-systems/ghost,https://drive.google.com/file/d/1olDwQ2SPSI2Tor1xdfMEgfO4NgSNfGxi/view
+11/24/25,Endurance 7.0,23,,6,,10,,Diesel Electric,,SeaRobotics,https://searobotics.com/products/autonomous-surface-vehicles/sr-endurance-class/,https://drive.google.com/file/d/14kwUNu0Cj_A0JVjSpTF8RYN5u20F0zrS/view
+11/24/25,Wave Glider SV3,10,,365,,2,154,Wave Energy,,Liquid Robotics (Boeing),https://www.liquid-robotics.com/wave-glider/overview/,https://drive.google.com/file/d/1O6r1T5E49SN1adyLCURiVkgVKtLogMzt/view
+11/24/25,Wave Glider SV5,17,,,,2,474,Wave Energy,,Liquid Robotics (Boeing),https://www.liquid-robotics.com/wave-glider/overview/,https://drive.google.com/file/d/1i404ztloX0Ge3X0xp67dqbWxN_vhhGBx/view
+11/24/25,Q-Boat 1250,4.2,,,,4.5,10,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1250,https://drive.google.com/file/d/10y2HF2FsCl0uFz_5pcliWDh61YiVsRdT/view
+11/24/25,Z-Boat 1250,4.2,,,,2.9,10,,,Teledyne Technologies,https://www.teledynemarine.com/en-us/products/Pages/zboat1250.aspx,https://drive.google.com/file/d/1rppfLpoZT0pz1ocDMtDRDk2IRnI4Yn8-/view
+11/24/25,Q-Boat 1800RP,5.9,,,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1800rp,https://drive.google.com/file/d/1OvtDT0pGvTCRbSWlegS2DtN3I58puHDe/view
+11/24/25,Z-Boat 1800,5.9,,0.167,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800,https://drive.google.com/file/d/1kCMfws0m8C-GUJVBJOUQNLs4-E-2T1eQ/view
+11/24/25,"Z-Boat 1800T - Trimble Edition",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
+11/24/25,-Unamed-,34,300,,,40,,Diesel,,BAE Systems US,https://www.baesystems.com/en/product/uncrewed-surface-vessel,https://drive.google.com/file/d/1qWAkEzsgrFOuyXm6LD3dbTpzAL5UHj-S/preview
+11/24/25,NeedleFish,46,,,,,,,,Ocean Infinity,https://oceaninfinity.com/news/ocean-infinity-launches-needlefish-usv-in-kuwait/,
+12/2/25,WAM-V® 8,8,,0.5,,6,100,Electric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-8/,
+12/2/25,WAM-V® 16,17.4,,0.3,,11,425,Eletric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-16/,
+12/2/25,WAM-V® 22,23,,3,,20,600,Gas,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-22/,
+12/2/25,Flow Seeker,5.41,10,,,6,22,Electric,,Surfbee,https://www.surfbee.io/,
+12/2/25,Flow Scout,4.43,8,,,1.8,18,Electric,,Surfbee,https://www.surfbee.io/,
+12/2/25,Flow Finder,3.9,7,,,4,18,Electric,,Surfbee,https://www.surfbee.io/,
+12/2/25,AIRCAT Bengal-MC,118,1000,,,50,80000,Diesel,,Eureka Naval Craft,https://www.eureka.navy/vessels/,https://drive.google.com/file/d/1ibSB0tw8Wp6BpDwKsNv9erAL8xdIUPYs/preview
+12/2/25,AIRCAT Panther,57,350,,,50,22000,Diesel,,Eureka Naval Craft,https://www.eureka.navy/vessels/,https://drive.google.com/file/d/1HKDAr_-3VnEBgVq24AI3p5g64hecQNEM/preview
+12/2/25,AIRCAT Bobcat,57,350,,,50,22000,Diesel,,Eureka Naval Craft,https://www.eureka.navy/vessels/,
+12/2/25,AIRCAT Jaguar,57,350,,,50,22000,Diesel,,Eureka Naval Craft,https://www.eureka.navy/vessels/,https://drive.google.com/file/d/1p1OXFJc5LbC7HpspCyMXo1vssGICWGU4/preview

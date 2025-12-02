@@ -15,7 +15,7 @@ export function HeroHeader() {
             USV Hub
           </h1>
           <p className="text-xl sm:text-2xl md:text-3xl text-blue-100 font-medium mb-3">
-            Key US Players in Unmanned Surface Vehicles
+            Key Players in Unmanned Surface Vehicles
           </p>
         </div>
         <div className="flex flex-col gap-3">

@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Company, ContractData, EntityType } from "./types";
-import { formatFunding, entityTypeLabels, categoryLabels } from "./utils";
+import { formatFunding, entityTypeLabels, entityCategoryLabels, companyTypeLabels } from "./utils";
 
 interface MapViewProps {
   contractData: ContractData[];
@@ -32,11 +32,19 @@ function CompanyPopupContent({ company }: { company: Company }) {
           <span className="text-xs font-mono text-gray-500 uppercase font-bold">
             {entityTypeLabels[company.entityType]}
           </span>
-          {(company.entityType === "usv platform" || company.entityType === "boatbuilder") && company.category && (
+          {company.entityCategory && (
             <>
               <span className="text-xs text-gray-400">•</span>
               <span className="text-xs font-mono text-gray-500 uppercase font-bold">
-                {categoryLabels[company.category]}
+                {entityCategoryLabels[company.entityCategory]}
+              </span>
+            </>
+          )}
+          {company.entityType === "company" && company.companyType && (
+            <>
+              <span className="text-xs text-gray-400">•</span>
+              <span className="text-xs font-mono text-blue-500 uppercase font-bold">
+                {companyTypeLabels[company.companyType]}
               </span>
             </>
           )}
@@ -79,9 +87,9 @@ function CompanyPopupContent({ company }: { company: Company }) {
   );
 }
 
-// Custom icons based on entity type
+// Custom icons based on entity type (4-color scheme)
 const entityTypeIcons: Record<EntityType, Icon> = {
-  "usv platform": new Icon({
+  company: new Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [25, 41],
@@ -89,31 +97,7 @@ const entityTypeIcons: Record<EntityType, Icon> = {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   }),
-  "boatbuilder": new Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  }),
-  "investor": new Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png",
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  }),
-  "university": new Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png",
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  }),
-  "research institute": new Icon({
+  partner: new Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [25, 41],
@@ -121,15 +105,7 @@ const entityTypeIcons: Record<EntityType, Icon> = {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   }),
-  "incubator": new Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  }),
-  "gov. agency": new Icon({
+  government: new Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png",
     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [25, 41],
@@ -137,8 +113,8 @@ const entityTypeIcons: Record<EntityType, Icon> = {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   }),
-  "association": new Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png",
+  investor: new Icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png",
     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -171,15 +147,12 @@ function FitBounds({ allMarkers }: { allMarkers: [number, number][] }) {
   return null;
 }
 
-// Legend data with colors and descriptions
+// Legend data with colors and descriptions (4-color scheme)
 const legendItems = [
-  { color: "#2A81CB", label: "USV Platform", entityType: "usv platform" as EntityType },
+  { color: "#2A81CB", label: "Company", entityType: "company" as EntityType },
+  { color: "#2AAD27", label: "Partner", entityType: "partner" as EntityType },
+  { color: "#7B7B7B", label: "Government", entityType: "government" as EntityType },
   { color: "#CB8427", label: "Investor", entityType: "investor" as EntityType },
-  { color: "#7B3FF2", label: "University", entityType: "university" as EntityType },
-  { color: "#2AAD27", label: "Research Institute", entityType: "research institute" as EntityType },
-  { color: "#CB2B3E", label: "Incubator", entityType: "incubator" as EntityType },
-  { color: "#7B7B7B", label: "Gov. Agency", entityType: "gov. agency" as EntityType },
-  { color: "#CAC428", label: "Association", entityType: "association" as EntityType },
 ];
 
 // Custom Legend Control Component

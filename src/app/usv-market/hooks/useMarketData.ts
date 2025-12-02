@@ -22,20 +22,22 @@ export function useMarketData() {
         complete: (results) => {
           const data = results.data as any[];
           const companies: Company[] = data
-            .filter(row => row["Entity Name"] && row.Website)
+            .filter(row => row["Entity Name"])
             .map(row => ({
               name: row["Entity Name"],
               website: row.Website,
               location: row.Location || "",
-              category: row["Category (for usv platform & boatbuilder)"]?.toLowerCase() || "",
+              companyType: row["Company Type"]?.toLowerCase() || "",
               description: row.Description || "",
               lat: row.Lat || 0,
               lng: row.Lng || 0,
               imageUrl: row["Image URL"] || "",
               funding: row.Funding || 0,
-              entityType: row["Entity Type"]?.toLowerCase() || "usv platform",
+              entityType: row["Entity Type"]?.toLowerCase() || "company",
+              entityCategory: row["Entity Category"]?.toLowerCase() || "",
               country: row.Country || "",
               portfolioCompanies: row["USVs in Portfolio (For investor)"] || "",
+              dateAdded: row["Date Added"] || "",
             }));
           setMarketCompanies(companies);
           setIsLoadingCompanies(false);
