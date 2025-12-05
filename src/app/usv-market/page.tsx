@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Filter, Minus, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,12 @@ import { useMarketData } from "./hooks/useMarketData";
 import { useFilters } from "./hooks/useFilters";
 import { useStatistics } from "./hooks/useStatistics";
 
+// Utils
+import { isRecentlyAdded } from "./utils";
+
 // Components
 import { HeroHeader } from "./components/HeroHeader";
+import { DatabaseSummary } from "./components/DatabaseSummary";
 import { ViewToggle } from "./components/ViewToggle";
 import { SearchAndFilters } from "./components/SearchAndFilters";
 import { EntityGrid } from "./components/EntityGrid";
@@ -47,10 +51,23 @@ export default function USVMarketInteractive() {
   const [mapSearchTerm, setMapSearchTerm] = useState("");
   const [showOnlyMarketPlayers, setShowOnlyMarketPlayers] = useState(false);
 
+  // Pagination state
+  const [itemsToShow, setItemsToShow] = useState(20);
+
   // Custom hooks
   const { marketCompanies, contractData, vehicles, vehiclesByCompany, isLoadingCompanies, isLoadingContracts } = useMarketData();
   const filters = useFilters(marketCompanies);
   const statistics = useStatistics(marketCompanies);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setItemsToShow(20);
+  }, [filters.filteredCompanies.length]);
+
+  // Calculate new entities this week
+  const newEntities = useMemo(() => {
+    return marketCompanies.filter((entity) => isRecentlyAdded(entity.dateAdded, 7));
+  }, [marketCompanies]);
 
   // Filtered companies for map
   const filteredMapCompanies = useMemo(() => {
@@ -124,6 +141,15 @@ export default function USVMarketInteractive() {
           {/* Hero Header */}
           <div className="mb-6 sm:mb-8">
             <HeroHeader />
+            <DatabaseSummary
+              totalCompanies={statistics.entityTypeCounts["company"] || 0}
+              totalInvestors={statistics.entityTypeCounts["investor"] || 0}
+              totalPartners={statistics.entityTypeCounts["partner"] || 0}
+              totalGovernment={statistics.entityTypeCounts["government"] || 0}
+              totalVehicles={vehicles.length}
+              totalContracts={contractData.length}
+              newEntities={newEntities}
+            />
             <ViewToggle
               viewType={viewType}
               onViewTypeChange={setViewType}
@@ -136,22 +162,31 @@ export default function USVMarketInteractive() {
               selectedEntityTypes={filters.selectedEntityTypes}
               selectedEntityCategories={filters.selectedEntityCategories}
               selectedCompanyTypes={filters.selectedCompanyTypes}
+              selectedRegions={filters.selectedRegions}
+              selectedCountries={filters.selectedCountries}
               onToggleEntityType={filters.toggleEntityType}
               onToggleEntityCategory={filters.toggleEntityCategory}
               onToggleCompanyType={filters.toggleCompanyType}
+              onToggleRegion={filters.toggleRegion}
+              onToggleCountry={filters.toggleCountry}
               onSelectAllEntityTypes={filters.selectAllEntityTypes}
               onDeselectAllEntityTypes={filters.deselectAllEntityTypes}
               onSelectAllEntityCategories={filters.selectAllEntityCategories}
               onDeselectAllEntityCategories={filters.deselectAllEntityCategories}
               onSelectAllCompanyTypes={filters.selectAllCompanyTypes}
               onDeselectAllCompanyTypes={filters.deselectAllCompanyTypes}
+              onSelectAllRegions={filters.selectAllRegions}
+              onDeselectAllRegions={filters.deselectAllRegions}
+              onSelectAllCountries={filters.selectAllCountries}
+              onDeselectAllCountries={filters.deselectAllCountries}
               availableEntityCategories={filters.availableEntityCategories}
+              availableCountries={filters.availableCountries}
+              availableRegions={filters.availableRegions}
               statistics={filters.dynamicFilterCounts}
               showFilters={viewType !== "map" && dataView === "entities"}
               showMapFilter={viewType === "map"}
               onToggleMapFilter={() => setShowOnlyMarketPlayers(!showOnlyMarketPlayers)}
               mapFilterActive={showOnlyMarketPlayers}
-              allEntities={marketCompanies}
             />
           </div>
 
@@ -197,13 +232,13 @@ export default function USVMarketInteractive() {
                     <>
                       {viewType === "grid" ? (
                         <EntityGrid
-                          companies={filters.filteredCompanies}
+                          companies={filters.filteredCompanies.slice(0, itemsToShow)}
                           vehiclesByCompany={vehiclesByCompany}
                           onCompanyClick={setSelectedCompany}
                         />
                       ) : (
                         <EntityTable
-                          companies={filters.filteredCompanies}
+                          companies={filters.filteredCompanies.slice(0, itemsToShow)}
                           vehiclesByCompany={vehiclesByCompany}
                           onCompanyClick={setSelectedCompany}
                         />
@@ -211,6 +246,16 @@ export default function USVMarketInteractive() {
                       {filters.filteredCompanies.length === 0 && (
                         <div className="text-center py-12 border-2 border-dashed border-gray-300">
                           <p className="text-gray-500 font-mono text-sm">No entities match your search</p>
+                        </div>
+                      )}
+                      {filters.filteredCompanies.length > itemsToShow && (
+                        <div className="text-center py-8">
+                          <Button
+                            onClick={() => setItemsToShow(prev => prev + 20)}
+                            className="font-mono cursor-pointer text-sm px-6 py-3 bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none"
+                          >
+                            LOAD MORE ({filters.filteredCompanies.length - itemsToShow} remaining)
+                          </Button>
                         </div>
                       )}
                     </>

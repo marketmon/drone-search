@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Company, EntityType, EntityCategory } from "../types";
 import { locationMatchesSearch } from "../utils";
+import { getRegionFromCountry, getUniqueCountries, getUniqueRegions, getCountriesForRegion } from "../regions";
 
 // Define entity category relationships
 const entityCategoryMap: Record<EntityType, EntityCategory[]> = {
@@ -31,6 +32,22 @@ export function useFilters(marketCompanies: Company[]) {
   const [selectedCompanyTypes, setSelectedCompanyTypes] = useState<Set<string>>(
     new Set(["startup", "legacy", "mid-tier", "new prime"])
   );
+
+  // Get all regions and countries that exist in the data
+  const availableRegions = useMemo(() => getUniqueRegions(marketCompanies), [marketCompanies]);
+  const allCountries = useMemo(() => getUniqueCountries(marketCompanies), [marketCompanies]);
+
+  // Geographic filters
+  const [selectedRegions, setSelectedRegions] = useState<Set<string>>(new Set());
+  const [selectedCountries, setSelectedCountries] = useState<Set<string>>(new Set());
+
+  // Initialize regions and countries when data loads
+  useEffect(() => {
+    if (marketCompanies.length > 0 && selectedRegions.size === 0) {
+      setSelectedRegions(new Set(availableRegions));
+      setSelectedCountries(new Set(allCountries));
+    }
+  }, [marketCompanies.length]);
 
   // Toggle functions for each level
   const toggleEntityType = (entityType: string) => {
@@ -100,6 +117,36 @@ export function useFilters(marketCompanies: Company[]) {
     setSelectedCompanyTypes(new Set());
   };
 
+  // Geography toggle functions
+  const toggleRegion = (region: string) => {
+    setSelectedRegions((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(region)) {
+        newSet.delete(region);
+      } else {
+        newSet.add(region);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleCountry = (country: string) => {
+    setSelectedCountries((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(country)) {
+        newSet.delete(country);
+      } else {
+        newSet.add(country);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAllRegions = () => setSelectedRegions(new Set(availableRegions));
+  const deselectAllRegions = () => setSelectedRegions(new Set());
+  const selectAllCountries = () => setSelectedCountries(new Set(allCountries));
+  const deselectAllCountries = () => setSelectedCountries(new Set());
+
   // Get available entity categories based on selected entity types
   const availableEntityCategories = useMemo(() => {
     const categories = new Set<string>();
@@ -109,6 +156,17 @@ export function useFilters(marketCompanies: Company[]) {
     });
     return Array.from(categories);
   }, [selectedEntityTypes]);
+
+  // Get available countries based on selected regions
+  const availableCountries = useMemo(() => {
+    if (selectedRegions.size === 0) return [];
+    const countries = new Set<string>();
+    selectedRegions.forEach(region => {
+      const regionCountries = getCountriesForRegion(marketCompanies, region);
+      regionCountries.forEach(country => countries.add(country));
+    });
+    return Array.from(countries).sort();
+  }, [selectedRegions, marketCompanies]);
 
   // Main filtering logic
   const filteredCompanies = useMemo(() => {
@@ -133,7 +191,14 @@ export function useFilters(marketCompanies: Company[]) {
           ? selectedCompanyTypes.has(company.companyType)
           : true; // Non-companies or companies without type pass this filter
 
-      return matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType;
+      // Geography: Region filter
+      const companyRegion = getRegionFromCountry(company.country);
+      const matchesRegion = companyRegion ? selectedRegions.has(companyRegion) : true;
+
+      // Geography: Country filter
+      const matchesCountry = selectedCountries.size === 0 || selectedCountries.has(company.country);
+
+      return matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType && matchesRegion && matchesCountry;
     });
 
     // Shuffle the filtered results
@@ -144,7 +209,7 @@ export function useFilters(marketCompanies: Company[]) {
     }
 
     return shuffled;
-  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, marketCompanies]);
+  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, selectedRegions, selectedCountries, marketCompanies]);
 
   // Dynamic filter counts based on current selections
   const dynamicFilterCounts = useMemo(() => {
@@ -212,8 +277,66 @@ export function useFilters(marketCompanies: Company[]) {
       }
     });
 
-    return { entityTypeCounts, entityCategoryCounts, companyTypeCounts };
-  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, marketCompanies]);
+    // Region counts (filter by search and entity filters only - NOT by country)
+    // We want to show all regions that have data, regardless of country selection
+    const regionCounts: Record<string, number> = {};
+
+    marketCompanies.forEach((company) => {
+      const matchesSearch =
+        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        locationMatchesSearch(company.location, searchTerm);
+
+      const matchesEntityType = selectedEntityTypes.has(company.entityType);
+
+      const matchesEntityCategory = company.entityCategory
+        ? selectedEntityCategories.has(company.entityCategory)
+        : true;
+
+      const matchesCompanyType =
+        company.entityType === "company" && company.companyType
+          ? selectedCompanyTypes.has(company.companyType)
+          : true;
+
+      // Don't filter by country when calculating region counts!
+      if (matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType) {
+        const region = getRegionFromCountry(company.country);
+        if (region) {
+          regionCounts[region] = (regionCounts[region] || 0) + 1;
+        }
+      }
+    });
+
+    // Country counts (filter by search, entity filters, and region filter)
+    const countryCounts: Record<string, number> = {};
+
+    marketCompanies.forEach((company) => {
+      const matchesSearch =
+        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        locationMatchesSearch(company.location, searchTerm);
+
+      const matchesEntityType = selectedEntityTypes.has(company.entityType);
+
+      const matchesEntityCategory = company.entityCategory
+        ? selectedEntityCategories.has(company.entityCategory)
+        : true;
+
+      const matchesCompanyType =
+        company.entityType === "company" && company.companyType
+          ? selectedCompanyTypes.has(company.companyType)
+          : true;
+
+      const companyRegion = getRegionFromCountry(company.country);
+      const matchesRegion = companyRegion ? selectedRegions.has(companyRegion) : true;
+
+      if (matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType && matchesRegion && company.country) {
+        countryCounts[company.country] = (countryCounts[company.country] || 0) + 1;
+      }
+    });
+
+    return { entityTypeCounts, entityCategoryCounts, companyTypeCounts, regionCounts, countryCounts };
+  }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, selectedRegions, selectedCountries, marketCompanies]);
 
   return {
     searchTerm,
@@ -221,16 +344,26 @@ export function useFilters(marketCompanies: Company[]) {
     selectedEntityTypes,
     selectedEntityCategories,
     selectedCompanyTypes,
+    selectedRegions,
+    selectedCountries,
     toggleEntityType,
     toggleEntityCategory,
     toggleCompanyType,
+    toggleRegion,
+    toggleCountry,
     selectAllEntityTypes,
     deselectAllEntityTypes,
     selectAllEntityCategories,
     deselectAllEntityCategories,
     selectAllCompanyTypes,
     deselectAllCompanyTypes,
+    selectAllRegions,
+    deselectAllRegions,
+    selectAllCountries,
+    deselectAllCountries,
     availableEntityCategories,
+    availableCountries,
+    availableRegions,
     filteredCompanies,
     dynamicFilterCounts,
   };

@@ -28,12 +28,11 @@ export function ViewToggle({ viewType, onViewTypeChange, dataView = "entities", 
                 title="Entities"
               >
                 <Building2 className="w-4 h-4 flex-shrink-0" />
-                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
-                  dataView === "entities"
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${dataView === "entities"
                     ? "max-w-[100px] opacity-100"
                     : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
-                }`}>
-                  ENTITIES
+                  }`}>
+                  ORGANIZATIONS
                 </span>
               </Button>
               <Button
@@ -45,11 +44,10 @@ export function ViewToggle({ viewType, onViewTypeChange, dataView = "entities", 
                 title="Contracts"
               >
                 <FileText className="w-4 h-4 flex-shrink-0" />
-                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
-                  dataView === "contracts"
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${dataView === "contracts"
                     ? "max-w-[100px] opacity-100"
                     : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
-                }`}>
+                  }`}>
                   CONTRACTS
                 </span>
               </Button>
@@ -62,11 +60,10 @@ export function ViewToggle({ viewType, onViewTypeChange, dataView = "entities", 
                 title="Vehicles"
               >
                 <Ship className="w-4 h-4 flex-shrink-0" />
-                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${
-                  dataView === "vehicles"
+                <span className={`ml-1.5 sm:ml-2 whitespace-nowrap transition-all duration-200 ease-in-out ${dataView === "vehicles"
                     ? "max-w-[100px] opacity-100"
                     : "max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100"
-                }`}>
+                  }`}>
                   VEHICLES
                 </span>
               </Button>

@@ -8,9 +8,7 @@ export function HeroHeader() {
     <div className="bg-gradient-to-br from-blue-600 to-blue-700 border-2 border-black p-4 sm:p-6">
       <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6">
         <div className="flex-1">
-          <div className="inline-block bg-blue-800 border-2 border-blue-400 px-3 py-1 mb-4">
-            <span className="text-xs font-mono tracking-wider text-blue-100 font-bold">DATABASE</span>
-          </div>
+
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white leading-none mb-4">
             USV Hub
           </h1>
