@@ -185,7 +185,12 @@ export function SearchAndFilters({
                 : "bg-white text-black border-2 border-gray-300 hover:bg-gray-100"
                 }`}
             >
-              {mapFilterActive ? "SHOW CONTRACTS & KEY PLAYERS" : "SHOW ONLY KEY PLAYERS"}
+              <span className="hidden sm:inline">
+                {mapFilterActive ? "SHOW CONTRACTS & KEY PLAYERS" : "SHOW ONLY KEY PLAYERS"}
+              </span>
+              <span className="inline sm:hidden">
+                {mapFilterActive ? "SHOW ALL" : "KEY PLAYERS"}
+              </span>
             </Button>
           </div>
         )}
@@ -241,13 +246,15 @@ export function SearchAndFilters({
                     value="entity"
                     className="rounded-none border-r-2 cursor-pointer border-gray-400 !bg-gray-200 !text-gray-700 data-[state=active]:!bg-white data-[state=active]:!text-black data-[state=active]:border-b-2 data-[state=active]:border-b-white data-[state=active]:shadow-none font-mono text-xs font-bold py-3 hover:bg-gray-300 transition-colors"
                   >
-                    By Organization ({entityFiltersCount} active)
+                    <span className="hidden sm:inline">By Organization ({entityFiltersCount} active)</span>
+                    <span className="inline sm:hidden">Org ({entityFiltersCount})</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="geography"
                     className="rounded-none cursor-pointer !bg-gray-200 !text-gray-700 data-[state=active]:!bg-white data-[state=active]:!text-black data-[state=active]:border-b-2 data-[state=active]:border-b-white data-[state=active]:shadow-none font-mono text-xs font-bold py-3 hover:bg-gray-300 transition-colors"
                   >
-                    By Geography ({geographyFiltersCount} active)
+                    <span className="hidden sm:inline">By Geography ({geographyFiltersCount} active)</span>
+                    <span className="inline sm:hidden">Geo ({geographyFiltersCount})</span>
                   </TabsTrigger>
                 </TabsList>
 
