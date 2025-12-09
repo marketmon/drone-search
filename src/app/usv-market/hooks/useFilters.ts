@@ -5,7 +5,7 @@ import { getRegionFromCountry, getUniqueCountries, getUniqueRegions, getCountrie
 
 // Define entity category relationships
 const entityCategoryMap: Record<EntityType, EntityCategory[]> = {
-  company: ["usv platform", "usv integrator", "autonomy provider", "payload"],
+  company: ["usv platform", "usv integrator", "autonomy provider", "component manufacturer"],
   partner: ["university", "research institute", "incubator", "non-profit/association", "framework"],
   government: ["civil", "military"],
   investor: [], // No entity categories for investors
@@ -22,7 +22,7 @@ export function useFilters(marketCompanies: Company[]) {
   // Level 2: Entity Category (usv platform, usv integrator, etc.)
   const [selectedEntityCategories, setSelectedEntityCategories] = useState<Set<string>>(
     new Set([
-      "usv platform", "usv integrator", "autonomy provider", "payload",
+      "usv platform", "usv integrator", "autonomy provider", "component manufacturer",
       "university", "research institute", "incubator", "non-profit/association", "framework",
       "civil", "military"
     ])
@@ -98,7 +98,7 @@ export function useFilters(marketCompanies: Company[]) {
   const selectAllEntityCategories = () => {
     setSelectedEntityCategories(
       new Set([
-        "usv platform", "usv integrator", "autonomy provider", "payload",
+        "usv platform", "usv integrator", "autonomy provider", "component manufacturer",
         "university", "research institute", "incubator", "non-profit/association", "framework",
         "civil", "military"
       ])

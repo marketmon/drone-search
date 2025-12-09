@@ -118,7 +118,7 @@ export const entityCategoryLabels: Record<string, string> = {
   military: "MILITARY",
   university: "UNIVERSITY",
   "autonomy provider": "AUTONOMY PROVIDER",
-  payload: "PAYLOAD",
+  "component manufacturer": "COMPONENT MANUFACTURER",
   framework: "FRAMEWORK",
   "": "",
 };
@@ -133,7 +133,7 @@ export const entityCategoryColors: Record<string, string> = {
   military: "bg-stone-100 text-stone-700 border-stone-500",
   university: "bg-indigo-100 text-indigo-700 border-indigo-500",
   "autonomy provider": "bg-purple-100 text-purple-700 border-purple-500",
-  payload: "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-500",
+  "component manufacturer": "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-500",
   framework: "bg-cyan-100 text-cyan-700 border-cyan-500",
   "": "",
 };

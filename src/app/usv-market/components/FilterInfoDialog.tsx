@@ -46,7 +46,7 @@ export function FilterInfoDialog({ isOpen, onClose }: FilterInfoDialogProps) {
     {
       label: "USV Integrator",
       category: "Company",
-      description: "Companies that specialize in integrating various components, sensors, and systems into complete USV solutions."
+      description: "Companies that produce a USV on behalf for an organization"
     },
     {
       label: "Autonomy Provider",
@@ -54,9 +54,9 @@ export function FilterInfoDialog({ isOpen, onClose }: FilterInfoDialogProps) {
       description: "Companies developing autonomous navigation, control systems, and AI/ML software for unmanned vessels."
     },
     {
-      label: "Payload",
+      label: "Component Manufacturer",
       category: "Company",
-      description: "Companies providing sensors, mission-specific equipment, and payload systems for USVs."
+      description: "Companies producing necessary components for USV platform companies. Can include hulls, PCBs, payloads, etc."
     },
     {
       label: "University",

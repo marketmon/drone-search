@@ -130,7 +130,7 @@ export function SearchAndFilters({
       { value: "usv platform", label: "USV Platform" },
       { value: "usv integrator", label: "USV Integrator" },
       { value: "autonomy provider", label: "Autonomy Provider" },
-      { value: "payload", label: "Payload" },
+      { value: "component manufacturer", label: "Component Manufacturer" },
     ],
     partner: [
       { value: "university", label: "University" },

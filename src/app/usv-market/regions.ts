@@ -18,6 +18,8 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "Italy": "Europe",
   "Germany": "Europe",
   "Austria": "Europe",
+  "Sweden": "Europe",
+  "Finland": "Europe",
   "South Africa": "Africa",
   "Uruguay": "South America",
   "Israel": "Middle East",
