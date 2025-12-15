@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   description: "Comprehensive database of USV manufacturers, defense contractors, and maritime robotics companies in the United States. Explore key players, vehicles, and government contracts.",
   keywords: [
     "USV companies",
+    "USV company database",
+    "ASV companies",
     "unmanned surface vehicle manufacturers",
     "maritime robotics companies",
     "autonomous boat manufacturers",
@@ -12,7 +14,8 @@ export const metadata: Metadata = {
     "unmanned maritime systems",
     "defense contractors USV",
     "USV database",
-    "marine technology companies"
+    "marine technology companies",
+    "autonomous surface vehicles"
   ],
   openGraph: {
     title: "USV Market Database | Key Players in Unmanned Surface Vehicles",

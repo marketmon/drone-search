@@ -8,7 +8,8 @@
       "Bash(dir \"C:\\Users\\Etmar\\development\\other-dev\\forge-demo\\drone-search\\public\")",
       "Bash(npm run dev:*)",
       "Bash(npx shadcn@latest add drawer:*)",
-      "Bash(npx shadcn@latest add tabs)"
+      "Bash(npx shadcn@latest add tabs)",
+      "Bash(npx shadcn@latest add dropdown-menu)"
     ],
     "deny": [],
     "ask": []

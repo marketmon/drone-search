@@ -21,13 +21,19 @@ export const metadata: Metadata = {
     "unmanned surface vehicle manufacturers",
     "maritime robotics companies",
     "autonomous boat manufacturers",
+    "USV companies",
+    "USV company database",
+    "ASV companies",
     "USV contractors",
     "unmanned maritime systems",
     "defense contractors USV",
     "USV database",
     "marine technology companies",
     "USV Tech Hub",
-    "naval robotics"
+    "naval robotics",
+    "autonomous surface vehicles",
+    "naval drones",
+
   ],
   openGraph: {
     title: "USV Hub | Unmanned Surface Vehicle Market Database",

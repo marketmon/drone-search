@@ -3,6 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -49,15 +56,32 @@ export function SiteHeader() {
 
           {/* Navigation Links */}
           <div className="flex justify-center sm:justify-end gap-4 sm:gap-4 text-xs sm:text-md font-mono tracking-wider">
-            <Link
-              href="/usv-market"
-              className={`transition-colors whitespace-nowrap ${isActive("/usv-market")
+            <DropdownMenu>
+              <DropdownMenuTrigger className={`flex items-center gap-1 transition-colors whitespace-nowrap ${isActive("/usv-market")
                 ? "text-black border-b-2 border-black pb-0.5"
                 : "text-gray-600 hover:text-black"
-                }`}
-            >
-              DATABASE
-            </Link>
+                }`}>
+                DATABASE
+                <ChevronDown className="h-3 w-3" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="font-mono">
+                <DropdownMenuItem asChild>
+                  <Link href="/usv-market" className="cursor-pointer">
+                    USVs
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a
+                    href="https://uuvhub.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cursor-pointer"
+                  >
+                    UUVs
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <Link
               href="/usv-market/contribution"
