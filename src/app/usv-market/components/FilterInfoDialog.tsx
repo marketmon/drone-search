@@ -49,6 +49,11 @@ export function FilterInfoDialog({ isOpen, onClose }: FilterInfoDialogProps) {
       description: "Companies that produce a USV on behalf for an organization"
     },
     {
+      label: "USV Operator",
+      category: "Company",
+      description: "Companies who operate or use USVs to accomplish their mission."
+    },
+    {
       label: "Autonomy Provider",
       category: "Company",
       description: "Companies developing autonomous navigation, control systems, and AI/ML software for unmanned vessels."

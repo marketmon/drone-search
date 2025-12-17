@@ -13,6 +13,7 @@ export type EntityCategory =
   | "university"
   | "autonomy provider"
   | "component manufacturer"
+  | "usv operator"
   | "framework";
 
 // Level 3: Company maturity stage (only applies to companies)
