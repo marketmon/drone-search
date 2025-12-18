@@ -182,3 +182,11 @@ export function isRecentlyAdded(dateAdded: string | undefined, daysThreshold: nu
     return false;
   }
 }
+
+// Helper function to create URL-friendly slugs from company names
+export function createSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric chars with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}

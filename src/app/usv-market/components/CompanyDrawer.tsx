@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -9,7 +10,8 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Company } from "../types";
-import { entityCategoryLabels, entityCategoryColors, companyTypeLabels, companyTypeColors, entityTypeLabels, entityTypeColors, formatFunding } from "../utils";
+import { entityCategoryLabels, entityCategoryColors, companyTypeLabels, companyTypeColors, entityTypeLabels, entityTypeColors, formatFunding, createSlug } from "../utils";
+import { ExternalLink } from "lucide-react";
 
 interface CompanyDrawerProps {
   company: Company;
@@ -45,9 +47,19 @@ export function CompanyDrawer({
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="max-h-[90vh] bg-white border-t-2 border-black rounded-none flex flex-col">
         <DrawerHeader className="border-b border-gray-300 pb-3 bg-white flex-shrink-0">
-          <DrawerTitle className="text-lg sm:text-2xl font-bold text-black">
-            {company.name}
-          </DrawerTitle>
+          <div className="flex items-center justify-between gap-3">
+            <DrawerTitle className="text-lg sm:text-2xl font-bold text-black flex-1">
+              {company.name}
+            </DrawerTitle>
+            <Link
+              href={`/usv-market/company/${createSlug(company.name)}`}
+              className="flex items-center gap-1.5 text-xs font-mono text-blue-600 hover:text-blue-800 border-b border-blue-400 hover:border-blue-800 transition-colors whitespace-nowrap"
+              onClick={(e) => e.stopPropagation()}
+            >
+              VIEW PAGE
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
         </DrawerHeader>
 
         <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4">

@@ -3,6 +3,9 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from "react-leaflet";
 import { Icon, LatLngBounds, Control, DomUtil } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Company, ContractData, EntityType } from "./types";
@@ -348,81 +351,95 @@ export default function MapView({ contractData, marketCompanies, showOnlyMarketP
         contractCount={contractMarkers.length}
       />
 
-      {/* Market Company Markers */}
-      {marketCompanyMarkers.map((marker, idx) => (
-        <Marker
-          key={`market-${idx}`}
-          position={[marker.lat, marker.lng]}
-          icon={entityTypeIcons[marker.company.entityType]}
-        >
-          <Popup maxWidth={320}>
-            <CompanyPopupContent company={marker.company} />
-          </Popup>
-        </Marker>
-      ))}
-
-      {/* Government Contract Markers */}
-      {!showOnlyMarketPlayers && contractMarkers.map((marker, idx) => {
-        const totalAmount = marker.contracts.reduce(
-          (sum, c) => sum + (c.contract_amount || 0),
-          0
-        );
-
-        return (
+      {/* Market Company Markers with Clustering */}
+      <MarkerClusterGroup
+        chunkedLoading
+        showCoverageOnHover={false}
+        maxClusterRadius={60}
+      >
+        {marketCompanyMarkers.map((marker, idx) => (
           <Marker
-            key={`contract-${idx}`}
+            key={`market-${idx}`}
             position={[marker.lat, marker.lng]}
-            icon={contractIcon}
+            icon={entityTypeIcons[marker.company.entityType]}
           >
             <Popup maxWidth={320}>
-              <div className="min-w-[280px] max-w-[300px] max-h-[400px] overflow-y-auto">
-                <div className="border-b-2 border-gray-400 pb-2 mb-3">
-                  <h3 className="font-bold text-base text-gray-800">{marker.company_name}</h3>
-                  <p className="text-xs text-gray-600">
-                    {marker.contracts[0].city}, {marker.contracts[0].state}
-                  </p>
-                  {marker.contracts[0].company_url && (
-                    <a
-                      href={ensureProtocol(marker.contracts[0].company_url)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800 font-mono border-b border-blue-400 inline-block mt-1"
-                    >
-                      Visit Website →
-                    </a>
-                  )}
-                  <p className="text-xs font-mono text-gray-500 mt-2">
-                    {marker.contracts.length} CONTRACT{marker.contracts.length > 1 ? "S" : ""} • {formatCurrency(totalAmount)}
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {marker.contracts.slice(0, 10).map((contract, i) => (
-                    <div key={i} className="border-l-2 border-gray-300 pl-3">
-                      <p className="text-sm font-medium text-gray-800 mb-1">{contract.product}</p>
-                      <div className="flex justify-between items-center text-xs text-gray-600">
-                        <span>{formatCurrency(contract.contract_amount || 0)}</span>
-                        <span>{contract.start_date}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <p className="text-xs text-gray-500 font-mono">{contract.contract_id}</p>
-                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded font-mono">
-                          {contract.source}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {marker.contracts.length > 10 && (
-                    <p className="text-xs text-gray-500 italic">
-                      + {marker.contracts.length - 10} more contracts
-                    </p>
-                  )}
-                </div>
-              </div>
+              <CompanyPopupContent company={marker.company} />
             </Popup>
           </Marker>
-        );
-      })}
+        ))}
+      </MarkerClusterGroup>
+
+      {/* Government Contract Markers with Clustering */}
+      {!showOnlyMarketPlayers && (
+        <MarkerClusterGroup
+          chunkedLoading
+          showCoverageOnHover={false}
+          maxClusterRadius={60}
+        >
+          {contractMarkers.map((marker, idx) => {
+            const totalAmount = marker.contracts.reduce(
+              (sum, c) => sum + (c.contract_amount || 0),
+              0
+            );
+
+            return (
+              <Marker
+                key={`contract-${idx}`}
+                position={[marker.lat, marker.lng]}
+                icon={contractIcon}
+              >
+                <Popup maxWidth={320}>
+                  <div className="min-w-[280px] max-w-[300px] max-h-[400px] overflow-y-auto">
+                    <div className="border-b-2 border-gray-400 pb-2 mb-3">
+                      <h3 className="font-bold text-base text-gray-800">{marker.company_name}</h3>
+                      <p className="text-xs text-gray-600">
+                        {marker.contracts[0].city}, {marker.contracts[0].state}
+                      </p>
+                      {marker.contracts[0].company_url && (
+                        <a
+                          href={ensureProtocol(marker.contracts[0].company_url)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:text-blue-800 font-mono border-b border-blue-400 inline-block mt-1"
+                        >
+                          Visit Website →
+                        </a>
+                      )}
+                      <p className="text-xs font-mono text-gray-500 mt-2">
+                        {marker.contracts.length} CONTRACT{marker.contracts.length > 1 ? "S" : ""} • {formatCurrency(totalAmount)}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {marker.contracts.slice(0, 10).map((contract, i) => (
+                        <div key={i} className="border-l-2 border-gray-300 pl-3">
+                          <p className="text-sm font-medium text-gray-800 mb-1">{contract.product}</p>
+                          <div className="flex justify-between items-center text-xs text-gray-600">
+                            <span>{formatCurrency(contract.contract_amount || 0)}</span>
+                            <span>{contract.start_date}</span>
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <p className="text-xs text-gray-500 font-mono">{contract.contract_id}</p>
+                            <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded font-mono">
+                              {contract.source}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                      {marker.contracts.length > 10 && (
+                        <p className="text-xs text-gray-500 italic">
+                          + {marker.contracts.length - 10} more contracts
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
+      )}
     </MapContainer>
   );
 }
