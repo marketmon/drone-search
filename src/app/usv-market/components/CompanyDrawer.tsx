@@ -161,18 +161,20 @@ export function CompanyDrawer({
             )}
 
             {/* Website */}
-            <div className="pb-2">
-              <span className="text-xs font-mono text-gray-600 font-bold block mb-1">WEBSITE</span>
-              <a
-                href={company.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-mono text-blue-600 hover:text-blue-800 transition-colors inline-block border-b border-blue-400 hover:border-blue-800 break-all"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-              </a>
-            </div>
+            {company.website && (
+              <div className="pb-2">
+                <span className="text-xs font-mono text-gray-600 font-bold block mb-1">WEBSITE</span>
+                <a
+                  href={company.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-mono text-blue-600 hover:text-blue-800 transition-colors inline-block border-b border-blue-400 hover:border-blue-800 break-all"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {company.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
