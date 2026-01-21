@@ -11,7 +11,7 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "Canada": "North America",
   "Norway": "Europe",
   "Ukraine": "Europe",
-  "Poland": "Europe",
+  "Hungary": "Europe",
   "New Zealand": "Oceania",
   "India": "Asia",
   "China": "Asia",
@@ -19,8 +19,8 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "Italy": "Europe",
   "Germany": "Europe",
   "Austria": "Europe",
+  "France": "Europe",
   "Sweden": "Europe",
-  "Finland": "Europe",
   "South Africa": "Africa",
   "Uruguay": "South America",
   "Israel": "Middle East",
@@ -28,6 +28,8 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "UAE": "Middle East",
   "South Korea": "Asia",
   "Japan": "Asia",
+  "Denmark": "Europe",
+  "Latvia": "Europe",
   "Turkey": "Middle East"
 };
 

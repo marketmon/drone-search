@@ -160,7 +160,7 @@ export function isRecentlyAdded(dateAdded: string | undefined, daysThreshold: nu
   if (!dateAdded) return false;
 
   try {
-    // Parse MM/DD/YY format
+    // Parse MM/DD/YY or MM/DD/YYYY format
     const parts = dateAdded.split('/');
     if (parts.length !== 3) return false;
 
@@ -168,8 +168,10 @@ export function isRecentlyAdded(dateAdded: string | undefined, daysThreshold: nu
     const day = parseInt(parts[1], 10);
     let year = parseInt(parts[2], 10);
 
-    // Convert 2-digit year to 4-digit year
-    year = year < 50 ? 2000 + year : 1900 + year;
+    // Convert 2-digit year to 4-digit year (only if it's actually 2-digit)
+    if (year < 100) {
+      year = year < 50 ? 2000 + year : 1900 + year;
+    }
 
     const entityDate = new Date(year, month - 1, day);
     const now = new Date();
@@ -181,6 +183,49 @@ export function isRecentlyAdded(dateAdded: string | undefined, daysThreshold: nu
     console.error('Error parsing date:', dateAdded, error);
     return false;
   }
+}
+
+// Helper function to parse date string (MM/DD/YY or MM/DD/YYYY format) to Date object
+export function parseDateAdded(dateAdded: string | undefined): Date | null {
+  if (!dateAdded) return null;
+
+  try {
+    const parts = dateAdded.split('/');
+    if (parts.length !== 3) return null;
+
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    let year = parseInt(parts[2], 10);
+
+    // Convert 2-digit year to 4-digit year (only if it's actually 2-digit)
+    if (year < 100) {
+      year = year < 50 ? 2000 + year : 1900 + year;
+    }
+
+    return new Date(year, month - 1, day);
+  } catch (error) {
+    return null;
+  }
+}
+
+// Helper function to find the most recent date from an array of entities
+export function getMostRecentDate(entities: { dateAdded?: string }[]): Date | null {
+  let mostRecentDate: Date | null = null;
+
+  for (const entity of entities) {
+    const date = parseDateAdded(entity.dateAdded);
+    if (date && (!mostRecentDate || date > mostRecentDate)) {
+      mostRecentDate = date;
+    }
+  }
+
+  return mostRecentDate;
+}
+
+// Helper function to format a date as "MMM D, YYYY" (e.g., "Jan 21, 2026")
+export function formatDateShort(date: Date): string {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 }
 
 // Helper function to create URL-friendly slugs from company names

@@ -16,7 +16,7 @@ import { useFilters } from "./hooks/useFilters";
 import { useStatistics } from "./hooks/useStatistics";
 
 // Utils
-import { isRecentlyAdded } from "./utils";
+import { getMostRecentDate, parseDateAdded, formatDateShort } from "./utils";
 
 // Components
 import { HeroHeader } from "./components/HeroHeader";
@@ -49,7 +49,7 @@ export default function USVMarketInteractive() {
 
   // Map-specific state
   const [mapSearchTerm, setMapSearchTerm] = useState("");
-  const [showOnlyMarketPlayers, setShowOnlyMarketPlayers] = useState(false);
+  const [showOnlyMarketPlayers, setShowOnlyMarketPlayers] = useState(true);
 
   // Pagination state
   const [itemsToShow, setItemsToShow] = useState(20);
@@ -64,9 +64,25 @@ export default function USVMarketInteractive() {
     setItemsToShow(20);
   }, [filters.filteredCompanies.length]);
 
-  // Calculate new entities this week
-  const newEntities = useMemo(() => {
-    return marketCompanies.filter((entity) => isRecentlyAdded(entity.dateAdded, 7));
+  // Calculate new entities from the most recent batch (entities with the latest date)
+  const { newEntities, mostRecentDateFormatted } = useMemo(() => {
+    const mostRecentDate = getMostRecentDate(marketCompanies);
+    if (!mostRecentDate) {
+      return { newEntities: [], mostRecentDateFormatted: null };
+    }
+
+    // Filter entities that match the most recent date
+    const entities = marketCompanies.filter((entity) => {
+      const entityDate = parseDateAdded(entity.dateAdded);
+      if (!entityDate) return false;
+      // Compare dates (ignoring time)
+      return entityDate.getTime() === mostRecentDate.getTime();
+    });
+
+    return {
+      newEntities: entities,
+      mostRecentDateFormatted: formatDateShort(mostRecentDate),
+    };
   }, [marketCompanies]);
 
   // Filtered companies for map
@@ -149,6 +165,7 @@ export default function USVMarketInteractive() {
               totalVehicles={vehicles.length}
               totalContracts={contractData.length}
               newEntities={newEntities}
+              newEntitiesDate={mostRecentDateFormatted}
             />
             <ViewToggle
               viewType={viewType}

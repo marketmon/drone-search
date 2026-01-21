@@ -12,6 +12,7 @@ interface DatabaseSummaryProps {
   totalVehicles: number;
   totalContracts: number;
   newEntities: Company[];
+  newEntitiesDate: string | null;
 }
 
 export function DatabaseSummary({
@@ -22,6 +23,7 @@ export function DatabaseSummary({
   totalVehicles,
   totalContracts,
   newEntities,
+  newEntitiesDate,
 }: DatabaseSummaryProps) {
   const stats = [
     {
@@ -69,8 +71,8 @@ export function DatabaseSummary({
         <h2 className="font-mono text-xs sm:text-sm font-bold text-black tracking-wider">
           DATABASE OVERVIEW
         </h2>
-        {newEntities.length > 0 && (
-          <NewEntitiesDrawer newEntities={newEntities} />
+        {newEntities.length > 0 && newEntitiesDate && (
+          <NewEntitiesDrawer newEntities={newEntities} dateAdded={newEntitiesDate} />
         )}
       </div>
 

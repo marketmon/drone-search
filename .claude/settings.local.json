@@ -10,7 +10,8 @@
       "Bash(npx shadcn@latest add drawer:*)",
       "Bash(npx shadcn@latest add tabs)",
       "Bash(npx shadcn@latest add dropdown-menu)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []

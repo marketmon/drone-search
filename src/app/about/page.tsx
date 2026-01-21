@@ -107,7 +107,7 @@ export default function About() {
           <section className="border-2 border-black bg-white p-8">
             <div className="border-l-4 border-blue-600 pl-4 mb-6">
               <h2 className="text-3xl font-bold tracking-tight">Localize Opportunity</h2>
-              <span className="text-xs font-mono text-gray-600 tracking-wider">RESTORE AMERICAN MANUFACTURING</span>
+              <span className="text-xs font-mono text-gray-600 tracking-wider">STRENGTHEN AMERICAN MANUFACTURING</span>
             </div>
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
@@ -139,13 +139,10 @@ export default function About() {
                 <h3 className="font-bold text-lg mb-3 text-black">Ways to Contribute</h3>
                 <div className="space-y-3 text-sm">
                   <div>
-                    <p className="font-bold text-black">Add a Company</p>
+                    <p className="font-bold text-black">Add a Company or Vehicle</p>
                     <p>Use the "Contribute to Database" button on any page to suggest additions. All submissions are reviewed before being added.</p>
                   </div>
-                  <div>
-                    <p className="font-bold text-black">Build Tech Faster</p>
-                    <p>Submit a demand signal to tell us what you're building and what challenges you're facing. We'll connect you with suppliers and partners.</p>
-                  </div>
+
                   <div>
                     <p className="font-bold text-black">Share the Resource</p>
                     <p>The more engineers and companies that participate, the stronger the ecosystem becomes. Help spread the word.</p>
@@ -164,7 +161,7 @@ export default function About() {
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                Interested in joining the conversation? We're gauging interest for a dedicated Slack community where USV engineers, founders, suppliers, and operators can connect, collaborate, and advance the industry together.
+                Interested in joining the conversation?
               </p>
 
               <div className="pt-2">
@@ -174,7 +171,7 @@ export default function About() {
                   rel="noopener noreferrer"
                   className="inline-block px-6 py-3 bg-blue-600 text-white font-mono text-sm tracking-wider border-2 border-black hover:bg-blue-700 transition-colors"
                 >
-                  JOIN SLACK COMMUNITY
+                  Sign Up for Updates
                 </a>
               </div>
             </div>
