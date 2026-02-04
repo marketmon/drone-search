@@ -161,7 +161,11 @@ export default function About() {
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                Interested in joining the conversation?
+                Interested in joining the conversation? We host monthly conversations surrounding the autonomous maritime technology space. Past conversations include:
+                <br></br>
+                - Deep Dive on Chinese Maritime Tech
+                <br></br>
+                - US Navy Industry Day Debrief with Navy Officer
               </p>
 
               <div className="pt-2">

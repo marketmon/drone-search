@@ -14,7 +14,7 @@ import {
   formatFunding,
   formatSpec,
 } from "../../utils";
-import { Share2, ArrowLeft, Check } from "lucide-react";
+import { Share2, ArrowLeft, Check, Building2, Landmark, Ship, Users, DollarSign } from "lucide-react";
 
 interface CompanyPageClientProps {
   company: Company;
@@ -168,9 +168,10 @@ export default function CompanyPageClient({
             <h2 className="text-xs font-mono text-gray-600 font-bold mb-2">
               DESCRIPTION
             </h2>
-            <p className="text-base text-gray-700 leading-relaxed whitespace-pre-line">
-              {company.description}
-            </p>
+            <div
+              className="text-base text-gray-700 leading-relaxed [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 [&_p]:mb-3 [&_strong]:font-bold"
+              dangerouslySetInnerHTML={{ __html: company.description }}
+            />
           </div>
         )}
 
@@ -287,12 +288,69 @@ export default function CompanyPageClient({
           </div>
         )}
 
-        {/* Back to Market Button */}
-        <Link href="/usv-market">
-          <Button className="w-full font-mono text-sm bg-gray-900 text-white border-2 border-gray-900 hover:bg-gray-800 rounded-none px-6 py-4">
-            BACK TO USV MARKET
-          </Button>
-        </Link>
+        {/* Explore the Database CTA */}
+        <div className="mb-8 border-2 border-blue-600 bg-blue-50 p-6">
+          <h2 className="text-lg font-bold text-black mb-2">
+            Explore the Full Database
+          </h2>
+          <p className="text-sm text-gray-700 mb-4">
+            USV Hub tracks the entire autonomous maritime ecosystem. Discover companies, government programs, and investors shaping the future of unmanned surface vehicles.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <DollarSign className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold text-black">$600M+</p>
+              <p className="text-xs font-mono text-gray-600">GOV CONTRACTS</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Building2 className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold text-black">249</p>
+              <p className="text-xs font-mono text-gray-600">ENTITIES</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Landmark className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold text-black">28</p>
+              <p className="text-xs font-mono text-gray-600">GOV ORGS</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Users className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold text-black">60</p>
+              <p className="text-xs font-mono text-gray-600">INVESTORS</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-1">
+                <Ship className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold text-black">83</p>
+              <p className="text-xs font-mono text-gray-600">VEHICLES</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/usv-market" className="flex-1">
+              <Button className="w-full font-mono text-sm bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 rounded-none px-6 py-3">
+                EXPLORE THE DATABASE
+              </Button>
+            </Link>
+            <a
+              href="https://forms.gle/Y1kJ34ZPvyaikgxq7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button className="w-full font-mono text-sm bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-100 rounded-none px-6 py-3">
+                JOIN THE CONVERSATION
+              </Button>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -21,6 +21,9 @@ export function CompanyGridCard({
   const description = company.description || "";
   const fundingDisplay = formatFunding(company.funding);
 
+  // Strip HTML tags for preview display
+  const plainTextDescription = description.replace(/<[^>]*>/g, '');
+
   return (
     <Card
       className="border border-gray-300 rounded-none shadow-none hover:shadow-md hover:border-gray-400 transition-all flex flex-col bg-white cursor-pointer"
@@ -80,9 +83,9 @@ export function CompanyGridCard({
         </CardTitle>
 
         {/* Company Description - 2 lines max */}
-        {description && (
+        {plainTextDescription && (
           <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
-            {description}
+            {plainTextDescription}
           </p>
         )}
       </CardHeader>

@@ -38,10 +38,13 @@ export function CompanyDrawer({
     }
   }, [isOpen, company.name]);
 
-  // Truncate description to ~150 characters
-  const truncatedDescription = company.description && company.description.length > 150
-    ? company.description.substring(0, 150).trim() + "..."
-    : company.description;
+  // Strip HTML tags for truncated preview
+  const plainTextDescription = company.description ? company.description.replace(/<[^>]*>/g, '') : '';
+
+  // Truncate description to ~150 characters (using plain text to avoid breaking HTML tags)
+  const truncatedDescription = plainTextDescription.length > 150
+    ? plainTextDescription.substring(0, 150).trim() + "..."
+    : plainTextDescription;
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
@@ -129,10 +132,17 @@ export function CompanyDrawer({
             {company.description && (
               <div>
                 <span className="text-xs font-mono text-gray-600 font-bold block mb-1">DESCRIPTION</span>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {showFullDescription ? company.description : truncatedDescription}
-                </p>
-                {company.description.length > 150 && (
+                {showFullDescription ? (
+                  <div
+                    className="text-sm text-gray-700 leading-relaxed [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 [&_p]:mb-2 [&_strong]:font-bold"
+                    dangerouslySetInnerHTML={{ __html: company.description }}
+                  />
+                ) : (
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {truncatedDescription}
+                  </p>
+                )}
+                {plainTextDescription.length > 150 && (
                   <button
                     onClick={() => setShowFullDescription(!showFullDescription)}
                     className="text-xs font-mono text-blue-600 hover:text-blue-800 mt-2 underline cursor-pointer"
