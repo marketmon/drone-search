@@ -65,7 +65,7 @@ export default function CompanyPageClient({
             className="flex items-center gap-2 text-sm font-mono text-gray-600 hover:text-black transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            BACK TO MARKET
+            BACK TO DATABASE
           </Link>
           <Button
             onClick={handleShare}
