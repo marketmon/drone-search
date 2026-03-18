@@ -33,7 +33,7 @@ export default function About() {
             </div>
           </div>
           <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
-            The comprehensive directory for America's autonomous maritime ecosystem—connecting engineers, suppliers, and innovators in the unmanned surface vehicle market.
+            The comprehensive directory for the world's autonomous maritime ecosystem—connecting engineers, suppliers, and innovators in the unmanned surface vehicle market.
           </p>
         </div>
 
