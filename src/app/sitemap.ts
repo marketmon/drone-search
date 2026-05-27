@@ -1,26 +1,14 @@
 import { MetadataRoute } from 'next';
 import Papa from 'papaparse';
-import fs from 'fs';
-import path from 'path';
 import { createSlug } from './usv-market/utils';
+
+const ENTITIES_SHEET_URL = process.env.USV_ENTITIES_SHEET_URL!;
 
 // Function to load company data for sitemap
 async function loadCompanies() {
   try {
-    let csvText: string;
-
-    // During build time, read from file system
-    if (process.env.NODE_ENV === 'production' || !process.env.NEXT_PUBLIC_BASE_URL) {
-      const filePath = path.join(process.cwd(), 'public', 'usv_key_entities.csv');
-      csvText = fs.readFileSync(filePath, 'utf-8');
-    } else {
-      // During runtime, fetch from URL
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/usv_key_entities.csv`,
-        { cache: 'no-store' }
-      );
-      csvText = await response.text();
-    }
+    const response = await fetch(ENTITIES_SHEET_URL, { cache: 'no-store' });
+    const csvText = await response.text();
 
     return new Promise<string[]>((resolve) => {
       Papa.parse(csvText, {

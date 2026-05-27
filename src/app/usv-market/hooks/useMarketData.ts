@@ -13,7 +13,7 @@ export function useMarketData() {
   const loadCompanyData = async () => {
     setIsLoadingCompanies(true);
     try {
-      const response = await fetch("/usv_key_entities.csv");
+      const response = await fetch("/api/entities");
       const csvText = await response.text();
 
       Papa.parse(csvText, {
