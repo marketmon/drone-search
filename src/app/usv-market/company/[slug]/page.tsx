@@ -50,20 +50,11 @@ async function loadCompanyData(): Promise<Company[]> {
 // Function to load vehicle data server-side
 async function loadVehicleData(): Promise<Vehicle[]> {
   try {
-    let csvText: string;
-
-    // During build time, read from file system
-    if (process.env.NODE_ENV === "production" || !process.env.NEXT_PUBLIC_BASE_URL) {
-      const filePath = path.join(process.cwd(), "public", "usv_vehicles_matched_to_company.csv");
-      csvText = fs.readFileSync(filePath, "utf-8");
-    } else {
-      // During runtime, fetch from URL
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/usv_vehicles_matched_to_company.csv`,
-        { cache: "no-store" }
-      );
-      csvText = await response.text();
-    }
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/usv_vehicles_matched_to_company.csv`,
+      { cache: "no-store" }
+    );
+    const csvText = await response.text();
 
     return new Promise((resolve) => {
       Papa.parse(csvText, {
