@@ -31,7 +31,7 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "Japan": "Asia",
   "Denmark": "Europe",
   "Latvia": "Europe",
-  "Turkey": "Middle East"
+  "Turkey": "Middle East",
 };
 
 // Get region from country
