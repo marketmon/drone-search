@@ -13,8 +13,8 @@ Date Added,Name,Length (ft),Range (nm),Endurance (days),Seastate,Top Speed (kts)
 11/24/25,Surveyor,65,,100,,6,,Wind (Sail),Diesel,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1AfGfNzSEH-xZckoE7X4wRwhHcIion_6J/view
 11/24/25,Voyager,33,,100,,5,,Wind (Sail),Eletric,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/19j3znGRFVdq4RYh_cY-xOTHDkcLQ-3hk/view
 11/24/25,Explorer,23,Unlimited,365,,3,,Wind (Sail),,Saildrone,https://www.saildrone.com/technology/vehicles,https://drive.google.com/file/d/1kyOJT3LezW3pskZnaEYqTBllW85ykIIe/view
-11/24/25,Lightfish,11,,180,6,4,,Electric,,Seasats,https://seasats.com/the-lightfish/,https://drive.google.com/file/d/1vtsXFyIRkAObikCt2IKa2Sj24dtC5pyQ/view
-11/24/25,Quickfish,17,400,,6,34,600,Gas or Diesel,,Seasats,https://seasats.com/the-quickfish/,https://drive.google.com/file/d/1jo0g2eK7igNLfvzyfynJQy0VKlzusiWS/view
+11/24/25,Lightfish,11,8000,180,"Operational 6+, Survival 10",5,66,Brushless water proof motor with weedless prop,,Seasats,https://seasats.com/the-lightfish/,https://drive.google.com/file/d/1gkqQaGgwoWDyAy7peE76rH49p4v1QFXU/view?usp=drive_link
+11/24/25,Quickfish,18,400,28,"Operational 6+, Survival 10",35,450,AE SELP HONE 128 VP INBOARD/OUTBOARD,ELECTRIC THRUSTER,Seasats,https://seasats.com/the-quickfish/,https://drive.google.com/file/d/1dgemcpepjlQo8LBPUGQCQASJNrEDsWJ5/view?usp=drive_link
 11/24/25,CUSV,39,1200,,4,35,,,,Textron Systems,https://www.naval-technology.com/projects/fleet-class-common-unmanned-surface-vessel-cusv/,
 11/24/25,TSUNAMI 21,24,1000,,4,40,2800,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
 11/24/25,TSUNAMI 25,25,1000,,4,40,3642,Gas or Diesel,,Textron Systems,https://www.textronsystems.com/products/tsunami,https://drive.google.com/file/d/1_EvspRtSK1mUdSIXt4gNitKM6Kv6kNXr/view
@@ -56,7 +56,8 @@ Date Added,Name,Length (ft),Range (nm),Endurance (days),Seastate,Top Speed (kts)
 11/24/25,Z-Boat 1250,4.2,,,,2.9,10,,,Teledyne Technologies,https://www.teledynemarine.com/en-us/products/Pages/zboat1250.aspx,https://drive.google.com/file/d/1rppfLpoZT0pz1ocDMtDRDk2IRnI4Yn8-/view
 11/24/25,Q-Boat 1800RP,5.9,,,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/q-boat-1800rp,https://drive.google.com/file/d/1OvtDT0pGvTCRbSWlegS2DtN3I58puHDe/view
 11/24/25,Z-Boat 1800,5.9,,0.167,,10,66.6,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800,https://drive.google.com/file/d/1kCMfws0m8C-GUJVBJOUQNLs4-E-2T1eQ/view
-11/24/25,"Z-Boat 1800T - Trimble Edition",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
+11/24/25,"Z-Boat 1800T - Trimble Edition
+",5.9,,,,4.5,19.8,,,Teledyne Technologies,https://www.teledynemarine.com/brands/oceanscience/z-boat1800t-trimble,https://drive.google.com/file/d/1pT9vUdc6WSN8XSljtIIT5aI1sSnDNYt2/view
 11/24/25,-Unamed-,34,300,,,40,,Diesel,,BAE Systems US,https://www.baesystems.com/en/product/uncrewed-surface-vessel,https://drive.google.com/file/d/1qWAkEzsgrFOuyXm6LD3dbTpzAL5UHj-S/preview
 11/24/25,NeedleFish,46,,,,,,,,Ocean Infinity,https://oceaninfinity.com/news/ocean-infinity-launches-needlefish-usv-in-kuwait/,
 12/2/25,WAM-V® 8,8,,0.5,,6,100,Electric,,Ocean Power Technologies,https://oceanpowertechnologies.com/products/unmanned-surface-vehicles/wam-v-8/,
