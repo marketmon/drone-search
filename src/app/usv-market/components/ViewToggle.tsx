@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Grid2x2, List, Map, Building2, FileText, Ship } from "lucide-react";
+import { Grid2x2, List, Building2, FileText, Ship } from "lucide-react";
 
 interface ViewToggleProps {
   viewType: "grid" | "table" | "map";
@@ -92,15 +92,7 @@ export function ViewToggle({ viewType, onViewTypeChange, dataView = "entities", 
           >
             <List className="w-4 h-4" />
           </Button>
-          <Button
-            onClick={() => onViewTypeChange("map")}
-            className={`border-2 cursor-pointer rounded-none font-mono text-xs px-3 py-2 transition-all ${viewType === "map"
-              ? "bg-black text-white border-black"
-              : "bg-white text-black border-black hover:bg-gray-100"
-              }`}
-          >
-            <Map className="w-4 h-4" />
-          </Button>
+          {/* Map view temporarily disabled (map tiles not loading) */}
         </div>
       </div>
     </div>
