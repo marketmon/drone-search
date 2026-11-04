@@ -27,7 +27,7 @@ export function EntityTable({ companies, vehiclesByCompany, onCompanyClick }: En
         <tbody>
           {companies.map((company, index) => (
             <tr
-              key={company.name}
+              key={`${company.name}-${company.entityCategory}-${company.dateAdded}`}
               onClick={() => onCompanyClick(company)}
               className={`border-b border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}

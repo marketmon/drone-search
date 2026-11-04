@@ -32,6 +32,10 @@ export const COUNTRY_TO_REGION: Record<string, string> = {
   "Denmark": "Europe",
   "Latvia": "Europe",
   "Turkey": "Middle East",
+  "Poland": "Europe",
+  "Greece": "Europe",
+  "Ireland": "Europe",
+  "Estonia": "Europe",
 };
 
 // Get region from country

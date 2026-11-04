@@ -100,7 +100,8 @@ export function SearchAndFilters({
   }, [selectedRegions, availableRegions]);
 
   // Calculate active filter counts per tab
-  const entityFiltersCount = selectedEntityTypes.size + selectedEntityCategories.size + selectedCompanyTypes.size;
+  const relevantCompanyTypeCount = selectedEntityTypes.has("company") ? selectedCompanyTypes.size : 0;
+  const entityFiltersCount = selectedEntityTypes.size + relevantEntityCategoryCount + relevantCompanyTypeCount;
   const geographyFiltersCount = relevantRegionCount + selectedCountries.size;
   const totalFiltersCount = entityFiltersCount + geographyFiltersCount;
 
@@ -152,6 +153,7 @@ export function SearchAndFilters({
     { value: "startup", label: "Startup" },
     { value: "mid-tier", label: "Mid-Tier" },
     { value: "new prime", label: "New Prime" },
+    { value: "prime", label: "Prime" },
     { value: "legacy", label: "Legacy" },
   ];
 
@@ -221,8 +223,7 @@ export function SearchAndFilters({
                     onSelectAllEntityTypes();
                     onSelectAllEntityCategories();
                     onSelectAllCompanyTypes();
-                    onSelectAllRegions();
-                    onSelectAllCountries();
+                    onSelectAllRegions(); // also re-selects every country
                   }}
                   className="text-xs font-mono px-3 py-1.5 bg-black text-white border-2 border-black hover:bg-gray-800 cursor-pointer transition-colors"
                   title="Reset all filters"
@@ -462,7 +463,7 @@ export function SearchAndFilters({
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-mono font-bold bg-purple-600 text-white px-2 py-0.5">LEVEL 3</span>
                           <span className="font-mono text-sm font-bold text-black">Company Type</span>
-                          <span className="text-xs text-gray-500 font-mono">({selectedCompanyTypes.size} selected)</span>
+                          <span className="text-xs text-gray-500 font-mono">({relevantCompanyTypeCount} selected)</span>
                         </div>
                         {expandedSections.has("company-type") ? (
                           <ChevronUp className="w-4 h-4" />

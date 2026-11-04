@@ -14,7 +14,7 @@ export function EntityGrid({ companies, vehiclesByCompany, onCompanyClick }: Ent
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
       {companies.map((company) => (
         <CompanyGridCard
-          key={company.name}
+          key={`${company.name}-${company.entityCategory}-${company.dateAdded}`}
           company={company}
           vehicleCount={vehiclesByCompany.get(company.name)?.length || 0}
           onClick={() => onCompanyClick(company)}

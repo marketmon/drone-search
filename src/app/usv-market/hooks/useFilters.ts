@@ -11,6 +11,12 @@ const entityCategoryMap: Record<EntityType, EntityCategory[]> = {
   investor: [], // No entity categories for investors
 };
 
+const ALL_COMPANY_TYPES = ["startup", "legacy", "mid-tier", "new prime", "prime"];
+
+const KNOWN_ENTITY_CATEGORIES = new Set<string>(Object.values(entityCategoryMap).flat());
+
+type Dimension = "entityType" | "entityCategory" | "companyType" | "region" | "country";
+
 export function useFilters(marketCompanies: Company[]) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -30,7 +36,7 @@ export function useFilters(marketCompanies: Company[]) {
 
   // Level 3: Company Type (startup/legacy/mid-tier/new prime) - only for companies
   const [selectedCompanyTypes, setSelectedCompanyTypes] = useState<Set<string>>(
-    new Set(["startup", "legacy", "mid-tier", "new prime"])
+    new Set(ALL_COMPANY_TYPES)
   );
 
   // Get all regions and countries that exist in the data
@@ -110,7 +116,7 @@ export function useFilters(marketCompanies: Company[]) {
   };
 
   const selectAllCompanyTypes = () => {
-    setSelectedCompanyTypes(new Set(["startup", "legacy", "mid-tier", "new prime"]));
+    setSelectedCompanyTypes(new Set(ALL_COMPANY_TYPES));
   };
 
   const deselectAllCompanyTypes = () => {
@@ -118,14 +124,20 @@ export function useFilters(marketCompanies: Company[]) {
   };
 
   // Geography toggle functions
+  // Regions and countries move together: checking a region selects its countries,
+  // unchecking it removes them, so a checked region can never show zero results.
   const toggleRegion = (region: string) => {
+    const regionCountries = getCountriesForRegion(marketCompanies, region);
+    const adding = !selectedRegions.has(region);
     setSelectedRegions((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(region)) {
-        newSet.delete(region);
-      } else {
-        newSet.add(region);
-      }
+      if (adding) newSet.add(region);
+      else newSet.delete(region);
+      return newSet;
+    });
+    setSelectedCountries((prev) => {
+      const newSet = new Set(prev);
+      regionCountries.forEach((country) => (adding ? newSet.add(country) : newSet.delete(country)));
       return newSet;
     });
   };
@@ -142,9 +154,16 @@ export function useFilters(marketCompanies: Company[]) {
     });
   };
 
-  const selectAllRegions = () => setSelectedRegions(new Set(availableRegions));
-  const deselectAllRegions = () => setSelectedRegions(new Set());
-  const selectAllCountries = () => setSelectedCountries(new Set(allCountries));
+  const selectAllRegions = () => {
+    setSelectedRegions(new Set(availableRegions));
+    setSelectedCountries(new Set(allCountries));
+  };
+  const deselectAllRegions = () => {
+    setSelectedRegions(new Set());
+    setSelectedCountries(new Set());
+  };
+  // Country buttons act within the currently selected regions
+  const selectAllCountries = () => setSelectedCountries(new Set(availableCountries));
   const deselectAllCountries = () => setSelectedCountries(new Set());
 
   // Get available entity categories based on selected entity types
@@ -168,38 +187,55 @@ export function useFilters(marketCompanies: Company[]) {
     return Array.from(countries).sort();
   }, [selectedRegions, marketCompanies]);
 
-  // Main filtering logic
+  // Single source of truth for whether a company passes the filters.
+  // `skip` omits one dimension so facet counts reflect "what would I get if I toggled this one".
+  const matchesFilters = (company: Company, skip?: Dimension): boolean => {
+    const term = searchTerm.toLowerCase();
+    const matchesSearch =
+      company.name.toLowerCase().includes(term) ||
+      (!!company.description && company.description.toLowerCase().includes(term)) ||
+      locationMatchesSearch(company.location, searchTerm);
+    if (!matchesSearch) return false;
+
+    if (skip !== "entityType" && !selectedEntityTypes.has(company.entityType)) return false;
+
+    // Category / company type only apply while their parent entity type is relevant
+    // Unrecognized values (typos in the sheet) can't be toggled, so they're treated like blank ones
+    if (
+      skip !== "entityCategory" &&
+      company.entityCategory &&
+      KNOWN_ENTITY_CATEGORIES.has(company.entityCategory) &&
+      !selectedEntityCategories.has(company.entityCategory)
+    ) {
+      return false;
+    }
+
+    if (
+      skip !== "companyType" &&
+      company.entityType === "company" &&
+      company.companyType &&
+      ALL_COMPANY_TYPES.includes(company.companyType) &&
+      !selectedCompanyTypes.has(company.companyType)
+    ) {
+      return false;
+    }
+
+    // Entities with no known region can't be toggled off individually, so they only show
+    // while every region is selected (otherwise they'd stay visible no matter the filter)
+    const region = getRegionFromCountry(company.country);
+    const allRegionsSelected = availableRegions.every((r) => selectedRegions.has(r));
+    const regionOk = region ? selectedRegions.has(region) : allRegionsSelected;
+    if (skip !== "region" && !regionOk) return false;
+
+    const country = company.country?.trim();
+    if (skip !== "country" && skip !== "region" && country && !selectedCountries.has(country)) return false;
+    if (skip === "region" && country && !selectedCountries.has(country)) return false;
+
+    return true;
+  };
+
   const filteredCompanies = useMemo(() => {
-    const filtered = marketCompanies.filter((company) => {
-      // Level 0: Search term
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      // Level 1: Entity Type
-      const matchesEntityType = selectedEntityTypes.has(company.entityType);
-
-      // Level 2: Entity Category (if applicable)
-      const matchesEntityCategory = company.entityCategory
-        ? selectedEntityCategories.has(company.entityCategory)
-        : true; // If no category, pass this filter
-
-      // Level 3: Company Type (only for companies)
-      const matchesCompanyType =
-        company.entityType === "company" && company.companyType
-          ? selectedCompanyTypes.has(company.companyType)
-          : true; // Non-companies or companies without type pass this filter
-
-      // Geography: Region filter
-      const companyRegion = getRegionFromCountry(company.country);
-      const matchesRegion = companyRegion ? selectedRegions.has(companyRegion) : true;
-
-      // Geography: Country filter
-      const matchesCountry = selectedCountries.size === 0 || selectedCountries.has(company.country);
-
-      return matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType && matchesRegion && matchesCountry;
-    });
+    const filtered = marketCompanies.filter((company) => matchesFilters(company));
 
     // Shuffle the filtered results
     const shuffled = [...filtered];
@@ -209,133 +245,39 @@ export function useFilters(marketCompanies: Company[]) {
     }
 
     return shuffled;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, selectedRegions, selectedCountries, marketCompanies]);
 
-  // Dynamic filter counts based on current selections
+  // Each count = entities that pass every OTHER filter, so counts always agree with the results list
   const dynamicFilterCounts = useMemo(() => {
-    // Entity Type counts (filter by search, entity categories, and company types)
     const entityTypeCounts: Record<string, number> = {};
-
-    marketCompanies.forEach((company) => {
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      const matchesEntityCategory = company.entityCategory
-        ? selectedEntityCategories.has(company.entityCategory)
-        : true;
-
-      const matchesCompanyType =
-        company.entityType === "company" && company.companyType
-          ? selectedCompanyTypes.has(company.companyType)
-          : true;
-
-      if (matchesSearch && matchesEntityCategory && matchesCompanyType) {
-        entityTypeCounts[company.entityType] = (entityTypeCounts[company.entityType] || 0) + 1;
-      }
-    });
-
-    // Entity Category counts (filter by search, entity types, and company types)
     const entityCategoryCounts: Record<string, number> = {};
-
-    marketCompanies.forEach((company) => {
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      const matchesEntityType = selectedEntityTypes.has(company.entityType);
-
-      const matchesCompanyType =
-        company.entityType === "company" && company.companyType
-          ? selectedCompanyTypes.has(company.companyType)
-          : true;
-
-      if (matchesSearch && matchesEntityType && matchesCompanyType && company.entityCategory) {
-        entityCategoryCounts[company.entityCategory] = (entityCategoryCounts[company.entityCategory] || 0) + 1;
-      }
-    });
-
-    // Company Type counts (filter by search, entity types, and entity categories - only for companies)
     const companyTypeCounts: Record<string, number> = {};
-
-    marketCompanies.forEach((company) => {
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      const matchesEntityType = selectedEntityTypes.has(company.entityType);
-
-      const matchesEntityCategory = company.entityCategory
-        ? selectedEntityCategories.has(company.entityCategory)
-        : true;
-
-      if (matchesSearch && matchesEntityType && matchesEntityCategory && company.entityType === "company" && company.companyType) {
-        companyTypeCounts[company.companyType] = (companyTypeCounts[company.companyType] || 0) + 1;
-      }
-    });
-
-    // Region counts (filter by search and entity filters only - NOT by country)
-    // We want to show all regions that have data, regardless of country selection
     const regionCounts: Record<string, number> = {};
-
-    marketCompanies.forEach((company) => {
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      const matchesEntityType = selectedEntityTypes.has(company.entityType);
-
-      const matchesEntityCategory = company.entityCategory
-        ? selectedEntityCategories.has(company.entityCategory)
-        : true;
-
-      const matchesCompanyType =
-        company.entityType === "company" && company.companyType
-          ? selectedCompanyTypes.has(company.companyType)
-          : true;
-
-      // Don't filter by country when calculating region counts!
-      if (matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType) {
-        const region = getRegionFromCountry(company.country);
-        if (region) {
-          regionCounts[region] = (regionCounts[region] || 0) + 1;
-        }
-      }
-    });
-
-    // Country counts (filter by search, entity filters, and region filter)
     const countryCounts: Record<string, number> = {};
 
     marketCompanies.forEach((company) => {
-      const matchesSearch =
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (company.description && company.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        locationMatchesSearch(company.location, searchTerm);
-
-      const matchesEntityType = selectedEntityTypes.has(company.entityType);
-
-      const matchesEntityCategory = company.entityCategory
-        ? selectedEntityCategories.has(company.entityCategory)
-        : true;
-
-      const matchesCompanyType =
-        company.entityType === "company" && company.companyType
-          ? selectedCompanyTypes.has(company.companyType)
-          : true;
-
-      const companyRegion = getRegionFromCountry(company.country);
-      const matchesRegion = companyRegion ? selectedRegions.has(companyRegion) : true;
-
-      if (matchesSearch && matchesEntityType && matchesEntityCategory && matchesCompanyType && matchesRegion && company.country) {
-        countryCounts[company.country] = (countryCounts[company.country] || 0) + 1;
+      if (matchesFilters(company, "entityType")) {
+        entityTypeCounts[company.entityType] = (entityTypeCounts[company.entityType] || 0) + 1;
+      }
+      if (company.entityCategory && matchesFilters(company, "entityCategory")) {
+        entityCategoryCounts[company.entityCategory] = (entityCategoryCounts[company.entityCategory] || 0) + 1;
+      }
+      if (company.entityType === "company" && company.companyType && matchesFilters(company, "companyType")) {
+        companyTypeCounts[company.companyType] = (companyTypeCounts[company.companyType] || 0) + 1;
+      }
+      const region = getRegionFromCountry(company.country);
+      if (region && matchesFilters(company, "region")) {
+        regionCounts[region] = (regionCounts[region] || 0) + 1;
+      }
+      const country = company.country?.trim();
+      if (country && matchesFilters(company, "country")) {
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
       }
     });
 
     return { entityTypeCounts, entityCategoryCounts, companyTypeCounts, regionCounts, countryCounts };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedEntityTypes, selectedEntityCategories, selectedCompanyTypes, selectedRegions, selectedCountries, marketCompanies]);
 
   return {
